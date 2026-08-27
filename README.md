@@ -34,11 +34,28 @@ and installed by libvirt development packages.
 3. `/usr/share/libvirt/api/libvirt-api.xml` or the corresponding
    `/usr/local` path.
 
-The generator parses the Go wrappers to discover every used `vir*` selector,
-derives those purego signatures and the registration table from the XML, and
-emits the complete raw `VIR_*` enum catalog. It also emits the idiomatic enum
-aliases used by the current public API. The generated `libvirt_api.gen.go` is
-committed, so package consumers still need only the runtime shared library.
+The generator emits every function declared by the main API XML (524 functions
+for libvirt 11.6), including purego signatures, introduction versions, the
+symbol registration table, and public `RawAPI.Vir*` methods. It also emits all
+raw `VIR_*` enums and the idiomatic aliases used by the current public API.
+The generated `libvirt_api.gen.go` is committed, so package consumers still
+need only the runtime shared library.
+
+Generated symbols are optional at load time. This lets output generated from a
+new libvirt XML load an older libvirt shared library: symbol presence is checked
+with `dlsym`, missing functions are recorded, and a high-level call returns a
+`SymbolUnavailableError` wrapping `ErrSymbolUnavailable` instead of calling
+a nil function pointer. `HasSymbol` reports runtime availability and
+`SymbolVersion` reports the upstream introduction version. Symbol presence,
+rather than only a numeric version comparison, also supports distribution
+backports. Both high-level and generated raw calls return the compatibility
+error before touching a missing function pointer.
+
+Raw methods otherwise preserve C return values and ownership rules. Their
+`error` result only represents symbol availability, so callers must still
+check libvirt's C failure sentinel and manage native resources. Lock the
+goroutine with `runtime.LockOSThread` when a raw failing call must be paired
+with `RawAPI.VirGetLastError`.
 
 To update against a libvirt source checkout or a specific installed version:
 
@@ -54,10 +71,12 @@ table.
 
 ## Current scope
 
-The initial binding covers library and hypervisor versions, read-write and
-read-only connections, connection liveness and URI inspection, domain listing,
-lookup and definition, domain identity/state/XML inspection, and basic domain
-lifecycle operations.
+The generated low-level surface covers all functions and enums in the main
+`libvirt-api.xml`. The ownership-aware high-level API currently covers library
+and hypervisor versions, read-write and read-only connections, connection
+liveness and URI inspection, domain listing, lookup and definition, domain
+identity/state/XML inspection, and basic domain lifecycle operations. The
+separate admin, QEMU, and LXC API XML files are not generated yet.
 
 The public API owns native references explicitly:
 
@@ -140,9 +159,8 @@ requires a local libvirt runtime.
 
 ## Next areas
 
-The generator now owns low-level signatures, registrations, and all enum values.
-Expanding the binding means adding ownership-aware wrappers; their referenced
-`vir*` functions are picked up automatically on the next `go generate`. The
-ABI type mapper must be extended when a new API introduces structs or callback
-types. Events and callbacks, typed parameters, streams, storage, networks,
-secrets, and node-device wrappers are not part of this first slice.
+The generator now owns the complete main low-level function catalog, versioned
+registrations, and all enum values. Remaining work is ownership-aware high-level
+wrappers for events and callbacks, typed parameters, streams, storage, networks,
+secrets, and node devices, followed by generation from the separate admin, QEMU,
+and LXC API XML files.

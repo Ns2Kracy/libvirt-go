@@ -8,57 +8,6302 @@ import "unsafe"
 const generatedLibvirtAPIHash = "372a60f58913cc4f3527762d48aed2ffd3e856530b61476b1e1d400dcc632a23"
 
 type generatedNativeAPI struct {
-	virConnectClose          func(unsafe.Pointer) int32
-	virConnectGetLibVersion  func(unsafe.Pointer, *uintptr) int32
-	virConnectGetURI         func(unsafe.Pointer) unsafe.Pointer
-	virConnectGetVersion     func(unsafe.Pointer, *uintptr) int32
-	virConnectIsAlive        func(unsafe.Pointer) int32
-	virConnectListAllDomains func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
-	virConnectOpen           func(*byte) unsafe.Pointer
-	virConnectOpenReadOnly   func(*byte) unsafe.Pointer
-	virDomainCreate          func(unsafe.Pointer) int32
-	virDomainDefineXML       func(unsafe.Pointer, *byte) unsafe.Pointer
-	virDomainDestroy         func(unsafe.Pointer) int32
-	virDomainFree            func(unsafe.Pointer) int32
-	virDomainGetName         func(unsafe.Pointer) unsafe.Pointer
-	virDomainGetState        func(unsafe.Pointer, *int32, *int32, uint32) int32
-	virDomainGetUUIDString   func(unsafe.Pointer, *byte) int32
-	virDomainGetXMLDesc      func(unsafe.Pointer, uint32) unsafe.Pointer
-	virDomainIsActive        func(unsafe.Pointer) int32
-	virDomainLookupByName    func(unsafe.Pointer, *byte) unsafe.Pointer
-	virDomainShutdown        func(unsafe.Pointer) int32
-	virGetLastError          func() unsafe.Pointer
-	virGetVersion            func(*uintptr, *byte, *uintptr) int32
-	virInitialize            func() int32
-	virResetLastError        func()
+	virConnCopyLastError                    func(unsafe.Pointer, unsafe.Pointer) int32
+	virConnGetLastError                     func(unsafe.Pointer) unsafe.Pointer
+	virConnResetLastError                   func(unsafe.Pointer)
+	virConnSetErrorFunc                     func(unsafe.Pointer, unsafe.Pointer, uintptr)
+	virConnectBaselineCPU                   func(unsafe.Pointer, *unsafe.Pointer, uint32, uint32) unsafe.Pointer
+	virConnectBaselineHypervisorCPU         func(unsafe.Pointer, *byte, *byte, *byte, *byte, *unsafe.Pointer, uint32, uint32) unsafe.Pointer
+	virConnectClose                         func(unsafe.Pointer) int32
+	virConnectCompareCPU                    func(unsafe.Pointer, *byte, uint32) int32
+	virConnectCompareHypervisorCPU          func(unsafe.Pointer, *byte, *byte, *byte, *byte, *byte, uint32) int32
+	virConnectDomainEventDeregister         func(unsafe.Pointer, uintptr) int32
+	virConnectDomainEventDeregisterAny      func(unsafe.Pointer, int32) int32
+	virConnectDomainEventRegister           func(unsafe.Pointer, uintptr, unsafe.Pointer, uintptr) int32
+	virConnectDomainEventRegisterAny        func(unsafe.Pointer, unsafe.Pointer, int32, uintptr, unsafe.Pointer, uintptr) int32
+	virConnectDomainXMLFromNative           func(unsafe.Pointer, *byte, *byte, uint32) unsafe.Pointer
+	virConnectDomainXMLToNative             func(unsafe.Pointer, *byte, *byte, uint32) unsafe.Pointer
+	virConnectFindStoragePoolSources        func(unsafe.Pointer, *byte, *byte, uint32) unsafe.Pointer
+	virConnectGetAllDomainStats             func(unsafe.Pointer, uint32, *unsafe.Pointer, uint32) int32
+	virConnectGetCPUModelNames              func(unsafe.Pointer, *byte, *unsafe.Pointer, uint32) int32
+	virConnectGetCapabilities               func(unsafe.Pointer) unsafe.Pointer
+	virConnectGetDomainCapabilities         func(unsafe.Pointer, *byte, *byte, *byte, *byte, uint32) unsafe.Pointer
+	virConnectGetHostname                   func(unsafe.Pointer) unsafe.Pointer
+	virConnectGetLibVersion                 func(unsafe.Pointer, *uintptr) int32
+	virConnectGetMaxVcpus                   func(unsafe.Pointer, *byte) int32
+	virConnectGetStoragePoolCapabilities    func(unsafe.Pointer, uint32) unsafe.Pointer
+	virConnectGetSysinfo                    func(unsafe.Pointer, uint32) unsafe.Pointer
+	virConnectGetType                       func(unsafe.Pointer) unsafe.Pointer
+	virConnectGetURI                        func(unsafe.Pointer) unsafe.Pointer
+	virConnectGetVersion                    func(unsafe.Pointer, *uintptr) int32
+	virConnectIsAlive                       func(unsafe.Pointer) int32
+	virConnectIsEncrypted                   func(unsafe.Pointer) int32
+	virConnectIsSecure                      func(unsafe.Pointer) int32
+	virConnectListAllDomains                func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListAllInterfaces             func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListAllNWFilterBindings       func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListAllNWFilters              func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListAllNetworks               func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListAllNodeDevices            func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListAllSecrets                func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListAllStoragePools           func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virConnectListDefinedDomains            func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListDefinedInterfaces         func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListDefinedNetworks           func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListDefinedStoragePools       func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListDomains                   func(unsafe.Pointer, *int32, int32) int32
+	virConnectListInterfaces                func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListNWFilters                 func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListNetworks                  func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListSecrets                   func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectListStoragePools              func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virConnectNetworkEventDeregisterAny     func(unsafe.Pointer, int32) int32
+	virConnectNetworkEventRegisterAny       func(unsafe.Pointer, unsafe.Pointer, int32, uintptr, unsafe.Pointer, uintptr) int32
+	virConnectNodeDeviceEventDeregisterAny  func(unsafe.Pointer, int32) int32
+	virConnectNodeDeviceEventRegisterAny    func(unsafe.Pointer, unsafe.Pointer, int32, uintptr, unsafe.Pointer, uintptr) int32
+	virConnectNumOfDefinedDomains           func(unsafe.Pointer) int32
+	virConnectNumOfDefinedInterfaces        func(unsafe.Pointer) int32
+	virConnectNumOfDefinedNetworks          func(unsafe.Pointer) int32
+	virConnectNumOfDefinedStoragePools      func(unsafe.Pointer) int32
+	virConnectNumOfDomains                  func(unsafe.Pointer) int32
+	virConnectNumOfInterfaces               func(unsafe.Pointer) int32
+	virConnectNumOfNWFilters                func(unsafe.Pointer) int32
+	virConnectNumOfNetworks                 func(unsafe.Pointer) int32
+	virConnectNumOfSecrets                  func(unsafe.Pointer) int32
+	virConnectNumOfStoragePools             func(unsafe.Pointer) int32
+	virConnectOpen                          func(*byte) unsafe.Pointer
+	virConnectOpenAuth                      func(*byte, unsafe.Pointer, uint32) unsafe.Pointer
+	virConnectOpenReadOnly                  func(*byte) unsafe.Pointer
+	virConnectRef                           func(unsafe.Pointer) int32
+	virConnectRegisterCloseCallback         func(unsafe.Pointer, uintptr, unsafe.Pointer, uintptr) int32
+	virConnectSecretEventDeregisterAny      func(unsafe.Pointer, int32) int32
+	virConnectSecretEventRegisterAny        func(unsafe.Pointer, unsafe.Pointer, int32, uintptr, unsafe.Pointer, uintptr) int32
+	virConnectSetIdentity                   func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virConnectSetKeepAlive                  func(unsafe.Pointer, int32, uint32) int32
+	virConnectStoragePoolEventDeregisterAny func(unsafe.Pointer, int32) int32
+	virConnectStoragePoolEventRegisterAny   func(unsafe.Pointer, unsafe.Pointer, int32, uintptr, unsafe.Pointer, uintptr) int32
+	virConnectUnregisterCloseCallback       func(unsafe.Pointer, uintptr) int32
+	virCopyLastError                        func(unsafe.Pointer) int32
+	virDefaultErrorFunc                     func(unsafe.Pointer)
+	virDomainAbortJob                       func(unsafe.Pointer) int32
+	virDomainAbortJobFlags                  func(unsafe.Pointer, uint32) int32
+	virDomainAddIOThread                    func(unsafe.Pointer, uint32, uint32) int32
+	virDomainAgentSetResponseTimeout        func(unsafe.Pointer, int32, uint32) int32
+	virDomainAttachDevice                   func(unsafe.Pointer, *byte) int32
+	virDomainAttachDeviceFlags              func(unsafe.Pointer, *byte, uint32) int32
+	virDomainAuthorizedSSHKeysGet           func(unsafe.Pointer, *byte, *unsafe.Pointer, uint32) int32
+	virDomainAuthorizedSSHKeysSet           func(unsafe.Pointer, *byte, *unsafe.Pointer, uint32, uint32) int32
+	virDomainBackupBegin                    func(unsafe.Pointer, *byte, *byte, uint32) int32
+	virDomainBackupGetXMLDesc               func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainBlockCommit                    func(unsafe.Pointer, *byte, *byte, *byte, uintptr, uint32) int32
+	virDomainBlockCopy                      func(unsafe.Pointer, *byte, *byte, unsafe.Pointer, int32, uint32) int32
+	virDomainBlockJobAbort                  func(unsafe.Pointer, *byte, uint32) int32
+	virDomainBlockJobSetSpeed               func(unsafe.Pointer, *byte, uintptr, uint32) int32
+	virDomainBlockPeek                      func(unsafe.Pointer, *byte, uint64, uintptr, unsafe.Pointer, uint32) int32
+	virDomainBlockPull                      func(unsafe.Pointer, *byte, uintptr, uint32) int32
+	virDomainBlockRebase                    func(unsafe.Pointer, *byte, *byte, uintptr, uint32) int32
+	virDomainBlockResize                    func(unsafe.Pointer, *byte, uint64, uint32) int32
+	virDomainBlockStats                     func(unsafe.Pointer, *byte, unsafe.Pointer, uintptr) int32
+	virDomainBlockStatsFlags                func(unsafe.Pointer, *byte, unsafe.Pointer, *int32, uint32) int32
+	virDomainCheckpointCreateXML            func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainCheckpointDelete               func(unsafe.Pointer, uint32) int32
+	virDomainCheckpointFree                 func(unsafe.Pointer) int32
+	virDomainCheckpointGetConnect           func(unsafe.Pointer) unsafe.Pointer
+	virDomainCheckpointGetDomain            func(unsafe.Pointer) unsafe.Pointer
+	virDomainCheckpointGetName              func(unsafe.Pointer) unsafe.Pointer
+	virDomainCheckpointGetParent            func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainCheckpointGetXMLDesc           func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainCheckpointListAllChildren      func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virDomainCheckpointLookupByName         func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainCheckpointRef                  func(unsafe.Pointer) int32
+	virDomainCoreDump                       func(unsafe.Pointer, *byte, uint32) int32
+	virDomainCoreDumpWithFormat             func(unsafe.Pointer, *byte, uint32, uint32) int32
+	virDomainCreate                         func(unsafe.Pointer) int32
+	virDomainCreateLinux                    func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainCreateWithFiles                func(unsafe.Pointer, uint32, *int32, uint32) int32
+	virDomainCreateWithFlags                func(unsafe.Pointer, uint32) int32
+	virDomainCreateXML                      func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainCreateXMLWithFiles             func(unsafe.Pointer, *byte, uint32, *int32, uint32) unsafe.Pointer
+	virDomainDefineXML                      func(unsafe.Pointer, *byte) unsafe.Pointer
+	virDomainDefineXMLFlags                 func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainDelIOThread                    func(unsafe.Pointer, uint32, uint32) int32
+	virDomainDelThrottleGroup               func(unsafe.Pointer, *byte, uint32) int32
+	virDomainDestroy                        func(unsafe.Pointer) int32
+	virDomainDestroyFlags                   func(unsafe.Pointer, uint32) int32
+	virDomainDetachDevice                   func(unsafe.Pointer, *byte) int32
+	virDomainDetachDeviceAlias              func(unsafe.Pointer, *byte, uint32) int32
+	virDomainDetachDeviceFlags              func(unsafe.Pointer, *byte, uint32) int32
+	virDomainFDAssociate                    func(unsafe.Pointer, *byte, uint32, *int32, uint32) int32
+	virDomainFSFreeze                       func(unsafe.Pointer, *unsafe.Pointer, uint32, uint32) int32
+	virDomainFSInfoFree                     func(unsafe.Pointer)
+	virDomainFSThaw                         func(unsafe.Pointer, *unsafe.Pointer, uint32, uint32) int32
+	virDomainFSTrim                         func(unsafe.Pointer, *byte, uint64, uint32) int32
+	virDomainFree                           func(unsafe.Pointer) int32
+	virDomainGetAutostart                   func(unsafe.Pointer, *int32) int32
+	virDomainGetAutostartOnce               func(unsafe.Pointer, *int32) int32
+	virDomainGetBlkioParameters             func(unsafe.Pointer, unsafe.Pointer, *int32, uint32) int32
+	virDomainGetBlockInfo                   func(unsafe.Pointer, *byte, unsafe.Pointer, uint32) int32
+	virDomainGetBlockIoTune                 func(unsafe.Pointer, *byte, unsafe.Pointer, *int32, uint32) int32
+	virDomainGetBlockJobInfo                func(unsafe.Pointer, *byte, unsafe.Pointer, uint32) int32
+	virDomainGetCPUStats                    func(unsafe.Pointer, unsafe.Pointer, uint32, int32, uint32, uint32) int32
+	virDomainGetConnect                     func(unsafe.Pointer) unsafe.Pointer
+	virDomainGetControlInfo                 func(unsafe.Pointer, unsafe.Pointer, uint32) int32
+	virDomainGetDiskErrors                  func(unsafe.Pointer, unsafe.Pointer, uint32, uint32) int32
+	virDomainGetEmulatorPinInfo             func(unsafe.Pointer, *byte, int32, uint32) int32
+	virDomainGetFSInfo                      func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virDomainGetGuestInfo                   func(unsafe.Pointer, uint32, *unsafe.Pointer, *int32, uint32) int32
+	virDomainGetGuestVcpus                  func(unsafe.Pointer, *unsafe.Pointer, *uint32, uint32) int32
+	virDomainGetHostname                    func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainGetID                          func(unsafe.Pointer) uint32
+	virDomainGetIOThreadInfo                func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virDomainGetInfo                        func(unsafe.Pointer, unsafe.Pointer) int32
+	virDomainGetInterfaceParameters         func(unsafe.Pointer, *byte, unsafe.Pointer, *int32, uint32) int32
+	virDomainGetJobInfo                     func(unsafe.Pointer, unsafe.Pointer) int32
+	virDomainGetJobStats                    func(unsafe.Pointer, *int32, *unsafe.Pointer, *int32, uint32) int32
+	virDomainGetLaunchSecurityInfo          func(unsafe.Pointer, *unsafe.Pointer, *int32, uint32) int32
+	virDomainGetMaxMemory                   func(unsafe.Pointer) uintptr
+	virDomainGetMaxVcpus                    func(unsafe.Pointer) int32
+	virDomainGetMemoryParameters            func(unsafe.Pointer, unsafe.Pointer, *int32, uint32) int32
+	virDomainGetMessages                    func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virDomainGetMetadata                    func(unsafe.Pointer, int32, *byte, uint32) unsafe.Pointer
+	virDomainGetName                        func(unsafe.Pointer) unsafe.Pointer
+	virDomainGetNumaParameters              func(unsafe.Pointer, unsafe.Pointer, *int32, uint32) int32
+	virDomainGetOSType                      func(unsafe.Pointer) unsafe.Pointer
+	virDomainGetPerfEvents                  func(unsafe.Pointer, *unsafe.Pointer, *int32, uint32) int32
+	virDomainGetSchedulerParameters         func(unsafe.Pointer, unsafe.Pointer, *int32) int32
+	virDomainGetSchedulerParametersFlags    func(unsafe.Pointer, unsafe.Pointer, *int32, uint32) int32
+	virDomainGetSchedulerType               func(unsafe.Pointer, *int32) unsafe.Pointer
+	virDomainGetSecurityLabel               func(unsafe.Pointer, unsafe.Pointer) int32
+	virDomainGetSecurityLabelList           func(unsafe.Pointer, *unsafe.Pointer) int32
+	virDomainGetState                       func(unsafe.Pointer, *int32, *int32, uint32) int32
+	virDomainGetTime                        func(unsafe.Pointer, *int64, *uint32, uint32) int32
+	virDomainGetUUID                        func(unsafe.Pointer, *byte) int32
+	virDomainGetUUIDString                  func(unsafe.Pointer, *byte) int32
+	virDomainGetVcpuPinInfo                 func(unsafe.Pointer, int32, *byte, int32, uint32) int32
+	virDomainGetVcpus                       func(unsafe.Pointer, unsafe.Pointer, int32, *byte, int32) int32
+	virDomainGetVcpusFlags                  func(unsafe.Pointer, uint32) int32
+	virDomainGetXMLDesc                     func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainGraphicsReload                 func(unsafe.Pointer, uint32, uint32) int32
+	virDomainHasCurrentSnapshot             func(unsafe.Pointer, uint32) int32
+	virDomainHasManagedSaveImage            func(unsafe.Pointer, uint32) int32
+	virDomainIOThreadInfoFree               func(unsafe.Pointer)
+	virDomainInjectNMI                      func(unsafe.Pointer, uint32) int32
+	virDomainInterfaceAddresses             func(unsafe.Pointer, *unsafe.Pointer, uint32, uint32) int32
+	virDomainInterfaceFree                  func(unsafe.Pointer)
+	virDomainInterfaceStats                 func(unsafe.Pointer, *byte, unsafe.Pointer, uintptr) int32
+	virDomainIsActive                       func(unsafe.Pointer) int32
+	virDomainIsPersistent                   func(unsafe.Pointer) int32
+	virDomainIsUpdated                      func(unsafe.Pointer) int32
+	virDomainListAllCheckpoints             func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virDomainListAllSnapshots               func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virDomainListGetStats                   func(*unsafe.Pointer, uint32, *unsafe.Pointer, uint32) int32
+	virDomainLookupByID                     func(unsafe.Pointer, int32) unsafe.Pointer
+	virDomainLookupByName                   func(unsafe.Pointer, *byte) unsafe.Pointer
+	virDomainLookupByUUID                   func(unsafe.Pointer, *byte) unsafe.Pointer
+	virDomainLookupByUUIDString             func(unsafe.Pointer, *byte) unsafe.Pointer
+	virDomainManagedSave                    func(unsafe.Pointer, uint32) int32
+	virDomainManagedSaveDefineXML           func(unsafe.Pointer, *byte, uint32) int32
+	virDomainManagedSaveGetXMLDesc          func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainManagedSaveRemove              func(unsafe.Pointer, uint32) int32
+	virDomainMemoryPeek                     func(unsafe.Pointer, uint64, uintptr, unsafe.Pointer, uint32) int32
+	virDomainMemoryStats                    func(unsafe.Pointer, unsafe.Pointer, uint32, uint32) int32
+	virDomainMigrate                        func(unsafe.Pointer, unsafe.Pointer, uintptr, *byte, *byte, uintptr) unsafe.Pointer
+	virDomainMigrate2                       func(unsafe.Pointer, unsafe.Pointer, *byte, uintptr, *byte, *byte, uintptr) unsafe.Pointer
+	virDomainMigrate3                       func(unsafe.Pointer, unsafe.Pointer, unsafe.Pointer, uint32, uint32) unsafe.Pointer
+	virDomainMigrateGetCompressionCache     func(unsafe.Pointer, *uint64, uint32) int32
+	virDomainMigrateGetMaxDowntime          func(unsafe.Pointer, *uint64, uint32) int32
+	virDomainMigrateGetMaxSpeed             func(unsafe.Pointer, *uintptr, uint32) int32
+	virDomainMigrateSetCompressionCache     func(unsafe.Pointer, uint64, uint32) int32
+	virDomainMigrateSetMaxDowntime          func(unsafe.Pointer, uint64, uint32) int32
+	virDomainMigrateSetMaxSpeed             func(unsafe.Pointer, uintptr, uint32) int32
+	virDomainMigrateStartPostCopy           func(unsafe.Pointer, uint32) int32
+	virDomainMigrateToURI                   func(unsafe.Pointer, *byte, uintptr, *byte, uintptr) int32
+	virDomainMigrateToURI2                  func(unsafe.Pointer, *byte, *byte, *byte, uintptr, *byte, uintptr) int32
+	virDomainMigrateToURI3                  func(unsafe.Pointer, *byte, unsafe.Pointer, uint32, uint32) int32
+	virDomainOpenChannel                    func(unsafe.Pointer, *byte, unsafe.Pointer, uint32) int32
+	virDomainOpenConsole                    func(unsafe.Pointer, *byte, unsafe.Pointer, uint32) int32
+	virDomainOpenGraphics                   func(unsafe.Pointer, uint32, int32, uint32) int32
+	virDomainOpenGraphicsFD                 func(unsafe.Pointer, uint32, uint32) int32
+	virDomainPMSuspendForDuration           func(unsafe.Pointer, uint32, uint64, uint32) int32
+	virDomainPMWakeup                       func(unsafe.Pointer, uint32) int32
+	virDomainPinEmulator                    func(unsafe.Pointer, *byte, int32, uint32) int32
+	virDomainPinIOThread                    func(unsafe.Pointer, uint32, *byte, int32, uint32) int32
+	virDomainPinVcpu                        func(unsafe.Pointer, uint32, *byte, int32) int32
+	virDomainPinVcpuFlags                   func(unsafe.Pointer, uint32, *byte, int32, uint32) int32
+	virDomainReboot                         func(unsafe.Pointer, uint32) int32
+	virDomainRef                            func(unsafe.Pointer) int32
+	virDomainRename                         func(unsafe.Pointer, *byte, uint32) int32
+	virDomainReset                          func(unsafe.Pointer, uint32) int32
+	virDomainRestore                        func(unsafe.Pointer, *byte) int32
+	virDomainRestoreFlags                   func(unsafe.Pointer, *byte, *byte, uint32) int32
+	virDomainRestoreParams                  func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainResume                         func(unsafe.Pointer) int32
+	virDomainRevertToSnapshot               func(unsafe.Pointer, uint32) int32
+	virDomainSave                           func(unsafe.Pointer, *byte) int32
+	virDomainSaveFlags                      func(unsafe.Pointer, *byte, *byte, uint32) int32
+	virDomainSaveImageDefineXML             func(unsafe.Pointer, *byte, *byte, uint32) int32
+	virDomainSaveImageGetXMLDesc            func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainSaveParams                     func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainScreenshot                     func(unsafe.Pointer, unsafe.Pointer, uint32, uint32) unsafe.Pointer
+	virDomainSendKey                        func(unsafe.Pointer, uint32, uint32, *uint32, int32, uint32) int32
+	virDomainSendProcessSignal              func(unsafe.Pointer, int64, uint32, uint32) int32
+	virDomainSetAutostart                   func(unsafe.Pointer, int32) int32
+	virDomainSetAutostartOnce               func(unsafe.Pointer, int32) int32
+	virDomainSetBlkioParameters             func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainSetBlockIoTune                 func(unsafe.Pointer, *byte, unsafe.Pointer, int32, uint32) int32
+	virDomainSetBlockThreshold              func(unsafe.Pointer, *byte, uint64, uint32) int32
+	virDomainSetGuestVcpus                  func(unsafe.Pointer, *byte, int32, uint32) int32
+	virDomainSetIOThreadParams              func(unsafe.Pointer, uint32, unsafe.Pointer, int32, uint32) int32
+	virDomainSetInterfaceParameters         func(unsafe.Pointer, *byte, unsafe.Pointer, int32, uint32) int32
+	virDomainSetLaunchSecurityState         func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainSetLifecycleAction             func(unsafe.Pointer, uint32, uint32, uint32) int32
+	virDomainSetMaxMemory                   func(unsafe.Pointer, uintptr) int32
+	virDomainSetMemory                      func(unsafe.Pointer, uintptr) int32
+	virDomainSetMemoryFlags                 func(unsafe.Pointer, uintptr, uint32) int32
+	virDomainSetMemoryParameters            func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainSetMemoryStatsPeriod           func(unsafe.Pointer, int32, uint32) int32
+	virDomainSetMetadata                    func(unsafe.Pointer, int32, *byte, *byte, *byte, uint32) int32
+	virDomainSetNumaParameters              func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainSetPerfEvents                  func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainSetSchedulerParameters         func(unsafe.Pointer, unsafe.Pointer, int32) int32
+	virDomainSetSchedulerParametersFlags    func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virDomainSetThrottleGroup               func(unsafe.Pointer, *byte, unsafe.Pointer, int32, uint32) int32
+	virDomainSetTime                        func(unsafe.Pointer, int64, uint32, uint32) int32
+	virDomainSetUserPassword                func(unsafe.Pointer, *byte, *byte, uint32) int32
+	virDomainSetVcpu                        func(unsafe.Pointer, *byte, int32, uint32) int32
+	virDomainSetVcpus                       func(unsafe.Pointer, uint32) int32
+	virDomainSetVcpusFlags                  func(unsafe.Pointer, uint32, uint32) int32
+	virDomainShutdown                       func(unsafe.Pointer) int32
+	virDomainShutdownFlags                  func(unsafe.Pointer, uint32) int32
+	virDomainSnapshotCreateXML              func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainSnapshotCurrent                func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainSnapshotDelete                 func(unsafe.Pointer, uint32) int32
+	virDomainSnapshotFree                   func(unsafe.Pointer) int32
+	virDomainSnapshotGetConnect             func(unsafe.Pointer) unsafe.Pointer
+	virDomainSnapshotGetDomain              func(unsafe.Pointer) unsafe.Pointer
+	virDomainSnapshotGetName                func(unsafe.Pointer) unsafe.Pointer
+	virDomainSnapshotGetParent              func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainSnapshotGetXMLDesc             func(unsafe.Pointer, uint32) unsafe.Pointer
+	virDomainSnapshotHasMetadata            func(unsafe.Pointer, uint32) int32
+	virDomainSnapshotIsCurrent              func(unsafe.Pointer, uint32) int32
+	virDomainSnapshotListAllChildren        func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virDomainSnapshotListChildrenNames      func(unsafe.Pointer, *unsafe.Pointer, int32, uint32) int32
+	virDomainSnapshotListNames              func(unsafe.Pointer, *unsafe.Pointer, int32, uint32) int32
+	virDomainSnapshotLookupByName           func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virDomainSnapshotNum                    func(unsafe.Pointer, uint32) int32
+	virDomainSnapshotNumChildren            func(unsafe.Pointer, uint32) int32
+	virDomainSnapshotRef                    func(unsafe.Pointer) int32
+	virDomainStartDirtyRateCalc             func(unsafe.Pointer, int32, uint32) int32
+	virDomainStatsRecordListFree            func(*unsafe.Pointer)
+	virDomainSuspend                        func(unsafe.Pointer) int32
+	virDomainUndefine                       func(unsafe.Pointer) int32
+	virDomainUndefineFlags                  func(unsafe.Pointer, uint32) int32
+	virDomainUpdateDeviceFlags              func(unsafe.Pointer, *byte, uint32) int32
+	virEventAddHandle                       func(int32, int32, uintptr, unsafe.Pointer, uintptr) int32
+	virEventAddTimeout                      func(int32, uintptr, unsafe.Pointer, uintptr) int32
+	virEventRegisterDefaultImpl             func() int32
+	virEventRegisterImpl                    func(uintptr, uintptr, uintptr, uintptr, uintptr, uintptr)
+	virEventRemoveHandle                    func(int32) int32
+	virEventRemoveTimeout                   func(int32) int32
+	virEventRunDefaultImpl                  func() int32
+	virEventUpdateHandle                    func(int32, int32)
+	virEventUpdateTimeout                   func(int32, int32)
+	virFreeError                            func(unsafe.Pointer)
+	virGetLastError                         func() unsafe.Pointer
+	virGetLastErrorCode                     func() int32
+	virGetLastErrorDomain                   func() int32
+	virGetLastErrorMessage                  func() unsafe.Pointer
+	virGetVersion                           func(*uintptr, *byte, *uintptr) int32
+	virInitialize                           func() int32
+	virInterfaceChangeBegin                 func(unsafe.Pointer, uint32) int32
+	virInterfaceChangeCommit                func(unsafe.Pointer, uint32) int32
+	virInterfaceChangeRollback              func(unsafe.Pointer, uint32) int32
+	virInterfaceCreate                      func(unsafe.Pointer, uint32) int32
+	virInterfaceDefineXML                   func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virInterfaceDestroy                     func(unsafe.Pointer, uint32) int32
+	virInterfaceFree                        func(unsafe.Pointer) int32
+	virInterfaceGetConnect                  func(unsafe.Pointer) unsafe.Pointer
+	virInterfaceGetMACString                func(unsafe.Pointer) unsafe.Pointer
+	virInterfaceGetName                     func(unsafe.Pointer) unsafe.Pointer
+	virInterfaceGetXMLDesc                  func(unsafe.Pointer, uint32) unsafe.Pointer
+	virInterfaceIsActive                    func(unsafe.Pointer) int32
+	virInterfaceLookupByMACString           func(unsafe.Pointer, *byte) unsafe.Pointer
+	virInterfaceLookupByName                func(unsafe.Pointer, *byte) unsafe.Pointer
+	virInterfaceRef                         func(unsafe.Pointer) int32
+	virInterfaceUndefine                    func(unsafe.Pointer) int32
+	virNWFilterBindingCreateXML             func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virNWFilterBindingDelete                func(unsafe.Pointer) int32
+	virNWFilterBindingFree                  func(unsafe.Pointer) int32
+	virNWFilterBindingGetFilterName         func(unsafe.Pointer) unsafe.Pointer
+	virNWFilterBindingGetPortDev            func(unsafe.Pointer) unsafe.Pointer
+	virNWFilterBindingGetXMLDesc            func(unsafe.Pointer, uint32) unsafe.Pointer
+	virNWFilterBindingLookupByPortDev       func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNWFilterBindingRef                   func(unsafe.Pointer) int32
+	virNWFilterDefineXML                    func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNWFilterDefineXMLFlags               func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virNWFilterFree                         func(unsafe.Pointer) int32
+	virNWFilterGetName                      func(unsafe.Pointer) unsafe.Pointer
+	virNWFilterGetUUID                      func(unsafe.Pointer, *byte) int32
+	virNWFilterGetUUIDString                func(unsafe.Pointer, *byte) int32
+	virNWFilterGetXMLDesc                   func(unsafe.Pointer, uint32) unsafe.Pointer
+	virNWFilterLookupByName                 func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNWFilterLookupByUUID                 func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNWFilterLookupByUUIDString           func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNWFilterRef                          func(unsafe.Pointer) int32
+	virNWFilterUndefine                     func(unsafe.Pointer) int32
+	virNetworkCreate                        func(unsafe.Pointer) int32
+	virNetworkCreateXML                     func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNetworkCreateXMLFlags                func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virNetworkDHCPLeaseFree                 func(unsafe.Pointer)
+	virNetworkDefineXML                     func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNetworkDefineXMLFlags                func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virNetworkDestroy                       func(unsafe.Pointer) int32
+	virNetworkFree                          func(unsafe.Pointer) int32
+	virNetworkGetAutostart                  func(unsafe.Pointer, *int32) int32
+	virNetworkGetBridgeName                 func(unsafe.Pointer) unsafe.Pointer
+	virNetworkGetConnect                    func(unsafe.Pointer) unsafe.Pointer
+	virNetworkGetDHCPLeases                 func(unsafe.Pointer, *byte, *unsafe.Pointer, uint32) int32
+	virNetworkGetMetadata                   func(unsafe.Pointer, int32, *byte, uint32) unsafe.Pointer
+	virNetworkGetName                       func(unsafe.Pointer) unsafe.Pointer
+	virNetworkGetUUID                       func(unsafe.Pointer, *byte) int32
+	virNetworkGetUUIDString                 func(unsafe.Pointer, *byte) int32
+	virNetworkGetXMLDesc                    func(unsafe.Pointer, uint32) unsafe.Pointer
+	virNetworkIsActive                      func(unsafe.Pointer) int32
+	virNetworkIsPersistent                  func(unsafe.Pointer) int32
+	virNetworkListAllPorts                  func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virNetworkLookupByName                  func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNetworkLookupByUUID                  func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNetworkLookupByUUIDString            func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNetworkPortCreateXML                 func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virNetworkPortDelete                    func(unsafe.Pointer, uint32) int32
+	virNetworkPortFree                      func(unsafe.Pointer) int32
+	virNetworkPortGetNetwork                func(unsafe.Pointer) unsafe.Pointer
+	virNetworkPortGetParameters             func(unsafe.Pointer, *unsafe.Pointer, *int32, uint32) int32
+	virNetworkPortGetUUID                   func(unsafe.Pointer, *byte) int32
+	virNetworkPortGetUUIDString             func(unsafe.Pointer, *byte) int32
+	virNetworkPortGetXMLDesc                func(unsafe.Pointer, uint32) unsafe.Pointer
+	virNetworkPortLookupByUUID              func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNetworkPortLookupByUUIDString        func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNetworkPortRef                       func(unsafe.Pointer) int32
+	virNetworkPortSetParameters             func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virNetworkRef                           func(unsafe.Pointer) int32
+	virNetworkSetAutostart                  func(unsafe.Pointer, int32) int32
+	virNetworkSetMetadata                   func(unsafe.Pointer, int32, *byte, *byte, *byte, uint32) int32
+	virNetworkUndefine                      func(unsafe.Pointer) int32
+	virNetworkUpdate                        func(unsafe.Pointer, uint32, uint32, int32, *byte, uint32) int32
+	virNodeAllocPages                       func(unsafe.Pointer, uint32, *uint32, *uint64, int32, uint32, uint32) int32
+	virNodeDeviceCreate                     func(unsafe.Pointer, uint32) int32
+	virNodeDeviceCreateXML                  func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virNodeDeviceDefineXML                  func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virNodeDeviceDestroy                    func(unsafe.Pointer) int32
+	virNodeDeviceDetachFlags                func(unsafe.Pointer, *byte, uint32) int32
+	virNodeDeviceDettach                    func(unsafe.Pointer) int32
+	virNodeDeviceFree                       func(unsafe.Pointer) int32
+	virNodeDeviceGetAutostart               func(unsafe.Pointer, *int32) int32
+	virNodeDeviceGetName                    func(unsafe.Pointer) unsafe.Pointer
+	virNodeDeviceGetParent                  func(unsafe.Pointer) unsafe.Pointer
+	virNodeDeviceGetXMLDesc                 func(unsafe.Pointer, uint32) unsafe.Pointer
+	virNodeDeviceIsActive                   func(unsafe.Pointer) int32
+	virNodeDeviceIsPersistent               func(unsafe.Pointer) int32
+	virNodeDeviceListCaps                   func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virNodeDeviceLookupByName               func(unsafe.Pointer, *byte) unsafe.Pointer
+	virNodeDeviceLookupSCSIHostByWWN        func(unsafe.Pointer, *byte, *byte, uint32) unsafe.Pointer
+	virNodeDeviceNumOfCaps                  func(unsafe.Pointer) int32
+	virNodeDeviceReAttach                   func(unsafe.Pointer) int32
+	virNodeDeviceRef                        func(unsafe.Pointer) int32
+	virNodeDeviceReset                      func(unsafe.Pointer) int32
+	virNodeDeviceSetAutostart               func(unsafe.Pointer, int32) int32
+	virNodeDeviceUndefine                   func(unsafe.Pointer, uint32) int32
+	virNodeDeviceUpdate                     func(unsafe.Pointer, *byte, uint32) int32
+	virNodeGetCPUMap                        func(unsafe.Pointer, *unsafe.Pointer, *uint32, uint32) int32
+	virNodeGetCPUStats                      func(unsafe.Pointer, int32, unsafe.Pointer, *int32, uint32) int32
+	virNodeGetCellsFreeMemory               func(unsafe.Pointer, *uint64, int32, int32) int32
+	virNodeGetFreeMemory                    func(unsafe.Pointer) uint64
+	virNodeGetFreePages                     func(unsafe.Pointer, uint32, *uint32, int32, uint32, *uint64, uint32) int32
+	virNodeGetInfo                          func(unsafe.Pointer, unsafe.Pointer) int32
+	virNodeGetMemoryParameters              func(unsafe.Pointer, unsafe.Pointer, *int32, uint32) int32
+	virNodeGetMemoryStats                   func(unsafe.Pointer, int32, unsafe.Pointer, *int32, uint32) int32
+	virNodeGetSEVInfo                       func(unsafe.Pointer, *unsafe.Pointer, *int32, uint32) int32
+	virNodeGetSecurityModel                 func(unsafe.Pointer, unsafe.Pointer) int32
+	virNodeListDevices                      func(unsafe.Pointer, *byte, *unsafe.Pointer, int32, uint32) int32
+	virNodeNumOfDevices                     func(unsafe.Pointer, *byte, uint32) int32
+	virNodeSetMemoryParameters              func(unsafe.Pointer, unsafe.Pointer, int32, uint32) int32
+	virNodeSuspendForDuration               func(unsafe.Pointer, uint32, uint64, uint32) int32
+	virResetError                           func(unsafe.Pointer)
+	virResetLastError                       func()
+	virSaveLastError                        func() unsafe.Pointer
+	virSecretDefineXML                      func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virSecretFree                           func(unsafe.Pointer) int32
+	virSecretGetConnect                     func(unsafe.Pointer) unsafe.Pointer
+	virSecretGetUUID                        func(unsafe.Pointer, *byte) int32
+	virSecretGetUUIDString                  func(unsafe.Pointer, *byte) int32
+	virSecretGetUsageID                     func(unsafe.Pointer) unsafe.Pointer
+	virSecretGetUsageType                   func(unsafe.Pointer) int32
+	virSecretGetValue                       func(unsafe.Pointer, *uintptr, uint32) unsafe.Pointer
+	virSecretGetXMLDesc                     func(unsafe.Pointer, uint32) unsafe.Pointer
+	virSecretLookupByUUID                   func(unsafe.Pointer, *byte) unsafe.Pointer
+	virSecretLookupByUUIDString             func(unsafe.Pointer, *byte) unsafe.Pointer
+	virSecretLookupByUsage                  func(unsafe.Pointer, int32, *byte) unsafe.Pointer
+	virSecretRef                            func(unsafe.Pointer) int32
+	virSecretSetValue                       func(unsafe.Pointer, *byte, uintptr, uint32) int32
+	virSecretUndefine                       func(unsafe.Pointer) int32
+	virSetErrorFunc                         func(unsafe.Pointer, uintptr)
+	virStoragePoolBuild                     func(unsafe.Pointer, uint32) int32
+	virStoragePoolCreate                    func(unsafe.Pointer, uint32) int32
+	virStoragePoolCreateXML                 func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virStoragePoolDefineXML                 func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virStoragePoolDelete                    func(unsafe.Pointer, uint32) int32
+	virStoragePoolDestroy                   func(unsafe.Pointer) int32
+	virStoragePoolFree                      func(unsafe.Pointer) int32
+	virStoragePoolGetAutostart              func(unsafe.Pointer, *int32) int32
+	virStoragePoolGetConnect                func(unsafe.Pointer) unsafe.Pointer
+	virStoragePoolGetInfo                   func(unsafe.Pointer, unsafe.Pointer) int32
+	virStoragePoolGetName                   func(unsafe.Pointer) unsafe.Pointer
+	virStoragePoolGetUUID                   func(unsafe.Pointer, *byte) int32
+	virStoragePoolGetUUIDString             func(unsafe.Pointer, *byte) int32
+	virStoragePoolGetXMLDesc                func(unsafe.Pointer, uint32) unsafe.Pointer
+	virStoragePoolIsActive                  func(unsafe.Pointer) int32
+	virStoragePoolIsPersistent              func(unsafe.Pointer) int32
+	virStoragePoolListAllVolumes            func(unsafe.Pointer, *unsafe.Pointer, uint32) int32
+	virStoragePoolListVolumes               func(unsafe.Pointer, *unsafe.Pointer, int32) int32
+	virStoragePoolLookupByName              func(unsafe.Pointer, *byte) unsafe.Pointer
+	virStoragePoolLookupByTargetPath        func(unsafe.Pointer, *byte) unsafe.Pointer
+	virStoragePoolLookupByUUID              func(unsafe.Pointer, *byte) unsafe.Pointer
+	virStoragePoolLookupByUUIDString        func(unsafe.Pointer, *byte) unsafe.Pointer
+	virStoragePoolLookupByVolume            func(unsafe.Pointer) unsafe.Pointer
+	virStoragePoolNumOfVolumes              func(unsafe.Pointer) int32
+	virStoragePoolRef                       func(unsafe.Pointer) int32
+	virStoragePoolRefresh                   func(unsafe.Pointer, uint32) int32
+	virStoragePoolSetAutostart              func(unsafe.Pointer, int32) int32
+	virStoragePoolUndefine                  func(unsafe.Pointer) int32
+	virStorageVolCreateXML                  func(unsafe.Pointer, *byte, uint32) unsafe.Pointer
+	virStorageVolCreateXMLFrom              func(unsafe.Pointer, *byte, unsafe.Pointer, uint32) unsafe.Pointer
+	virStorageVolDelete                     func(unsafe.Pointer, uint32) int32
+	virStorageVolDownload                   func(unsafe.Pointer, unsafe.Pointer, uint64, uint64, uint32) int32
+	virStorageVolFree                       func(unsafe.Pointer) int32
+	virStorageVolGetConnect                 func(unsafe.Pointer) unsafe.Pointer
+	virStorageVolGetInfo                    func(unsafe.Pointer, unsafe.Pointer) int32
+	virStorageVolGetInfoFlags               func(unsafe.Pointer, unsafe.Pointer, uint32) int32
+	virStorageVolGetKey                     func(unsafe.Pointer) unsafe.Pointer
+	virStorageVolGetName                    func(unsafe.Pointer) unsafe.Pointer
+	virStorageVolGetPath                    func(unsafe.Pointer) unsafe.Pointer
+	virStorageVolGetXMLDesc                 func(unsafe.Pointer, uint32) unsafe.Pointer
+	virStorageVolLookupByKey                func(unsafe.Pointer, *byte) unsafe.Pointer
+	virStorageVolLookupByName               func(unsafe.Pointer, *byte) unsafe.Pointer
+	virStorageVolLookupByPath               func(unsafe.Pointer, *byte) unsafe.Pointer
+	virStorageVolRef                        func(unsafe.Pointer) int32
+	virStorageVolResize                     func(unsafe.Pointer, uint64, uint32) int32
+	virStorageVolUpload                     func(unsafe.Pointer, unsafe.Pointer, uint64, uint64, uint32) int32
+	virStorageVolWipe                       func(unsafe.Pointer, uint32) int32
+	virStorageVolWipePattern                func(unsafe.Pointer, uint32, uint32) int32
+	virStreamAbort                          func(unsafe.Pointer) int32
+	virStreamEventAddCallback               func(unsafe.Pointer, int32, uintptr, unsafe.Pointer, uintptr) int32
+	virStreamEventRemoveCallback            func(unsafe.Pointer) int32
+	virStreamEventUpdateCallback            func(unsafe.Pointer, int32) int32
+	virStreamFinish                         func(unsafe.Pointer) int32
+	virStreamFree                           func(unsafe.Pointer) int32
+	virStreamNew                            func(unsafe.Pointer, uint32) unsafe.Pointer
+	virStreamRecv                           func(unsafe.Pointer, *byte, uintptr) int32
+	virStreamRecvAll                        func(unsafe.Pointer, uintptr, unsafe.Pointer) int32
+	virStreamRecvFlags                      func(unsafe.Pointer, *byte, uintptr, uint32) int32
+	virStreamRecvHole                       func(unsafe.Pointer, *int64, uint32) int32
+	virStreamRef                            func(unsafe.Pointer) int32
+	virStreamSend                           func(unsafe.Pointer, *byte, uintptr) int32
+	virStreamSendAll                        func(unsafe.Pointer, uintptr, unsafe.Pointer) int32
+	virStreamSendHole                       func(unsafe.Pointer, int64, uint32) int32
+	virStreamSparseRecvAll                  func(unsafe.Pointer, uintptr, uintptr, unsafe.Pointer) int32
+	virStreamSparseSendAll                  func(unsafe.Pointer, uintptr, uintptr, uintptr, unsafe.Pointer) int32
+	virTypedParamsAddBoolean                func(*unsafe.Pointer, *int32, *int32, *byte, int32) int32
+	virTypedParamsAddDouble                 func(*unsafe.Pointer, *int32, *int32, *byte, float64) int32
+	virTypedParamsAddFromString             func(*unsafe.Pointer, *int32, *int32, *byte, int32, *byte) int32
+	virTypedParamsAddInt                    func(*unsafe.Pointer, *int32, *int32, *byte, int32) int32
+	virTypedParamsAddLLong                  func(*unsafe.Pointer, *int32, *int32, *byte, int64) int32
+	virTypedParamsAddString                 func(*unsafe.Pointer, *int32, *int32, *byte, *byte) int32
+	virTypedParamsAddStringList             func(*unsafe.Pointer, *int32, *int32, *byte, *unsafe.Pointer) int32
+	virTypedParamsAddUInt                   func(*unsafe.Pointer, *int32, *int32, *byte, uint32) int32
+	virTypedParamsAddULLong                 func(*unsafe.Pointer, *int32, *int32, *byte, uint64) int32
+	virTypedParamsClear                     func(unsafe.Pointer, int32)
+	virTypedParamsFree                      func(unsafe.Pointer, int32)
+	virTypedParamsGet                       func(unsafe.Pointer, int32, *byte) unsafe.Pointer
+	virTypedParamsGetBoolean                func(unsafe.Pointer, int32, *byte, *int32) int32
+	virTypedParamsGetDouble                 func(unsafe.Pointer, int32, *byte, *float64) int32
+	virTypedParamsGetInt                    func(unsafe.Pointer, int32, *byte, *int32) int32
+	virTypedParamsGetLLong                  func(unsafe.Pointer, int32, *byte, *int64) int32
+	virTypedParamsGetString                 func(unsafe.Pointer, int32, *byte, *unsafe.Pointer) int32
+	virTypedParamsGetUInt                   func(unsafe.Pointer, int32, *byte, *uint32) int32
+	virTypedParamsGetULLong                 func(unsafe.Pointer, int32, *byte, *uint64) int32
 }
 
 func libvirtSymbolBindings(api *nativeAPI) []nativeSymbolBinding {
 	return []nativeSymbolBinding{
-		{name: "virConnectClose", target: &api.virConnectClose},
-		{name: "virConnectGetLibVersion", target: &api.virConnectGetLibVersion},
-		{name: "virConnectGetURI", target: &api.virConnectGetURI},
-		{name: "virConnectGetVersion", target: &api.virConnectGetVersion},
-		{name: "virConnectIsAlive", target: &api.virConnectIsAlive},
-		{name: "virConnectListAllDomains", target: &api.virConnectListAllDomains},
-		{name: "virConnectOpen", target: &api.virConnectOpen},
-		{name: "virConnectOpenReadOnly", target: &api.virConnectOpenReadOnly},
-		{name: "virDomainCreate", target: &api.virDomainCreate},
-		{name: "virDomainDefineXML", target: &api.virDomainDefineXML},
-		{name: "virDomainDestroy", target: &api.virDomainDestroy},
-		{name: "virDomainFree", target: &api.virDomainFree},
-		{name: "virDomainGetName", target: &api.virDomainGetName},
-		{name: "virDomainGetState", target: &api.virDomainGetState},
-		{name: "virDomainGetUUIDString", target: &api.virDomainGetUUIDString},
-		{name: "virDomainGetXMLDesc", target: &api.virDomainGetXMLDesc},
-		{name: "virDomainIsActive", target: &api.virDomainIsActive},
-		{name: "virDomainLookupByName", target: &api.virDomainLookupByName},
-		{name: "virDomainShutdown", target: &api.virDomainShutdown},
-		{name: "virGetLastError", target: &api.virGetLastError},
-		{name: "virGetVersion", target: &api.virGetVersion},
-		{name: "virInitialize", target: &api.virInitialize},
-		{name: "virResetLastError", target: &api.virResetLastError},
+		{name: "virConnCopyLastError", since: "0.1.0", target: &api.virConnCopyLastError},
+		{name: "virConnGetLastError", since: "0.1.0", target: &api.virConnGetLastError},
+		{name: "virConnResetLastError", since: "0.1.0", target: &api.virConnResetLastError},
+		{name: "virConnSetErrorFunc", since: "0.1.0", target: &api.virConnSetErrorFunc},
+		{name: "virConnectBaselineCPU", since: "0.7.7", target: &api.virConnectBaselineCPU},
+		{name: "virConnectBaselineHypervisorCPU", since: "4.4.0", target: &api.virConnectBaselineHypervisorCPU},
+		{name: "virConnectClose", since: "0.0.3", target: &api.virConnectClose},
+		{name: "virConnectCompareCPU", since: "0.7.5", target: &api.virConnectCompareCPU},
+		{name: "virConnectCompareHypervisorCPU", since: "4.4.0", target: &api.virConnectCompareHypervisorCPU},
+		{name: "virConnectDomainEventDeregister", since: "0.5.0", target: &api.virConnectDomainEventDeregister},
+		{name: "virConnectDomainEventDeregisterAny", since: "0.8.0", target: &api.virConnectDomainEventDeregisterAny},
+		{name: "virConnectDomainEventRegister", since: "0.5.0", target: &api.virConnectDomainEventRegister},
+		{name: "virConnectDomainEventRegisterAny", since: "0.8.0", target: &api.virConnectDomainEventRegisterAny},
+		{name: "virConnectDomainXMLFromNative", since: "0.6.4", target: &api.virConnectDomainXMLFromNative},
+		{name: "virConnectDomainXMLToNative", since: "0.6.4", target: &api.virConnectDomainXMLToNative},
+		{name: "virConnectFindStoragePoolSources", since: "0.4.5", target: &api.virConnectFindStoragePoolSources},
+		{name: "virConnectGetAllDomainStats", since: "1.2.8", target: &api.virConnectGetAllDomainStats},
+		{name: "virConnectGetCPUModelNames", since: "1.1.3", target: &api.virConnectGetCPUModelNames},
+		{name: "virConnectGetCapabilities", since: "0.2.1", target: &api.virConnectGetCapabilities},
+		{name: "virConnectGetDomainCapabilities", since: "1.2.7", target: &api.virConnectGetDomainCapabilities},
+		{name: "virConnectGetHostname", since: "0.3.0", target: &api.virConnectGetHostname},
+		{name: "virConnectGetLibVersion", since: "0.7.3", target: &api.virConnectGetLibVersion},
+		{name: "virConnectGetMaxVcpus", since: "0.2.1", target: &api.virConnectGetMaxVcpus},
+		{name: "virConnectGetStoragePoolCapabilities", since: "5.2.0", target: &api.virConnectGetStoragePoolCapabilities},
+		{name: "virConnectGetSysinfo", since: "0.8.8", target: &api.virConnectGetSysinfo},
+		{name: "virConnectGetType", since: "0.0.3", target: &api.virConnectGetType},
+		{name: "virConnectGetURI", since: "0.3.0", target: &api.virConnectGetURI},
+		{name: "virConnectGetVersion", since: "0.0.3", target: &api.virConnectGetVersion},
+		{name: "virConnectIsAlive", since: "0.9.8", target: &api.virConnectIsAlive},
+		{name: "virConnectIsEncrypted", since: "0.7.3", target: &api.virConnectIsEncrypted},
+		{name: "virConnectIsSecure", since: "0.7.3", target: &api.virConnectIsSecure},
+		{name: "virConnectListAllDomains", since: "0.9.13", target: &api.virConnectListAllDomains},
+		{name: "virConnectListAllInterfaces", since: "0.10.2", target: &api.virConnectListAllInterfaces},
+		{name: "virConnectListAllNWFilterBindings", since: "4.5.0", target: &api.virConnectListAllNWFilterBindings},
+		{name: "virConnectListAllNWFilters", since: "0.10.2", target: &api.virConnectListAllNWFilters},
+		{name: "virConnectListAllNetworks", since: "0.10.2", target: &api.virConnectListAllNetworks},
+		{name: "virConnectListAllNodeDevices", since: "0.10.2", target: &api.virConnectListAllNodeDevices},
+		{name: "virConnectListAllSecrets", since: "0.10.2", target: &api.virConnectListAllSecrets},
+		{name: "virConnectListAllStoragePools", since: "0.10.2", target: &api.virConnectListAllStoragePools},
+		{name: "virConnectListDefinedDomains", since: "0.1.1", target: &api.virConnectListDefinedDomains},
+		{name: "virConnectListDefinedInterfaces", since: "0.7.0", target: &api.virConnectListDefinedInterfaces},
+		{name: "virConnectListDefinedNetworks", since: "0.2.0", target: &api.virConnectListDefinedNetworks},
+		{name: "virConnectListDefinedStoragePools", since: "0.4.1", target: &api.virConnectListDefinedStoragePools},
+		{name: "virConnectListDomains", since: "0.0.3", target: &api.virConnectListDomains},
+		{name: "virConnectListInterfaces", since: "0.6.4", target: &api.virConnectListInterfaces},
+		{name: "virConnectListNWFilters", since: "0.8.0", target: &api.virConnectListNWFilters},
+		{name: "virConnectListNetworks", since: "0.2.0", target: &api.virConnectListNetworks},
+		{name: "virConnectListSecrets", since: "0.7.1", target: &api.virConnectListSecrets},
+		{name: "virConnectListStoragePools", since: "0.4.1", target: &api.virConnectListStoragePools},
+		{name: "virConnectNetworkEventDeregisterAny", since: "1.2.1", target: &api.virConnectNetworkEventDeregisterAny},
+		{name: "virConnectNetworkEventRegisterAny", since: "1.2.1", target: &api.virConnectNetworkEventRegisterAny},
+		{name: "virConnectNodeDeviceEventDeregisterAny", since: "2.2.0", target: &api.virConnectNodeDeviceEventDeregisterAny},
+		{name: "virConnectNodeDeviceEventRegisterAny", since: "2.2.0", target: &api.virConnectNodeDeviceEventRegisterAny},
+		{name: "virConnectNumOfDefinedDomains", since: "0.1.5", target: &api.virConnectNumOfDefinedDomains},
+		{name: "virConnectNumOfDefinedInterfaces", since: "0.7.0", target: &api.virConnectNumOfDefinedInterfaces},
+		{name: "virConnectNumOfDefinedNetworks", since: "0.2.0", target: &api.virConnectNumOfDefinedNetworks},
+		{name: "virConnectNumOfDefinedStoragePools", since: "0.4.1", target: &api.virConnectNumOfDefinedStoragePools},
+		{name: "virConnectNumOfDomains", since: "0.0.3", target: &api.virConnectNumOfDomains},
+		{name: "virConnectNumOfInterfaces", since: "0.6.4", target: &api.virConnectNumOfInterfaces},
+		{name: "virConnectNumOfNWFilters", since: "0.8.0", target: &api.virConnectNumOfNWFilters},
+		{name: "virConnectNumOfNetworks", since: "0.2.0", target: &api.virConnectNumOfNetworks},
+		{name: "virConnectNumOfSecrets", since: "0.7.1", target: &api.virConnectNumOfSecrets},
+		{name: "virConnectNumOfStoragePools", since: "0.4.1", target: &api.virConnectNumOfStoragePools},
+		{name: "virConnectOpen", since: "0.0.3", target: &api.virConnectOpen},
+		{name: "virConnectOpenAuth", since: "0.4.0", target: &api.virConnectOpenAuth},
+		{name: "virConnectOpenReadOnly", since: "0.0.3", target: &api.virConnectOpenReadOnly},
+		{name: "virConnectRef", since: "0.6.0", target: &api.virConnectRef},
+		{name: "virConnectRegisterCloseCallback", since: "0.10.0", target: &api.virConnectRegisterCloseCallback},
+		{name: "virConnectSecretEventDeregisterAny", since: "3.0.0", target: &api.virConnectSecretEventDeregisterAny},
+		{name: "virConnectSecretEventRegisterAny", since: "3.0.0", target: &api.virConnectSecretEventRegisterAny},
+		{name: "virConnectSetIdentity", since: "5.8.0", target: &api.virConnectSetIdentity},
+		{name: "virConnectSetKeepAlive", since: "0.9.8", target: &api.virConnectSetKeepAlive},
+		{name: "virConnectStoragePoolEventDeregisterAny", since: "2.0.0", target: &api.virConnectStoragePoolEventDeregisterAny},
+		{name: "virConnectStoragePoolEventRegisterAny", since: "2.0.0", target: &api.virConnectStoragePoolEventRegisterAny},
+		{name: "virConnectUnregisterCloseCallback", since: "0.10.0", target: &api.virConnectUnregisterCloseCallback},
+		{name: "virCopyLastError", since: "0.1.0", target: &api.virCopyLastError},
+		{name: "virDefaultErrorFunc", since: "0.1.0", target: &api.virDefaultErrorFunc},
+		{name: "virDomainAbortJob", since: "0.7.7", target: &api.virDomainAbortJob},
+		{name: "virDomainAbortJobFlags", since: "8.5.0", target: &api.virDomainAbortJobFlags},
+		{name: "virDomainAddIOThread", since: "1.2.15", target: &api.virDomainAddIOThread},
+		{name: "virDomainAgentSetResponseTimeout", since: "5.10.0", target: &api.virDomainAgentSetResponseTimeout},
+		{name: "virDomainAttachDevice", since: "0.1.9", target: &api.virDomainAttachDevice},
+		{name: "virDomainAttachDeviceFlags", since: "0.7.7", target: &api.virDomainAttachDeviceFlags},
+		{name: "virDomainAuthorizedSSHKeysGet", since: "6.10.0", target: &api.virDomainAuthorizedSSHKeysGet},
+		{name: "virDomainAuthorizedSSHKeysSet", since: "6.10.0", target: &api.virDomainAuthorizedSSHKeysSet},
+		{name: "virDomainBackupBegin", since: "6.0.0", target: &api.virDomainBackupBegin},
+		{name: "virDomainBackupGetXMLDesc", since: "6.0.0", target: &api.virDomainBackupGetXMLDesc},
+		{name: "virDomainBlockCommit", since: "0.10.2", target: &api.virDomainBlockCommit},
+		{name: "virDomainBlockCopy", since: "1.2.8", target: &api.virDomainBlockCopy},
+		{name: "virDomainBlockJobAbort", since: "0.9.4", target: &api.virDomainBlockJobAbort},
+		{name: "virDomainBlockJobSetSpeed", since: "0.9.4", target: &api.virDomainBlockJobSetSpeed},
+		{name: "virDomainBlockPeek", since: "0.4.2", target: &api.virDomainBlockPeek},
+		{name: "virDomainBlockPull", since: "0.9.4", target: &api.virDomainBlockPull},
+		{name: "virDomainBlockRebase", since: "0.9.10", target: &api.virDomainBlockRebase},
+		{name: "virDomainBlockResize", since: "0.9.8", target: &api.virDomainBlockResize},
+		{name: "virDomainBlockStats", since: "0.3.2", target: &api.virDomainBlockStats},
+		{name: "virDomainBlockStatsFlags", since: "0.9.5", target: &api.virDomainBlockStatsFlags},
+		{name: "virDomainCheckpointCreateXML", since: "5.6.0", target: &api.virDomainCheckpointCreateXML},
+		{name: "virDomainCheckpointDelete", since: "5.6.0", target: &api.virDomainCheckpointDelete},
+		{name: "virDomainCheckpointFree", since: "5.6.0", target: &api.virDomainCheckpointFree},
+		{name: "virDomainCheckpointGetConnect", since: "5.6.0", target: &api.virDomainCheckpointGetConnect},
+		{name: "virDomainCheckpointGetDomain", since: "5.6.0", target: &api.virDomainCheckpointGetDomain},
+		{name: "virDomainCheckpointGetName", since: "5.6.0", target: &api.virDomainCheckpointGetName},
+		{name: "virDomainCheckpointGetParent", since: "5.6.0", target: &api.virDomainCheckpointGetParent},
+		{name: "virDomainCheckpointGetXMLDesc", since: "5.6.0", target: &api.virDomainCheckpointGetXMLDesc},
+		{name: "virDomainCheckpointListAllChildren", since: "5.6.0", target: &api.virDomainCheckpointListAllChildren},
+		{name: "virDomainCheckpointLookupByName", since: "5.6.0", target: &api.virDomainCheckpointLookupByName},
+		{name: "virDomainCheckpointRef", since: "5.6.0", target: &api.virDomainCheckpointRef},
+		{name: "virDomainCoreDump", since: "0.1.9", target: &api.virDomainCoreDump},
+		{name: "virDomainCoreDumpWithFormat", since: "1.2.3", target: &api.virDomainCoreDumpWithFormat},
+		{name: "virDomainCreate", since: "0.1.1", target: &api.virDomainCreate},
+		{name: "virDomainCreateLinux", since: "0.0.3", target: &api.virDomainCreateLinux},
+		{name: "virDomainCreateWithFiles", since: "1.1.1", target: &api.virDomainCreateWithFiles},
+		{name: "virDomainCreateWithFlags", since: "0.8.2", target: &api.virDomainCreateWithFlags},
+		{name: "virDomainCreateXML", since: "0.5.0", target: &api.virDomainCreateXML},
+		{name: "virDomainCreateXMLWithFiles", since: "1.1.1", target: &api.virDomainCreateXMLWithFiles},
+		{name: "virDomainDefineXML", since: "0.1.1", target: &api.virDomainDefineXML},
+		{name: "virDomainDefineXMLFlags", since: "1.2.12", target: &api.virDomainDefineXMLFlags},
+		{name: "virDomainDelIOThread", since: "1.2.15", target: &api.virDomainDelIOThread},
+		{name: "virDomainDelThrottleGroup", since: "11.2.0", target: &api.virDomainDelThrottleGroup},
+		{name: "virDomainDestroy", since: "0.0.3", target: &api.virDomainDestroy},
+		{name: "virDomainDestroyFlags", since: "0.9.4", target: &api.virDomainDestroyFlags},
+		{name: "virDomainDetachDevice", since: "0.1.9", target: &api.virDomainDetachDevice},
+		{name: "virDomainDetachDeviceAlias", since: "4.4.0", target: &api.virDomainDetachDeviceAlias},
+		{name: "virDomainDetachDeviceFlags", since: "0.7.7", target: &api.virDomainDetachDeviceFlags},
+		{name: "virDomainFDAssociate", since: "9.0.0", target: &api.virDomainFDAssociate},
+		{name: "virDomainFSFreeze", since: "1.2.5", target: &api.virDomainFSFreeze},
+		{name: "virDomainFSInfoFree", since: "1.2.11", target: &api.virDomainFSInfoFree},
+		{name: "virDomainFSThaw", since: "1.2.5", target: &api.virDomainFSThaw},
+		{name: "virDomainFSTrim", since: "1.0.1", target: &api.virDomainFSTrim},
+		{name: "virDomainFree", since: "0.0.3", target: &api.virDomainFree},
+		{name: "virDomainGetAutostart", since: "0.2.1", target: &api.virDomainGetAutostart},
+		{name: "virDomainGetAutostartOnce", since: "11.2.0", target: &api.virDomainGetAutostartOnce},
+		{name: "virDomainGetBlkioParameters", since: "0.9.0", target: &api.virDomainGetBlkioParameters},
+		{name: "virDomainGetBlockInfo", since: "0.8.1", target: &api.virDomainGetBlockInfo},
+		{name: "virDomainGetBlockIoTune", since: "0.9.8", target: &api.virDomainGetBlockIoTune},
+		{name: "virDomainGetBlockJobInfo", since: "0.9.4", target: &api.virDomainGetBlockJobInfo},
+		{name: "virDomainGetCPUStats", since: "0.9.10", target: &api.virDomainGetCPUStats},
+		{name: "virDomainGetConnect", since: "0.3.0", target: &api.virDomainGetConnect},
+		{name: "virDomainGetControlInfo", since: "0.9.3", target: &api.virDomainGetControlInfo},
+		{name: "virDomainGetDiskErrors", since: "0.9.10", target: &api.virDomainGetDiskErrors},
+		{name: "virDomainGetEmulatorPinInfo", since: "0.10.0", target: &api.virDomainGetEmulatorPinInfo},
+		{name: "virDomainGetFSInfo", since: "1.2.11", target: &api.virDomainGetFSInfo},
+		{name: "virDomainGetGuestInfo", since: "5.7.0", target: &api.virDomainGetGuestInfo},
+		{name: "virDomainGetGuestVcpus", since: "2.0.0", target: &api.virDomainGetGuestVcpus},
+		{name: "virDomainGetHostname", since: "0.10.0", target: &api.virDomainGetHostname},
+		{name: "virDomainGetID", since: "0.0.3", target: &api.virDomainGetID},
+		{name: "virDomainGetIOThreadInfo", since: "1.2.14", target: &api.virDomainGetIOThreadInfo},
+		{name: "virDomainGetInfo", since: "0.0.3", target: &api.virDomainGetInfo},
+		{name: "virDomainGetInterfaceParameters", since: "0.9.9", target: &api.virDomainGetInterfaceParameters},
+		{name: "virDomainGetJobInfo", since: "0.7.7", target: &api.virDomainGetJobInfo},
+		{name: "virDomainGetJobStats", since: "1.0.3", target: &api.virDomainGetJobStats},
+		{name: "virDomainGetLaunchSecurityInfo", since: "4.5.0", target: &api.virDomainGetLaunchSecurityInfo},
+		{name: "virDomainGetMaxMemory", since: "0.0.3", target: &api.virDomainGetMaxMemory},
+		{name: "virDomainGetMaxVcpus", since: "0.2.1", target: &api.virDomainGetMaxVcpus},
+		{name: "virDomainGetMemoryParameters", since: "0.8.5", target: &api.virDomainGetMemoryParameters},
+		{name: "virDomainGetMessages", since: "7.1.0", target: &api.virDomainGetMessages},
+		{name: "virDomainGetMetadata", since: "0.9.10", target: &api.virDomainGetMetadata},
+		{name: "virDomainGetName", since: "0.0.3", target: &api.virDomainGetName},
+		{name: "virDomainGetNumaParameters", since: "0.9.9", target: &api.virDomainGetNumaParameters},
+		{name: "virDomainGetOSType", since: "0.0.3", target: &api.virDomainGetOSType},
+		{name: "virDomainGetPerfEvents", since: "1.3.3", target: &api.virDomainGetPerfEvents},
+		{name: "virDomainGetSchedulerParameters", since: "0.2.3", target: &api.virDomainGetSchedulerParameters},
+		{name: "virDomainGetSchedulerParametersFlags", since: "0.9.2", target: &api.virDomainGetSchedulerParametersFlags},
+		{name: "virDomainGetSchedulerType", since: "0.2.3", target: &api.virDomainGetSchedulerType},
+		{name: "virDomainGetSecurityLabel", since: "0.6.1", target: &api.virDomainGetSecurityLabel},
+		{name: "virDomainGetSecurityLabelList", since: "0.10.0", target: &api.virDomainGetSecurityLabelList},
+		{name: "virDomainGetState", since: "0.9.2", target: &api.virDomainGetState},
+		{name: "virDomainGetTime", since: "1.2.5", target: &api.virDomainGetTime},
+		{name: "virDomainGetUUID", since: "0.0.5", target: &api.virDomainGetUUID},
+		{name: "virDomainGetUUIDString", since: "0.1.1", target: &api.virDomainGetUUIDString},
+		{name: "virDomainGetVcpuPinInfo", since: "0.9.3", target: &api.virDomainGetVcpuPinInfo},
+		{name: "virDomainGetVcpus", since: "0.1.4", target: &api.virDomainGetVcpus},
+		{name: "virDomainGetVcpusFlags", since: "0.8.5", target: &api.virDomainGetVcpusFlags},
+		{name: "virDomainGetXMLDesc", since: "0.0.3", target: &api.virDomainGetXMLDesc},
+		{name: "virDomainGraphicsReload", since: "10.2.0", target: &api.virDomainGraphicsReload},
+		{name: "virDomainHasCurrentSnapshot", since: "0.8.0", target: &api.virDomainHasCurrentSnapshot},
+		{name: "virDomainHasManagedSaveImage", since: "0.8.0", target: &api.virDomainHasManagedSaveImage},
+		{name: "virDomainIOThreadInfoFree", since: "1.2.14", target: &api.virDomainIOThreadInfoFree},
+		{name: "virDomainInjectNMI", since: "0.9.2", target: &api.virDomainInjectNMI},
+		{name: "virDomainInterfaceAddresses", since: "1.2.14", target: &api.virDomainInterfaceAddresses},
+		{name: "virDomainInterfaceFree", since: "1.2.14", target: &api.virDomainInterfaceFree},
+		{name: "virDomainInterfaceStats", since: "0.3.2", target: &api.virDomainInterfaceStats},
+		{name: "virDomainIsActive", since: "0.7.3", target: &api.virDomainIsActive},
+		{name: "virDomainIsPersistent", since: "0.7.3", target: &api.virDomainIsPersistent},
+		{name: "virDomainIsUpdated", since: "0.8.6", target: &api.virDomainIsUpdated},
+		{name: "virDomainListAllCheckpoints", since: "5.6.0", target: &api.virDomainListAllCheckpoints},
+		{name: "virDomainListAllSnapshots", since: "0.9.13", target: &api.virDomainListAllSnapshots},
+		{name: "virDomainListGetStats", since: "1.2.8", target: &api.virDomainListGetStats},
+		{name: "virDomainLookupByID", since: "0.0.3", target: &api.virDomainLookupByID},
+		{name: "virDomainLookupByName", since: "0.0.3", target: &api.virDomainLookupByName},
+		{name: "virDomainLookupByUUID", since: "0.0.5", target: &api.virDomainLookupByUUID},
+		{name: "virDomainLookupByUUIDString", since: "0.1.1", target: &api.virDomainLookupByUUIDString},
+		{name: "virDomainManagedSave", since: "0.8.0", target: &api.virDomainManagedSave},
+		{name: "virDomainManagedSaveDefineXML", since: "3.7.0", target: &api.virDomainManagedSaveDefineXML},
+		{name: "virDomainManagedSaveGetXMLDesc", since: "3.7.0", target: &api.virDomainManagedSaveGetXMLDesc},
+		{name: "virDomainManagedSaveRemove", since: "0.8.0", target: &api.virDomainManagedSaveRemove},
+		{name: "virDomainMemoryPeek", since: "0.4.2", target: &api.virDomainMemoryPeek},
+		{name: "virDomainMemoryStats", since: "0.7.5", target: &api.virDomainMemoryStats},
+		{name: "virDomainMigrate", since: "0.3.2", target: &api.virDomainMigrate},
+		{name: "virDomainMigrate2", since: "0.9.2", target: &api.virDomainMigrate2},
+		{name: "virDomainMigrate3", since: "1.1.0", target: &api.virDomainMigrate3},
+		{name: "virDomainMigrateGetCompressionCache", since: "1.0.3", target: &api.virDomainMigrateGetCompressionCache},
+		{name: "virDomainMigrateGetMaxDowntime", since: "3.7.0", target: &api.virDomainMigrateGetMaxDowntime},
+		{name: "virDomainMigrateGetMaxSpeed", since: "0.9.5", target: &api.virDomainMigrateGetMaxSpeed},
+		{name: "virDomainMigrateSetCompressionCache", since: "1.0.3", target: &api.virDomainMigrateSetCompressionCache},
+		{name: "virDomainMigrateSetMaxDowntime", since: "0.8.0", target: &api.virDomainMigrateSetMaxDowntime},
+		{name: "virDomainMigrateSetMaxSpeed", since: "0.9.0", target: &api.virDomainMigrateSetMaxSpeed},
+		{name: "virDomainMigrateStartPostCopy", since: "1.3.3", target: &api.virDomainMigrateStartPostCopy},
+		{name: "virDomainMigrateToURI", since: "0.7.2", target: &api.virDomainMigrateToURI},
+		{name: "virDomainMigrateToURI2", since: "0.9.2", target: &api.virDomainMigrateToURI2},
+		{name: "virDomainMigrateToURI3", since: "1.1.0", target: &api.virDomainMigrateToURI3},
+		{name: "virDomainOpenChannel", since: "1.0.2", target: &api.virDomainOpenChannel},
+		{name: "virDomainOpenConsole", since: "0.8.6", target: &api.virDomainOpenConsole},
+		{name: "virDomainOpenGraphics", since: "0.9.7", target: &api.virDomainOpenGraphics},
+		{name: "virDomainOpenGraphicsFD", since: "1.2.8", target: &api.virDomainOpenGraphicsFD},
+		{name: "virDomainPMSuspendForDuration", since: "0.9.10", target: &api.virDomainPMSuspendForDuration},
+		{name: "virDomainPMWakeup", since: "0.9.11", target: &api.virDomainPMWakeup},
+		{name: "virDomainPinEmulator", since: "0.10.0", target: &api.virDomainPinEmulator},
+		{name: "virDomainPinIOThread", since: "1.2.14", target: &api.virDomainPinIOThread},
+		{name: "virDomainPinVcpu", since: "0.1.4", target: &api.virDomainPinVcpu},
+		{name: "virDomainPinVcpuFlags", since: "0.9.3", target: &api.virDomainPinVcpuFlags},
+		{name: "virDomainReboot", since: "0.1.0", target: &api.virDomainReboot},
+		{name: "virDomainRef", since: "0.6.0", target: &api.virDomainRef},
+		{name: "virDomainRename", since: "1.2.19", target: &api.virDomainRename},
+		{name: "virDomainReset", since: "0.9.7", target: &api.virDomainReset},
+		{name: "virDomainRestore", since: "0.0.3", target: &api.virDomainRestore},
+		{name: "virDomainRestoreFlags", since: "0.9.4", target: &api.virDomainRestoreFlags},
+		{name: "virDomainRestoreParams", since: "8.4.0", target: &api.virDomainRestoreParams},
+		{name: "virDomainResume", since: "0.0.3", target: &api.virDomainResume},
+		{name: "virDomainRevertToSnapshot", since: "0.8.0", target: &api.virDomainRevertToSnapshot},
+		{name: "virDomainSave", since: "0.0.3", target: &api.virDomainSave},
+		{name: "virDomainSaveFlags", since: "0.9.4", target: &api.virDomainSaveFlags},
+		{name: "virDomainSaveImageDefineXML", since: "0.9.4", target: &api.virDomainSaveImageDefineXML},
+		{name: "virDomainSaveImageGetXMLDesc", since: "0.9.4", target: &api.virDomainSaveImageGetXMLDesc},
+		{name: "virDomainSaveParams", since: "8.4.0", target: &api.virDomainSaveParams},
+		{name: "virDomainScreenshot", since: "0.9.2", target: &api.virDomainScreenshot},
+		{name: "virDomainSendKey", since: "0.9.3", target: &api.virDomainSendKey},
+		{name: "virDomainSendProcessSignal", since: "1.0.1", target: &api.virDomainSendProcessSignal},
+		{name: "virDomainSetAutostart", since: "0.2.1", target: &api.virDomainSetAutostart},
+		{name: "virDomainSetAutostartOnce", since: "11.2.0", target: &api.virDomainSetAutostartOnce},
+		{name: "virDomainSetBlkioParameters", since: "0.9.0", target: &api.virDomainSetBlkioParameters},
+		{name: "virDomainSetBlockIoTune", since: "0.9.8", target: &api.virDomainSetBlockIoTune},
+		{name: "virDomainSetBlockThreshold", since: "3.1.0", target: &api.virDomainSetBlockThreshold},
+		{name: "virDomainSetGuestVcpus", since: "2.0.0", target: &api.virDomainSetGuestVcpus},
+		{name: "virDomainSetIOThreadParams", since: "4.10.0", target: &api.virDomainSetIOThreadParams},
+		{name: "virDomainSetInterfaceParameters", since: "0.9.9", target: &api.virDomainSetInterfaceParameters},
+		{name: "virDomainSetLaunchSecurityState", since: "8.0.0", target: &api.virDomainSetLaunchSecurityState},
+		{name: "virDomainSetLifecycleAction", since: "3.9.0", target: &api.virDomainSetLifecycleAction},
+		{name: "virDomainSetMaxMemory", since: "0.0.3", target: &api.virDomainSetMaxMemory},
+		{name: "virDomainSetMemory", since: "0.1.1", target: &api.virDomainSetMemory},
+		{name: "virDomainSetMemoryFlags", since: "0.9.0", target: &api.virDomainSetMemoryFlags},
+		{name: "virDomainSetMemoryParameters", since: "0.8.5", target: &api.virDomainSetMemoryParameters},
+		{name: "virDomainSetMemoryStatsPeriod", since: "1.1.1", target: &api.virDomainSetMemoryStatsPeriod},
+		{name: "virDomainSetMetadata", since: "0.9.10", target: &api.virDomainSetMetadata},
+		{name: "virDomainSetNumaParameters", since: "0.9.9", target: &api.virDomainSetNumaParameters},
+		{name: "virDomainSetPerfEvents", since: "1.3.3", target: &api.virDomainSetPerfEvents},
+		{name: "virDomainSetSchedulerParameters", since: "0.2.3", target: &api.virDomainSetSchedulerParameters},
+		{name: "virDomainSetSchedulerParametersFlags", since: "0.9.2", target: &api.virDomainSetSchedulerParametersFlags},
+		{name: "virDomainSetThrottleGroup", since: "11.2.0", target: &api.virDomainSetThrottleGroup},
+		{name: "virDomainSetTime", since: "1.2.5", target: &api.virDomainSetTime},
+		{name: "virDomainSetUserPassword", since: "1.2.16", target: &api.virDomainSetUserPassword},
+		{name: "virDomainSetVcpu", since: "3.1.0", target: &api.virDomainSetVcpu},
+		{name: "virDomainSetVcpus", since: "0.1.4", target: &api.virDomainSetVcpus},
+		{name: "virDomainSetVcpusFlags", since: "0.8.5", target: &api.virDomainSetVcpusFlags},
+		{name: "virDomainShutdown", since: "0.0.3", target: &api.virDomainShutdown},
+		{name: "virDomainShutdownFlags", since: "0.9.10", target: &api.virDomainShutdownFlags},
+		{name: "virDomainSnapshotCreateXML", since: "0.8.0", target: &api.virDomainSnapshotCreateXML},
+		{name: "virDomainSnapshotCurrent", since: "0.8.0", target: &api.virDomainSnapshotCurrent},
+		{name: "virDomainSnapshotDelete", since: "0.8.0", target: &api.virDomainSnapshotDelete},
+		{name: "virDomainSnapshotFree", since: "0.8.0", target: &api.virDomainSnapshotFree},
+		{name: "virDomainSnapshotGetConnect", since: "0.9.5", target: &api.virDomainSnapshotGetConnect},
+		{name: "virDomainSnapshotGetDomain", since: "0.9.5", target: &api.virDomainSnapshotGetDomain},
+		{name: "virDomainSnapshotGetName", since: "0.9.5", target: &api.virDomainSnapshotGetName},
+		{name: "virDomainSnapshotGetParent", since: "0.9.7", target: &api.virDomainSnapshotGetParent},
+		{name: "virDomainSnapshotGetXMLDesc", since: "0.8.0", target: &api.virDomainSnapshotGetXMLDesc},
+		{name: "virDomainSnapshotHasMetadata", since: "0.9.13", target: &api.virDomainSnapshotHasMetadata},
+		{name: "virDomainSnapshotIsCurrent", since: "0.9.13", target: &api.virDomainSnapshotIsCurrent},
+		{name: "virDomainSnapshotListAllChildren", since: "0.9.13", target: &api.virDomainSnapshotListAllChildren},
+		{name: "virDomainSnapshotListChildrenNames", since: "0.9.7", target: &api.virDomainSnapshotListChildrenNames},
+		{name: "virDomainSnapshotListNames", since: "0.8.0", target: &api.virDomainSnapshotListNames},
+		{name: "virDomainSnapshotLookupByName", since: "0.8.0", target: &api.virDomainSnapshotLookupByName},
+		{name: "virDomainSnapshotNum", since: "0.8.0", target: &api.virDomainSnapshotNum},
+		{name: "virDomainSnapshotNumChildren", since: "0.9.7", target: &api.virDomainSnapshotNumChildren},
+		{name: "virDomainSnapshotRef", since: "0.9.13", target: &api.virDomainSnapshotRef},
+		{name: "virDomainStartDirtyRateCalc", since: "7.2.0", target: &api.virDomainStartDirtyRateCalc},
+		{name: "virDomainStatsRecordListFree", since: "1.2.8", target: &api.virDomainStatsRecordListFree},
+		{name: "virDomainSuspend", since: "0.0.3", target: &api.virDomainSuspend},
+		{name: "virDomainUndefine", since: "0.1.1", target: &api.virDomainUndefine},
+		{name: "virDomainUndefineFlags", since: "0.9.4", target: &api.virDomainUndefineFlags},
+		{name: "virDomainUpdateDeviceFlags", since: "0.8.0", target: &api.virDomainUpdateDeviceFlags},
+		{name: "virEventAddHandle", since: "0.9.3", target: &api.virEventAddHandle},
+		{name: "virEventAddTimeout", since: "0.9.3", target: &api.virEventAddTimeout},
+		{name: "virEventRegisterDefaultImpl", since: "0.9.0", target: &api.virEventRegisterDefaultImpl},
+		{name: "virEventRegisterImpl", since: "0.5.0", target: &api.virEventRegisterImpl},
+		{name: "virEventRemoveHandle", since: "0.9.3", target: &api.virEventRemoveHandle},
+		{name: "virEventRemoveTimeout", since: "0.9.3", target: &api.virEventRemoveTimeout},
+		{name: "virEventRunDefaultImpl", since: "0.9.0", target: &api.virEventRunDefaultImpl},
+		{name: "virEventUpdateHandle", since: "0.9.3", target: &api.virEventUpdateHandle},
+		{name: "virEventUpdateTimeout", since: "0.9.3", target: &api.virEventUpdateTimeout},
+		{name: "virFreeError", since: "0.6.1", target: &api.virFreeError},
+		{name: "virGetLastError", since: "0.1.0", target: &api.virGetLastError},
+		{name: "virGetLastErrorCode", since: "4.5.0", target: &api.virGetLastErrorCode},
+		{name: "virGetLastErrorDomain", since: "4.5.0", target: &api.virGetLastErrorDomain},
+		{name: "virGetLastErrorMessage", since: "1.0.6", target: &api.virGetLastErrorMessage},
+		{name: "virGetVersion", since: "0.0.3", target: &api.virGetVersion},
+		{name: "virInitialize", since: "0.1.0", target: &api.virInitialize},
+		{name: "virInterfaceChangeBegin", since: "0.9.2", target: &api.virInterfaceChangeBegin},
+		{name: "virInterfaceChangeCommit", since: "0.9.2", target: &api.virInterfaceChangeCommit},
+		{name: "virInterfaceChangeRollback", since: "0.9.2", target: &api.virInterfaceChangeRollback},
+		{name: "virInterfaceCreate", since: "0.6.4", target: &api.virInterfaceCreate},
+		{name: "virInterfaceDefineXML", since: "0.6.4", target: &api.virInterfaceDefineXML},
+		{name: "virInterfaceDestroy", since: "0.6.4", target: &api.virInterfaceDestroy},
+		{name: "virInterfaceFree", since: "0.6.4", target: &api.virInterfaceFree},
+		{name: "virInterfaceGetConnect", since: "0.6.4", target: &api.virInterfaceGetConnect},
+		{name: "virInterfaceGetMACString", since: "0.6.4", target: &api.virInterfaceGetMACString},
+		{name: "virInterfaceGetName", since: "0.6.4", target: &api.virInterfaceGetName},
+		{name: "virInterfaceGetXMLDesc", since: "0.6.4", target: &api.virInterfaceGetXMLDesc},
+		{name: "virInterfaceIsActive", since: "0.7.3", target: &api.virInterfaceIsActive},
+		{name: "virInterfaceLookupByMACString", since: "0.6.4", target: &api.virInterfaceLookupByMACString},
+		{name: "virInterfaceLookupByName", since: "0.6.4", target: &api.virInterfaceLookupByName},
+		{name: "virInterfaceRef", since: "0.6.4", target: &api.virInterfaceRef},
+		{name: "virInterfaceUndefine", since: "0.6.4", target: &api.virInterfaceUndefine},
+		{name: "virNWFilterBindingCreateXML", since: "4.5.0", target: &api.virNWFilterBindingCreateXML},
+		{name: "virNWFilterBindingDelete", since: "4.5.0", target: &api.virNWFilterBindingDelete},
+		{name: "virNWFilterBindingFree", since: "4.5.0", target: &api.virNWFilterBindingFree},
+		{name: "virNWFilterBindingGetFilterName", since: "4.5.0", target: &api.virNWFilterBindingGetFilterName},
+		{name: "virNWFilterBindingGetPortDev", since: "4.5.0", target: &api.virNWFilterBindingGetPortDev},
+		{name: "virNWFilterBindingGetXMLDesc", since: "4.5.0", target: &api.virNWFilterBindingGetXMLDesc},
+		{name: "virNWFilterBindingLookupByPortDev", since: "4.5.0", target: &api.virNWFilterBindingLookupByPortDev},
+		{name: "virNWFilterBindingRef", since: "4.5.0", target: &api.virNWFilterBindingRef},
+		{name: "virNWFilterDefineXML", since: "0.8.0", target: &api.virNWFilterDefineXML},
+		{name: "virNWFilterDefineXMLFlags", since: "7.7.0", target: &api.virNWFilterDefineXMLFlags},
+		{name: "virNWFilterFree", since: "0.8.0", target: &api.virNWFilterFree},
+		{name: "virNWFilterGetName", since: "0.8.0", target: &api.virNWFilterGetName},
+		{name: "virNWFilterGetUUID", since: "0.8.0", target: &api.virNWFilterGetUUID},
+		{name: "virNWFilterGetUUIDString", since: "0.8.0", target: &api.virNWFilterGetUUIDString},
+		{name: "virNWFilterGetXMLDesc", since: "0.8.0", target: &api.virNWFilterGetXMLDesc},
+		{name: "virNWFilterLookupByName", since: "0.8.0", target: &api.virNWFilterLookupByName},
+		{name: "virNWFilterLookupByUUID", since: "0.8.0", target: &api.virNWFilterLookupByUUID},
+		{name: "virNWFilterLookupByUUIDString", since: "0.8.0", target: &api.virNWFilterLookupByUUIDString},
+		{name: "virNWFilterRef", since: "0.8.0", target: &api.virNWFilterRef},
+		{name: "virNWFilterUndefine", since: "0.8.0", target: &api.virNWFilterUndefine},
+		{name: "virNetworkCreate", since: "0.2.0", target: &api.virNetworkCreate},
+		{name: "virNetworkCreateXML", since: "0.2.0", target: &api.virNetworkCreateXML},
+		{name: "virNetworkCreateXMLFlags", since: "7.8.0", target: &api.virNetworkCreateXMLFlags},
+		{name: "virNetworkDHCPLeaseFree", since: "1.2.6", target: &api.virNetworkDHCPLeaseFree},
+		{name: "virNetworkDefineXML", since: "0.2.0", target: &api.virNetworkDefineXML},
+		{name: "virNetworkDefineXMLFlags", since: "7.7.0", target: &api.virNetworkDefineXMLFlags},
+		{name: "virNetworkDestroy", since: "0.2.0", target: &api.virNetworkDestroy},
+		{name: "virNetworkFree", since: "0.2.0", target: &api.virNetworkFree},
+		{name: "virNetworkGetAutostart", since: "0.2.1", target: &api.virNetworkGetAutostart},
+		{name: "virNetworkGetBridgeName", since: "0.2.0", target: &api.virNetworkGetBridgeName},
+		{name: "virNetworkGetConnect", since: "0.3.0", target: &api.virNetworkGetConnect},
+		{name: "virNetworkGetDHCPLeases", since: "1.2.6", target: &api.virNetworkGetDHCPLeases},
+		{name: "virNetworkGetMetadata", since: "9.7.0", target: &api.virNetworkGetMetadata},
+		{name: "virNetworkGetName", since: "0.2.0", target: &api.virNetworkGetName},
+		{name: "virNetworkGetUUID", since: "0.2.0", target: &api.virNetworkGetUUID},
+		{name: "virNetworkGetUUIDString", since: "0.2.0", target: &api.virNetworkGetUUIDString},
+		{name: "virNetworkGetXMLDesc", since: "0.2.0", target: &api.virNetworkGetXMLDesc},
+		{name: "virNetworkIsActive", since: "0.7.3", target: &api.virNetworkIsActive},
+		{name: "virNetworkIsPersistent", since: "0.7.3", target: &api.virNetworkIsPersistent},
+		{name: "virNetworkListAllPorts", since: "5.5.0", target: &api.virNetworkListAllPorts},
+		{name: "virNetworkLookupByName", since: "0.2.0", target: &api.virNetworkLookupByName},
+		{name: "virNetworkLookupByUUID", since: "0.2.0", target: &api.virNetworkLookupByUUID},
+		{name: "virNetworkLookupByUUIDString", since: "0.2.0", target: &api.virNetworkLookupByUUIDString},
+		{name: "virNetworkPortCreateXML", since: "5.5.0", target: &api.virNetworkPortCreateXML},
+		{name: "virNetworkPortDelete", since: "5.5.0", target: &api.virNetworkPortDelete},
+		{name: "virNetworkPortFree", since: "5.5.0", target: &api.virNetworkPortFree},
+		{name: "virNetworkPortGetNetwork", since: "5.5.0", target: &api.virNetworkPortGetNetwork},
+		{name: "virNetworkPortGetParameters", since: "5.5.0", target: &api.virNetworkPortGetParameters},
+		{name: "virNetworkPortGetUUID", since: "5.5.0", target: &api.virNetworkPortGetUUID},
+		{name: "virNetworkPortGetUUIDString", since: "5.5.0", target: &api.virNetworkPortGetUUIDString},
+		{name: "virNetworkPortGetXMLDesc", since: "5.5.0", target: &api.virNetworkPortGetXMLDesc},
+		{name: "virNetworkPortLookupByUUID", since: "5.5.0", target: &api.virNetworkPortLookupByUUID},
+		{name: "virNetworkPortLookupByUUIDString", since: "5.5.0", target: &api.virNetworkPortLookupByUUIDString},
+		{name: "virNetworkPortRef", since: "5.5.0", target: &api.virNetworkPortRef},
+		{name: "virNetworkPortSetParameters", since: "5.5.0", target: &api.virNetworkPortSetParameters},
+		{name: "virNetworkRef", since: "0.6.0", target: &api.virNetworkRef},
+		{name: "virNetworkSetAutostart", since: "0.2.1", target: &api.virNetworkSetAutostart},
+		{name: "virNetworkSetMetadata", since: "9.7.0", target: &api.virNetworkSetMetadata},
+		{name: "virNetworkUndefine", since: "0.2.0", target: &api.virNetworkUndefine},
+		{name: "virNetworkUpdate", since: "0.10.2", target: &api.virNetworkUpdate},
+		{name: "virNodeAllocPages", since: "1.2.9", target: &api.virNodeAllocPages},
+		{name: "virNodeDeviceCreate", since: "7.3.0", target: &api.virNodeDeviceCreate},
+		{name: "virNodeDeviceCreateXML", since: "0.6.3", target: &api.virNodeDeviceCreateXML},
+		{name: "virNodeDeviceDefineXML", since: "7.3.0", target: &api.virNodeDeviceDefineXML},
+		{name: "virNodeDeviceDestroy", since: "0.6.3", target: &api.virNodeDeviceDestroy},
+		{name: "virNodeDeviceDetachFlags", since: "1.0.5", target: &api.virNodeDeviceDetachFlags},
+		{name: "virNodeDeviceDettach", since: "0.6.1", target: &api.virNodeDeviceDettach},
+		{name: "virNodeDeviceFree", since: "0.5.0", target: &api.virNodeDeviceFree},
+		{name: "virNodeDeviceGetAutostart", since: "7.8.0", target: &api.virNodeDeviceGetAutostart},
+		{name: "virNodeDeviceGetName", since: "0.5.0", target: &api.virNodeDeviceGetName},
+		{name: "virNodeDeviceGetParent", since: "0.5.0", target: &api.virNodeDeviceGetParent},
+		{name: "virNodeDeviceGetXMLDesc", since: "0.5.0", target: &api.virNodeDeviceGetXMLDesc},
+		{name: "virNodeDeviceIsActive", since: "7.8.0", target: &api.virNodeDeviceIsActive},
+		{name: "virNodeDeviceIsPersistent", since: "7.8.0", target: &api.virNodeDeviceIsPersistent},
+		{name: "virNodeDeviceListCaps", since: "0.5.0", target: &api.virNodeDeviceListCaps},
+		{name: "virNodeDeviceLookupByName", since: "0.5.0", target: &api.virNodeDeviceLookupByName},
+		{name: "virNodeDeviceLookupSCSIHostByWWN", since: "1.0.3", target: &api.virNodeDeviceLookupSCSIHostByWWN},
+		{name: "virNodeDeviceNumOfCaps", since: "0.5.0", target: &api.virNodeDeviceNumOfCaps},
+		{name: "virNodeDeviceReAttach", since: "0.6.1", target: &api.virNodeDeviceReAttach},
+		{name: "virNodeDeviceRef", since: "0.6.0", target: &api.virNodeDeviceRef},
+		{name: "virNodeDeviceReset", since: "0.6.1", target: &api.virNodeDeviceReset},
+		{name: "virNodeDeviceSetAutostart", since: "7.8.0", target: &api.virNodeDeviceSetAutostart},
+		{name: "virNodeDeviceUndefine", since: "7.3.0", target: &api.virNodeDeviceUndefine},
+		{name: "virNodeDeviceUpdate", since: "10.1.0", target: &api.virNodeDeviceUpdate},
+		{name: "virNodeGetCPUMap", since: "1.0.0", target: &api.virNodeGetCPUMap},
+		{name: "virNodeGetCPUStats", since: "0.9.3", target: &api.virNodeGetCPUStats},
+		{name: "virNodeGetCellsFreeMemory", since: "0.3.3", target: &api.virNodeGetCellsFreeMemory},
+		{name: "virNodeGetFreeMemory", since: "0.3.3", target: &api.virNodeGetFreeMemory},
+		{name: "virNodeGetFreePages", since: "1.2.6", target: &api.virNodeGetFreePages},
+		{name: "virNodeGetInfo", since: "0.1.0", target: &api.virNodeGetInfo},
+		{name: "virNodeGetMemoryParameters", since: "0.10.2", target: &api.virNodeGetMemoryParameters},
+		{name: "virNodeGetMemoryStats", since: "0.9.3", target: &api.virNodeGetMemoryStats},
+		{name: "virNodeGetSEVInfo", since: "4.5.0", target: &api.virNodeGetSEVInfo},
+		{name: "virNodeGetSecurityModel", since: "0.6.1", target: &api.virNodeGetSecurityModel},
+		{name: "virNodeListDevices", since: "0.5.0", target: &api.virNodeListDevices},
+		{name: "virNodeNumOfDevices", since: "0.5.0", target: &api.virNodeNumOfDevices},
+		{name: "virNodeSetMemoryParameters", since: "0.10.2", target: &api.virNodeSetMemoryParameters},
+		{name: "virNodeSuspendForDuration", since: "0.9.8", target: &api.virNodeSuspendForDuration},
+		{name: "virResetError", since: "0.1.0", target: &api.virResetError},
+		{name: "virResetLastError", since: "0.1.0", target: &api.virResetLastError},
+		{name: "virSaveLastError", since: "0.6.1", target: &api.virSaveLastError},
+		{name: "virSecretDefineXML", since: "0.7.1", target: &api.virSecretDefineXML},
+		{name: "virSecretFree", since: "0.7.1", target: &api.virSecretFree},
+		{name: "virSecretGetConnect", since: "0.7.1", target: &api.virSecretGetConnect},
+		{name: "virSecretGetUUID", since: "0.7.1", target: &api.virSecretGetUUID},
+		{name: "virSecretGetUUIDString", since: "0.7.1", target: &api.virSecretGetUUIDString},
+		{name: "virSecretGetUsageID", since: "0.7.1", target: &api.virSecretGetUsageID},
+		{name: "virSecretGetUsageType", since: "0.7.1", target: &api.virSecretGetUsageType},
+		{name: "virSecretGetValue", since: "0.7.1", target: &api.virSecretGetValue},
+		{name: "virSecretGetXMLDesc", since: "0.7.1", target: &api.virSecretGetXMLDesc},
+		{name: "virSecretLookupByUUID", since: "0.7.1", target: &api.virSecretLookupByUUID},
+		{name: "virSecretLookupByUUIDString", since: "0.7.1", target: &api.virSecretLookupByUUIDString},
+		{name: "virSecretLookupByUsage", since: "0.7.1", target: &api.virSecretLookupByUsage},
+		{name: "virSecretRef", since: "0.7.1", target: &api.virSecretRef},
+		{name: "virSecretSetValue", since: "0.7.1", target: &api.virSecretSetValue},
+		{name: "virSecretUndefine", since: "0.7.1", target: &api.virSecretUndefine},
+		{name: "virSetErrorFunc", since: "0.1.0", target: &api.virSetErrorFunc},
+		{name: "virStoragePoolBuild", since: "0.4.1", target: &api.virStoragePoolBuild},
+		{name: "virStoragePoolCreate", since: "0.4.1", target: &api.virStoragePoolCreate},
+		{name: "virStoragePoolCreateXML", since: "0.4.1", target: &api.virStoragePoolCreateXML},
+		{name: "virStoragePoolDefineXML", since: "0.4.1", target: &api.virStoragePoolDefineXML},
+		{name: "virStoragePoolDelete", since: "0.4.1", target: &api.virStoragePoolDelete},
+		{name: "virStoragePoolDestroy", since: "0.4.1", target: &api.virStoragePoolDestroy},
+		{name: "virStoragePoolFree", since: "0.4.1", target: &api.virStoragePoolFree},
+		{name: "virStoragePoolGetAutostart", since: "0.4.1", target: &api.virStoragePoolGetAutostart},
+		{name: "virStoragePoolGetConnect", since: "0.4.1", target: &api.virStoragePoolGetConnect},
+		{name: "virStoragePoolGetInfo", since: "0.4.1", target: &api.virStoragePoolGetInfo},
+		{name: "virStoragePoolGetName", since: "0.4.1", target: &api.virStoragePoolGetName},
+		{name: "virStoragePoolGetUUID", since: "0.4.1", target: &api.virStoragePoolGetUUID},
+		{name: "virStoragePoolGetUUIDString", since: "0.4.1", target: &api.virStoragePoolGetUUIDString},
+		{name: "virStoragePoolGetXMLDesc", since: "0.4.1", target: &api.virStoragePoolGetXMLDesc},
+		{name: "virStoragePoolIsActive", since: "0.7.3", target: &api.virStoragePoolIsActive},
+		{name: "virStoragePoolIsPersistent", since: "0.7.3", target: &api.virStoragePoolIsPersistent},
+		{name: "virStoragePoolListAllVolumes", since: "0.10.2", target: &api.virStoragePoolListAllVolumes},
+		{name: "virStoragePoolListVolumes", since: "0.4.1", target: &api.virStoragePoolListVolumes},
+		{name: "virStoragePoolLookupByName", since: "0.4.1", target: &api.virStoragePoolLookupByName},
+		{name: "virStoragePoolLookupByTargetPath", since: "4.1.0", target: &api.virStoragePoolLookupByTargetPath},
+		{name: "virStoragePoolLookupByUUID", since: "0.4.1", target: &api.virStoragePoolLookupByUUID},
+		{name: "virStoragePoolLookupByUUIDString", since: "0.4.1", target: &api.virStoragePoolLookupByUUIDString},
+		{name: "virStoragePoolLookupByVolume", since: "0.4.1", target: &api.virStoragePoolLookupByVolume},
+		{name: "virStoragePoolNumOfVolumes", since: "0.4.1", target: &api.virStoragePoolNumOfVolumes},
+		{name: "virStoragePoolRef", since: "0.6.0", target: &api.virStoragePoolRef},
+		{name: "virStoragePoolRefresh", since: "0.4.1", target: &api.virStoragePoolRefresh},
+		{name: "virStoragePoolSetAutostart", since: "0.4.1", target: &api.virStoragePoolSetAutostart},
+		{name: "virStoragePoolUndefine", since: "0.4.1", target: &api.virStoragePoolUndefine},
+		{name: "virStorageVolCreateXML", since: "0.4.1", target: &api.virStorageVolCreateXML},
+		{name: "virStorageVolCreateXMLFrom", since: "0.6.4", target: &api.virStorageVolCreateXMLFrom},
+		{name: "virStorageVolDelete", since: "0.4.1", target: &api.virStorageVolDelete},
+		{name: "virStorageVolDownload", since: "0.9.0", target: &api.virStorageVolDownload},
+		{name: "virStorageVolFree", since: "0.4.1", target: &api.virStorageVolFree},
+		{name: "virStorageVolGetConnect", since: "0.4.1", target: &api.virStorageVolGetConnect},
+		{name: "virStorageVolGetInfo", since: "0.4.1", target: &api.virStorageVolGetInfo},
+		{name: "virStorageVolGetInfoFlags", since: "3.0.0", target: &api.virStorageVolGetInfoFlags},
+		{name: "virStorageVolGetKey", since: "0.4.1", target: &api.virStorageVolGetKey},
+		{name: "virStorageVolGetName", since: "0.4.1", target: &api.virStorageVolGetName},
+		{name: "virStorageVolGetPath", since: "0.4.1", target: &api.virStorageVolGetPath},
+		{name: "virStorageVolGetXMLDesc", since: "0.4.1", target: &api.virStorageVolGetXMLDesc},
+		{name: "virStorageVolLookupByKey", since: "0.4.1", target: &api.virStorageVolLookupByKey},
+		{name: "virStorageVolLookupByName", since: "0.4.1", target: &api.virStorageVolLookupByName},
+		{name: "virStorageVolLookupByPath", since: "0.4.1", target: &api.virStorageVolLookupByPath},
+		{name: "virStorageVolRef", since: "0.6.0", target: &api.virStorageVolRef},
+		{name: "virStorageVolResize", since: "0.9.10", target: &api.virStorageVolResize},
+		{name: "virStorageVolUpload", since: "0.9.0", target: &api.virStorageVolUpload},
+		{name: "virStorageVolWipe", since: "0.8.0", target: &api.virStorageVolWipe},
+		{name: "virStorageVolWipePattern", since: "0.9.10", target: &api.virStorageVolWipePattern},
+		{name: "virStreamAbort", since: "0.7.2", target: &api.virStreamAbort},
+		{name: "virStreamEventAddCallback", since: "0.7.2", target: &api.virStreamEventAddCallback},
+		{name: "virStreamEventRemoveCallback", since: "0.7.2", target: &api.virStreamEventRemoveCallback},
+		{name: "virStreamEventUpdateCallback", since: "0.7.2", target: &api.virStreamEventUpdateCallback},
+		{name: "virStreamFinish", since: "0.7.2", target: &api.virStreamFinish},
+		{name: "virStreamFree", since: "0.7.2", target: &api.virStreamFree},
+		{name: "virStreamNew", since: "0.7.2", target: &api.virStreamNew},
+		{name: "virStreamRecv", since: "0.7.2", target: &api.virStreamRecv},
+		{name: "virStreamRecvAll", since: "0.7.2", target: &api.virStreamRecvAll},
+		{name: "virStreamRecvFlags", since: "3.4.0", target: &api.virStreamRecvFlags},
+		{name: "virStreamRecvHole", since: "3.4.0", target: &api.virStreamRecvHole},
+		{name: "virStreamRef", since: "0.7.2", target: &api.virStreamRef},
+		{name: "virStreamSend", since: "0.7.2", target: &api.virStreamSend},
+		{name: "virStreamSendAll", since: "0.7.2", target: &api.virStreamSendAll},
+		{name: "virStreamSendHole", since: "3.4.0", target: &api.virStreamSendHole},
+		{name: "virStreamSparseRecvAll", since: "3.4.0", target: &api.virStreamSparseRecvAll},
+		{name: "virStreamSparseSendAll", since: "3.4.0", target: &api.virStreamSparseSendAll},
+		{name: "virTypedParamsAddBoolean", since: "1.0.2", target: &api.virTypedParamsAddBoolean},
+		{name: "virTypedParamsAddDouble", since: "1.0.2", target: &api.virTypedParamsAddDouble},
+		{name: "virTypedParamsAddFromString", since: "1.0.2", target: &api.virTypedParamsAddFromString},
+		{name: "virTypedParamsAddInt", since: "1.0.2", target: &api.virTypedParamsAddInt},
+		{name: "virTypedParamsAddLLong", since: "1.0.2", target: &api.virTypedParamsAddLLong},
+		{name: "virTypedParamsAddString", since: "1.0.2", target: &api.virTypedParamsAddString},
+		{name: "virTypedParamsAddStringList", since: "1.2.17", target: &api.virTypedParamsAddStringList},
+		{name: "virTypedParamsAddUInt", since: "1.0.2", target: &api.virTypedParamsAddUInt},
+		{name: "virTypedParamsAddULLong", since: "1.0.2", target: &api.virTypedParamsAddULLong},
+		{name: "virTypedParamsClear", since: "1.0.2", target: &api.virTypedParamsClear},
+		{name: "virTypedParamsFree", since: "1.0.2", target: &api.virTypedParamsFree},
+		{name: "virTypedParamsGet", since: "1.0.2", target: &api.virTypedParamsGet},
+		{name: "virTypedParamsGetBoolean", since: "1.0.2", target: &api.virTypedParamsGetBoolean},
+		{name: "virTypedParamsGetDouble", since: "1.0.2", target: &api.virTypedParamsGetDouble},
+		{name: "virTypedParamsGetInt", since: "1.0.2", target: &api.virTypedParamsGetInt},
+		{name: "virTypedParamsGetLLong", since: "1.0.2", target: &api.virTypedParamsGetLLong},
+		{name: "virTypedParamsGetString", since: "1.0.2", target: &api.virTypedParamsGetString},
+		{name: "virTypedParamsGetUInt", since: "1.0.2", target: &api.virTypedParamsGetUInt},
+		{name: "virTypedParamsGetULLong", since: "1.0.2", target: &api.virTypedParamsGetULLong},
 	}
+}
+
+var generatedLibvirtSymbolVersions = map[string]string{
+	"virConnCopyLastError":                    "0.1.0",
+	"virConnGetLastError":                     "0.1.0",
+	"virConnResetLastError":                   "0.1.0",
+	"virConnSetErrorFunc":                     "0.1.0",
+	"virConnectBaselineCPU":                   "0.7.7",
+	"virConnectBaselineHypervisorCPU":         "4.4.0",
+	"virConnectClose":                         "0.0.3",
+	"virConnectCompareCPU":                    "0.7.5",
+	"virConnectCompareHypervisorCPU":          "4.4.0",
+	"virConnectDomainEventDeregister":         "0.5.0",
+	"virConnectDomainEventDeregisterAny":      "0.8.0",
+	"virConnectDomainEventRegister":           "0.5.0",
+	"virConnectDomainEventRegisterAny":        "0.8.0",
+	"virConnectDomainXMLFromNative":           "0.6.4",
+	"virConnectDomainXMLToNative":             "0.6.4",
+	"virConnectFindStoragePoolSources":        "0.4.5",
+	"virConnectGetAllDomainStats":             "1.2.8",
+	"virConnectGetCPUModelNames":              "1.1.3",
+	"virConnectGetCapabilities":               "0.2.1",
+	"virConnectGetDomainCapabilities":         "1.2.7",
+	"virConnectGetHostname":                   "0.3.0",
+	"virConnectGetLibVersion":                 "0.7.3",
+	"virConnectGetMaxVcpus":                   "0.2.1",
+	"virConnectGetStoragePoolCapabilities":    "5.2.0",
+	"virConnectGetSysinfo":                    "0.8.8",
+	"virConnectGetType":                       "0.0.3",
+	"virConnectGetURI":                        "0.3.0",
+	"virConnectGetVersion":                    "0.0.3",
+	"virConnectIsAlive":                       "0.9.8",
+	"virConnectIsEncrypted":                   "0.7.3",
+	"virConnectIsSecure":                      "0.7.3",
+	"virConnectListAllDomains":                "0.9.13",
+	"virConnectListAllInterfaces":             "0.10.2",
+	"virConnectListAllNWFilterBindings":       "4.5.0",
+	"virConnectListAllNWFilters":              "0.10.2",
+	"virConnectListAllNetworks":               "0.10.2",
+	"virConnectListAllNodeDevices":            "0.10.2",
+	"virConnectListAllSecrets":                "0.10.2",
+	"virConnectListAllStoragePools":           "0.10.2",
+	"virConnectListDefinedDomains":            "0.1.1",
+	"virConnectListDefinedInterfaces":         "0.7.0",
+	"virConnectListDefinedNetworks":           "0.2.0",
+	"virConnectListDefinedStoragePools":       "0.4.1",
+	"virConnectListDomains":                   "0.0.3",
+	"virConnectListInterfaces":                "0.6.4",
+	"virConnectListNWFilters":                 "0.8.0",
+	"virConnectListNetworks":                  "0.2.0",
+	"virConnectListSecrets":                   "0.7.1",
+	"virConnectListStoragePools":              "0.4.1",
+	"virConnectNetworkEventDeregisterAny":     "1.2.1",
+	"virConnectNetworkEventRegisterAny":       "1.2.1",
+	"virConnectNodeDeviceEventDeregisterAny":  "2.2.0",
+	"virConnectNodeDeviceEventRegisterAny":    "2.2.0",
+	"virConnectNumOfDefinedDomains":           "0.1.5",
+	"virConnectNumOfDefinedInterfaces":        "0.7.0",
+	"virConnectNumOfDefinedNetworks":          "0.2.0",
+	"virConnectNumOfDefinedStoragePools":      "0.4.1",
+	"virConnectNumOfDomains":                  "0.0.3",
+	"virConnectNumOfInterfaces":               "0.6.4",
+	"virConnectNumOfNWFilters":                "0.8.0",
+	"virConnectNumOfNetworks":                 "0.2.0",
+	"virConnectNumOfSecrets":                  "0.7.1",
+	"virConnectNumOfStoragePools":             "0.4.1",
+	"virConnectOpen":                          "0.0.3",
+	"virConnectOpenAuth":                      "0.4.0",
+	"virConnectOpenReadOnly":                  "0.0.3",
+	"virConnectRef":                           "0.6.0",
+	"virConnectRegisterCloseCallback":         "0.10.0",
+	"virConnectSecretEventDeregisterAny":      "3.0.0",
+	"virConnectSecretEventRegisterAny":        "3.0.0",
+	"virConnectSetIdentity":                   "5.8.0",
+	"virConnectSetKeepAlive":                  "0.9.8",
+	"virConnectStoragePoolEventDeregisterAny": "2.0.0",
+	"virConnectStoragePoolEventRegisterAny":   "2.0.0",
+	"virConnectUnregisterCloseCallback":       "0.10.0",
+	"virCopyLastError":                        "0.1.0",
+	"virDefaultErrorFunc":                     "0.1.0",
+	"virDomainAbortJob":                       "0.7.7",
+	"virDomainAbortJobFlags":                  "8.5.0",
+	"virDomainAddIOThread":                    "1.2.15",
+	"virDomainAgentSetResponseTimeout":        "5.10.0",
+	"virDomainAttachDevice":                   "0.1.9",
+	"virDomainAttachDeviceFlags":              "0.7.7",
+	"virDomainAuthorizedSSHKeysGet":           "6.10.0",
+	"virDomainAuthorizedSSHKeysSet":           "6.10.0",
+	"virDomainBackupBegin":                    "6.0.0",
+	"virDomainBackupGetXMLDesc":               "6.0.0",
+	"virDomainBlockCommit":                    "0.10.2",
+	"virDomainBlockCopy":                      "1.2.8",
+	"virDomainBlockJobAbort":                  "0.9.4",
+	"virDomainBlockJobSetSpeed":               "0.9.4",
+	"virDomainBlockPeek":                      "0.4.2",
+	"virDomainBlockPull":                      "0.9.4",
+	"virDomainBlockRebase":                    "0.9.10",
+	"virDomainBlockResize":                    "0.9.8",
+	"virDomainBlockStats":                     "0.3.2",
+	"virDomainBlockStatsFlags":                "0.9.5",
+	"virDomainCheckpointCreateXML":            "5.6.0",
+	"virDomainCheckpointDelete":               "5.6.0",
+	"virDomainCheckpointFree":                 "5.6.0",
+	"virDomainCheckpointGetConnect":           "5.6.0",
+	"virDomainCheckpointGetDomain":            "5.6.0",
+	"virDomainCheckpointGetName":              "5.6.0",
+	"virDomainCheckpointGetParent":            "5.6.0",
+	"virDomainCheckpointGetXMLDesc":           "5.6.0",
+	"virDomainCheckpointListAllChildren":      "5.6.0",
+	"virDomainCheckpointLookupByName":         "5.6.0",
+	"virDomainCheckpointRef":                  "5.6.0",
+	"virDomainCoreDump":                       "0.1.9",
+	"virDomainCoreDumpWithFormat":             "1.2.3",
+	"virDomainCreate":                         "0.1.1",
+	"virDomainCreateLinux":                    "0.0.3",
+	"virDomainCreateWithFiles":                "1.1.1",
+	"virDomainCreateWithFlags":                "0.8.2",
+	"virDomainCreateXML":                      "0.5.0",
+	"virDomainCreateXMLWithFiles":             "1.1.1",
+	"virDomainDefineXML":                      "0.1.1",
+	"virDomainDefineXMLFlags":                 "1.2.12",
+	"virDomainDelIOThread":                    "1.2.15",
+	"virDomainDelThrottleGroup":               "11.2.0",
+	"virDomainDestroy":                        "0.0.3",
+	"virDomainDestroyFlags":                   "0.9.4",
+	"virDomainDetachDevice":                   "0.1.9",
+	"virDomainDetachDeviceAlias":              "4.4.0",
+	"virDomainDetachDeviceFlags":              "0.7.7",
+	"virDomainFDAssociate":                    "9.0.0",
+	"virDomainFSFreeze":                       "1.2.5",
+	"virDomainFSInfoFree":                     "1.2.11",
+	"virDomainFSThaw":                         "1.2.5",
+	"virDomainFSTrim":                         "1.0.1",
+	"virDomainFree":                           "0.0.3",
+	"virDomainGetAutostart":                   "0.2.1",
+	"virDomainGetAutostartOnce":               "11.2.0",
+	"virDomainGetBlkioParameters":             "0.9.0",
+	"virDomainGetBlockInfo":                   "0.8.1",
+	"virDomainGetBlockIoTune":                 "0.9.8",
+	"virDomainGetBlockJobInfo":                "0.9.4",
+	"virDomainGetCPUStats":                    "0.9.10",
+	"virDomainGetConnect":                     "0.3.0",
+	"virDomainGetControlInfo":                 "0.9.3",
+	"virDomainGetDiskErrors":                  "0.9.10",
+	"virDomainGetEmulatorPinInfo":             "0.10.0",
+	"virDomainGetFSInfo":                      "1.2.11",
+	"virDomainGetGuestInfo":                   "5.7.0",
+	"virDomainGetGuestVcpus":                  "2.0.0",
+	"virDomainGetHostname":                    "0.10.0",
+	"virDomainGetID":                          "0.0.3",
+	"virDomainGetIOThreadInfo":                "1.2.14",
+	"virDomainGetInfo":                        "0.0.3",
+	"virDomainGetInterfaceParameters":         "0.9.9",
+	"virDomainGetJobInfo":                     "0.7.7",
+	"virDomainGetJobStats":                    "1.0.3",
+	"virDomainGetLaunchSecurityInfo":          "4.5.0",
+	"virDomainGetMaxMemory":                   "0.0.3",
+	"virDomainGetMaxVcpus":                    "0.2.1",
+	"virDomainGetMemoryParameters":            "0.8.5",
+	"virDomainGetMessages":                    "7.1.0",
+	"virDomainGetMetadata":                    "0.9.10",
+	"virDomainGetName":                        "0.0.3",
+	"virDomainGetNumaParameters":              "0.9.9",
+	"virDomainGetOSType":                      "0.0.3",
+	"virDomainGetPerfEvents":                  "1.3.3",
+	"virDomainGetSchedulerParameters":         "0.2.3",
+	"virDomainGetSchedulerParametersFlags":    "0.9.2",
+	"virDomainGetSchedulerType":               "0.2.3",
+	"virDomainGetSecurityLabel":               "0.6.1",
+	"virDomainGetSecurityLabelList":           "0.10.0",
+	"virDomainGetState":                       "0.9.2",
+	"virDomainGetTime":                        "1.2.5",
+	"virDomainGetUUID":                        "0.0.5",
+	"virDomainGetUUIDString":                  "0.1.1",
+	"virDomainGetVcpuPinInfo":                 "0.9.3",
+	"virDomainGetVcpus":                       "0.1.4",
+	"virDomainGetVcpusFlags":                  "0.8.5",
+	"virDomainGetXMLDesc":                     "0.0.3",
+	"virDomainGraphicsReload":                 "10.2.0",
+	"virDomainHasCurrentSnapshot":             "0.8.0",
+	"virDomainHasManagedSaveImage":            "0.8.0",
+	"virDomainIOThreadInfoFree":               "1.2.14",
+	"virDomainInjectNMI":                      "0.9.2",
+	"virDomainInterfaceAddresses":             "1.2.14",
+	"virDomainInterfaceFree":                  "1.2.14",
+	"virDomainInterfaceStats":                 "0.3.2",
+	"virDomainIsActive":                       "0.7.3",
+	"virDomainIsPersistent":                   "0.7.3",
+	"virDomainIsUpdated":                      "0.8.6",
+	"virDomainListAllCheckpoints":             "5.6.0",
+	"virDomainListAllSnapshots":               "0.9.13",
+	"virDomainListGetStats":                   "1.2.8",
+	"virDomainLookupByID":                     "0.0.3",
+	"virDomainLookupByName":                   "0.0.3",
+	"virDomainLookupByUUID":                   "0.0.5",
+	"virDomainLookupByUUIDString":             "0.1.1",
+	"virDomainManagedSave":                    "0.8.0",
+	"virDomainManagedSaveDefineXML":           "3.7.0",
+	"virDomainManagedSaveGetXMLDesc":          "3.7.0",
+	"virDomainManagedSaveRemove":              "0.8.0",
+	"virDomainMemoryPeek":                     "0.4.2",
+	"virDomainMemoryStats":                    "0.7.5",
+	"virDomainMigrate":                        "0.3.2",
+	"virDomainMigrate2":                       "0.9.2",
+	"virDomainMigrate3":                       "1.1.0",
+	"virDomainMigrateGetCompressionCache":     "1.0.3",
+	"virDomainMigrateGetMaxDowntime":          "3.7.0",
+	"virDomainMigrateGetMaxSpeed":             "0.9.5",
+	"virDomainMigrateSetCompressionCache":     "1.0.3",
+	"virDomainMigrateSetMaxDowntime":          "0.8.0",
+	"virDomainMigrateSetMaxSpeed":             "0.9.0",
+	"virDomainMigrateStartPostCopy":           "1.3.3",
+	"virDomainMigrateToURI":                   "0.7.2",
+	"virDomainMigrateToURI2":                  "0.9.2",
+	"virDomainMigrateToURI3":                  "1.1.0",
+	"virDomainOpenChannel":                    "1.0.2",
+	"virDomainOpenConsole":                    "0.8.6",
+	"virDomainOpenGraphics":                   "0.9.7",
+	"virDomainOpenGraphicsFD":                 "1.2.8",
+	"virDomainPMSuspendForDuration":           "0.9.10",
+	"virDomainPMWakeup":                       "0.9.11",
+	"virDomainPinEmulator":                    "0.10.0",
+	"virDomainPinIOThread":                    "1.2.14",
+	"virDomainPinVcpu":                        "0.1.4",
+	"virDomainPinVcpuFlags":                   "0.9.3",
+	"virDomainReboot":                         "0.1.0",
+	"virDomainRef":                            "0.6.0",
+	"virDomainRename":                         "1.2.19",
+	"virDomainReset":                          "0.9.7",
+	"virDomainRestore":                        "0.0.3",
+	"virDomainRestoreFlags":                   "0.9.4",
+	"virDomainRestoreParams":                  "8.4.0",
+	"virDomainResume":                         "0.0.3",
+	"virDomainRevertToSnapshot":               "0.8.0",
+	"virDomainSave":                           "0.0.3",
+	"virDomainSaveFlags":                      "0.9.4",
+	"virDomainSaveImageDefineXML":             "0.9.4",
+	"virDomainSaveImageGetXMLDesc":            "0.9.4",
+	"virDomainSaveParams":                     "8.4.0",
+	"virDomainScreenshot":                     "0.9.2",
+	"virDomainSendKey":                        "0.9.3",
+	"virDomainSendProcessSignal":              "1.0.1",
+	"virDomainSetAutostart":                   "0.2.1",
+	"virDomainSetAutostartOnce":               "11.2.0",
+	"virDomainSetBlkioParameters":             "0.9.0",
+	"virDomainSetBlockIoTune":                 "0.9.8",
+	"virDomainSetBlockThreshold":              "3.1.0",
+	"virDomainSetGuestVcpus":                  "2.0.0",
+	"virDomainSetIOThreadParams":              "4.10.0",
+	"virDomainSetInterfaceParameters":         "0.9.9",
+	"virDomainSetLaunchSecurityState":         "8.0.0",
+	"virDomainSetLifecycleAction":             "3.9.0",
+	"virDomainSetMaxMemory":                   "0.0.3",
+	"virDomainSetMemory":                      "0.1.1",
+	"virDomainSetMemoryFlags":                 "0.9.0",
+	"virDomainSetMemoryParameters":            "0.8.5",
+	"virDomainSetMemoryStatsPeriod":           "1.1.1",
+	"virDomainSetMetadata":                    "0.9.10",
+	"virDomainSetNumaParameters":              "0.9.9",
+	"virDomainSetPerfEvents":                  "1.3.3",
+	"virDomainSetSchedulerParameters":         "0.2.3",
+	"virDomainSetSchedulerParametersFlags":    "0.9.2",
+	"virDomainSetThrottleGroup":               "11.2.0",
+	"virDomainSetTime":                        "1.2.5",
+	"virDomainSetUserPassword":                "1.2.16",
+	"virDomainSetVcpu":                        "3.1.0",
+	"virDomainSetVcpus":                       "0.1.4",
+	"virDomainSetVcpusFlags":                  "0.8.5",
+	"virDomainShutdown":                       "0.0.3",
+	"virDomainShutdownFlags":                  "0.9.10",
+	"virDomainSnapshotCreateXML":              "0.8.0",
+	"virDomainSnapshotCurrent":                "0.8.0",
+	"virDomainSnapshotDelete":                 "0.8.0",
+	"virDomainSnapshotFree":                   "0.8.0",
+	"virDomainSnapshotGetConnect":             "0.9.5",
+	"virDomainSnapshotGetDomain":              "0.9.5",
+	"virDomainSnapshotGetName":                "0.9.5",
+	"virDomainSnapshotGetParent":              "0.9.7",
+	"virDomainSnapshotGetXMLDesc":             "0.8.0",
+	"virDomainSnapshotHasMetadata":            "0.9.13",
+	"virDomainSnapshotIsCurrent":              "0.9.13",
+	"virDomainSnapshotListAllChildren":        "0.9.13",
+	"virDomainSnapshotListChildrenNames":      "0.9.7",
+	"virDomainSnapshotListNames":              "0.8.0",
+	"virDomainSnapshotLookupByName":           "0.8.0",
+	"virDomainSnapshotNum":                    "0.8.0",
+	"virDomainSnapshotNumChildren":            "0.9.7",
+	"virDomainSnapshotRef":                    "0.9.13",
+	"virDomainStartDirtyRateCalc":             "7.2.0",
+	"virDomainStatsRecordListFree":            "1.2.8",
+	"virDomainSuspend":                        "0.0.3",
+	"virDomainUndefine":                       "0.1.1",
+	"virDomainUndefineFlags":                  "0.9.4",
+	"virDomainUpdateDeviceFlags":              "0.8.0",
+	"virEventAddHandle":                       "0.9.3",
+	"virEventAddTimeout":                      "0.9.3",
+	"virEventRegisterDefaultImpl":             "0.9.0",
+	"virEventRegisterImpl":                    "0.5.0",
+	"virEventRemoveHandle":                    "0.9.3",
+	"virEventRemoveTimeout":                   "0.9.3",
+	"virEventRunDefaultImpl":                  "0.9.0",
+	"virEventUpdateHandle":                    "0.9.3",
+	"virEventUpdateTimeout":                   "0.9.3",
+	"virFreeError":                            "0.6.1",
+	"virGetLastError":                         "0.1.0",
+	"virGetLastErrorCode":                     "4.5.0",
+	"virGetLastErrorDomain":                   "4.5.0",
+	"virGetLastErrorMessage":                  "1.0.6",
+	"virGetVersion":                           "0.0.3",
+	"virInitialize":                           "0.1.0",
+	"virInterfaceChangeBegin":                 "0.9.2",
+	"virInterfaceChangeCommit":                "0.9.2",
+	"virInterfaceChangeRollback":              "0.9.2",
+	"virInterfaceCreate":                      "0.6.4",
+	"virInterfaceDefineXML":                   "0.6.4",
+	"virInterfaceDestroy":                     "0.6.4",
+	"virInterfaceFree":                        "0.6.4",
+	"virInterfaceGetConnect":                  "0.6.4",
+	"virInterfaceGetMACString":                "0.6.4",
+	"virInterfaceGetName":                     "0.6.4",
+	"virInterfaceGetXMLDesc":                  "0.6.4",
+	"virInterfaceIsActive":                    "0.7.3",
+	"virInterfaceLookupByMACString":           "0.6.4",
+	"virInterfaceLookupByName":                "0.6.4",
+	"virInterfaceRef":                         "0.6.4",
+	"virInterfaceUndefine":                    "0.6.4",
+	"virNWFilterBindingCreateXML":             "4.5.0",
+	"virNWFilterBindingDelete":                "4.5.0",
+	"virNWFilterBindingFree":                  "4.5.0",
+	"virNWFilterBindingGetFilterName":         "4.5.0",
+	"virNWFilterBindingGetPortDev":            "4.5.0",
+	"virNWFilterBindingGetXMLDesc":            "4.5.0",
+	"virNWFilterBindingLookupByPortDev":       "4.5.0",
+	"virNWFilterBindingRef":                   "4.5.0",
+	"virNWFilterDefineXML":                    "0.8.0",
+	"virNWFilterDefineXMLFlags":               "7.7.0",
+	"virNWFilterFree":                         "0.8.0",
+	"virNWFilterGetName":                      "0.8.0",
+	"virNWFilterGetUUID":                      "0.8.0",
+	"virNWFilterGetUUIDString":                "0.8.0",
+	"virNWFilterGetXMLDesc":                   "0.8.0",
+	"virNWFilterLookupByName":                 "0.8.0",
+	"virNWFilterLookupByUUID":                 "0.8.0",
+	"virNWFilterLookupByUUIDString":           "0.8.0",
+	"virNWFilterRef":                          "0.8.0",
+	"virNWFilterUndefine":                     "0.8.0",
+	"virNetworkCreate":                        "0.2.0",
+	"virNetworkCreateXML":                     "0.2.0",
+	"virNetworkCreateXMLFlags":                "7.8.0",
+	"virNetworkDHCPLeaseFree":                 "1.2.6",
+	"virNetworkDefineXML":                     "0.2.0",
+	"virNetworkDefineXMLFlags":                "7.7.0",
+	"virNetworkDestroy":                       "0.2.0",
+	"virNetworkFree":                          "0.2.0",
+	"virNetworkGetAutostart":                  "0.2.1",
+	"virNetworkGetBridgeName":                 "0.2.0",
+	"virNetworkGetConnect":                    "0.3.0",
+	"virNetworkGetDHCPLeases":                 "1.2.6",
+	"virNetworkGetMetadata":                   "9.7.0",
+	"virNetworkGetName":                       "0.2.0",
+	"virNetworkGetUUID":                       "0.2.0",
+	"virNetworkGetUUIDString":                 "0.2.0",
+	"virNetworkGetXMLDesc":                    "0.2.0",
+	"virNetworkIsActive":                      "0.7.3",
+	"virNetworkIsPersistent":                  "0.7.3",
+	"virNetworkListAllPorts":                  "5.5.0",
+	"virNetworkLookupByName":                  "0.2.0",
+	"virNetworkLookupByUUID":                  "0.2.0",
+	"virNetworkLookupByUUIDString":            "0.2.0",
+	"virNetworkPortCreateXML":                 "5.5.0",
+	"virNetworkPortDelete":                    "5.5.0",
+	"virNetworkPortFree":                      "5.5.0",
+	"virNetworkPortGetNetwork":                "5.5.0",
+	"virNetworkPortGetParameters":             "5.5.0",
+	"virNetworkPortGetUUID":                   "5.5.0",
+	"virNetworkPortGetUUIDString":             "5.5.0",
+	"virNetworkPortGetXMLDesc":                "5.5.0",
+	"virNetworkPortLookupByUUID":              "5.5.0",
+	"virNetworkPortLookupByUUIDString":        "5.5.0",
+	"virNetworkPortRef":                       "5.5.0",
+	"virNetworkPortSetParameters":             "5.5.0",
+	"virNetworkRef":                           "0.6.0",
+	"virNetworkSetAutostart":                  "0.2.1",
+	"virNetworkSetMetadata":                   "9.7.0",
+	"virNetworkUndefine":                      "0.2.0",
+	"virNetworkUpdate":                        "0.10.2",
+	"virNodeAllocPages":                       "1.2.9",
+	"virNodeDeviceCreate":                     "7.3.0",
+	"virNodeDeviceCreateXML":                  "0.6.3",
+	"virNodeDeviceDefineXML":                  "7.3.0",
+	"virNodeDeviceDestroy":                    "0.6.3",
+	"virNodeDeviceDetachFlags":                "1.0.5",
+	"virNodeDeviceDettach":                    "0.6.1",
+	"virNodeDeviceFree":                       "0.5.0",
+	"virNodeDeviceGetAutostart":               "7.8.0",
+	"virNodeDeviceGetName":                    "0.5.0",
+	"virNodeDeviceGetParent":                  "0.5.0",
+	"virNodeDeviceGetXMLDesc":                 "0.5.0",
+	"virNodeDeviceIsActive":                   "7.8.0",
+	"virNodeDeviceIsPersistent":               "7.8.0",
+	"virNodeDeviceListCaps":                   "0.5.0",
+	"virNodeDeviceLookupByName":               "0.5.0",
+	"virNodeDeviceLookupSCSIHostByWWN":        "1.0.3",
+	"virNodeDeviceNumOfCaps":                  "0.5.0",
+	"virNodeDeviceReAttach":                   "0.6.1",
+	"virNodeDeviceRef":                        "0.6.0",
+	"virNodeDeviceReset":                      "0.6.1",
+	"virNodeDeviceSetAutostart":               "7.8.0",
+	"virNodeDeviceUndefine":                   "7.3.0",
+	"virNodeDeviceUpdate":                     "10.1.0",
+	"virNodeGetCPUMap":                        "1.0.0",
+	"virNodeGetCPUStats":                      "0.9.3",
+	"virNodeGetCellsFreeMemory":               "0.3.3",
+	"virNodeGetFreeMemory":                    "0.3.3",
+	"virNodeGetFreePages":                     "1.2.6",
+	"virNodeGetInfo":                          "0.1.0",
+	"virNodeGetMemoryParameters":              "0.10.2",
+	"virNodeGetMemoryStats":                   "0.9.3",
+	"virNodeGetSEVInfo":                       "4.5.0",
+	"virNodeGetSecurityModel":                 "0.6.1",
+	"virNodeListDevices":                      "0.5.0",
+	"virNodeNumOfDevices":                     "0.5.0",
+	"virNodeSetMemoryParameters":              "0.10.2",
+	"virNodeSuspendForDuration":               "0.9.8",
+	"virResetError":                           "0.1.0",
+	"virResetLastError":                       "0.1.0",
+	"virSaveLastError":                        "0.6.1",
+	"virSecretDefineXML":                      "0.7.1",
+	"virSecretFree":                           "0.7.1",
+	"virSecretGetConnect":                     "0.7.1",
+	"virSecretGetUUID":                        "0.7.1",
+	"virSecretGetUUIDString":                  "0.7.1",
+	"virSecretGetUsageID":                     "0.7.1",
+	"virSecretGetUsageType":                   "0.7.1",
+	"virSecretGetValue":                       "0.7.1",
+	"virSecretGetXMLDesc":                     "0.7.1",
+	"virSecretLookupByUUID":                   "0.7.1",
+	"virSecretLookupByUUIDString":             "0.7.1",
+	"virSecretLookupByUsage":                  "0.7.1",
+	"virSecretRef":                            "0.7.1",
+	"virSecretSetValue":                       "0.7.1",
+	"virSecretUndefine":                       "0.7.1",
+	"virSetErrorFunc":                         "0.1.0",
+	"virStoragePoolBuild":                     "0.4.1",
+	"virStoragePoolCreate":                    "0.4.1",
+	"virStoragePoolCreateXML":                 "0.4.1",
+	"virStoragePoolDefineXML":                 "0.4.1",
+	"virStoragePoolDelete":                    "0.4.1",
+	"virStoragePoolDestroy":                   "0.4.1",
+	"virStoragePoolFree":                      "0.4.1",
+	"virStoragePoolGetAutostart":              "0.4.1",
+	"virStoragePoolGetConnect":                "0.4.1",
+	"virStoragePoolGetInfo":                   "0.4.1",
+	"virStoragePoolGetName":                   "0.4.1",
+	"virStoragePoolGetUUID":                   "0.4.1",
+	"virStoragePoolGetUUIDString":             "0.4.1",
+	"virStoragePoolGetXMLDesc":                "0.4.1",
+	"virStoragePoolIsActive":                  "0.7.3",
+	"virStoragePoolIsPersistent":              "0.7.3",
+	"virStoragePoolListAllVolumes":            "0.10.2",
+	"virStoragePoolListVolumes":               "0.4.1",
+	"virStoragePoolLookupByName":              "0.4.1",
+	"virStoragePoolLookupByTargetPath":        "4.1.0",
+	"virStoragePoolLookupByUUID":              "0.4.1",
+	"virStoragePoolLookupByUUIDString":        "0.4.1",
+	"virStoragePoolLookupByVolume":            "0.4.1",
+	"virStoragePoolNumOfVolumes":              "0.4.1",
+	"virStoragePoolRef":                       "0.6.0",
+	"virStoragePoolRefresh":                   "0.4.1",
+	"virStoragePoolSetAutostart":              "0.4.1",
+	"virStoragePoolUndefine":                  "0.4.1",
+	"virStorageVolCreateXML":                  "0.4.1",
+	"virStorageVolCreateXMLFrom":              "0.6.4",
+	"virStorageVolDelete":                     "0.4.1",
+	"virStorageVolDownload":                   "0.9.0",
+	"virStorageVolFree":                       "0.4.1",
+	"virStorageVolGetConnect":                 "0.4.1",
+	"virStorageVolGetInfo":                    "0.4.1",
+	"virStorageVolGetInfoFlags":               "3.0.0",
+	"virStorageVolGetKey":                     "0.4.1",
+	"virStorageVolGetName":                    "0.4.1",
+	"virStorageVolGetPath":                    "0.4.1",
+	"virStorageVolGetXMLDesc":                 "0.4.1",
+	"virStorageVolLookupByKey":                "0.4.1",
+	"virStorageVolLookupByName":               "0.4.1",
+	"virStorageVolLookupByPath":               "0.4.1",
+	"virStorageVolRef":                        "0.6.0",
+	"virStorageVolResize":                     "0.9.10",
+	"virStorageVolUpload":                     "0.9.0",
+	"virStorageVolWipe":                       "0.8.0",
+	"virStorageVolWipePattern":                "0.9.10",
+	"virStreamAbort":                          "0.7.2",
+	"virStreamEventAddCallback":               "0.7.2",
+	"virStreamEventRemoveCallback":            "0.7.2",
+	"virStreamEventUpdateCallback":            "0.7.2",
+	"virStreamFinish":                         "0.7.2",
+	"virStreamFree":                           "0.7.2",
+	"virStreamNew":                            "0.7.2",
+	"virStreamRecv":                           "0.7.2",
+	"virStreamRecvAll":                        "0.7.2",
+	"virStreamRecvFlags":                      "3.4.0",
+	"virStreamRecvHole":                       "3.4.0",
+	"virStreamRef":                            "0.7.2",
+	"virStreamSend":                           "0.7.2",
+	"virStreamSendAll":                        "0.7.2",
+	"virStreamSendHole":                       "3.4.0",
+	"virStreamSparseRecvAll":                  "3.4.0",
+	"virStreamSparseSendAll":                  "3.4.0",
+	"virTypedParamsAddBoolean":                "1.0.2",
+	"virTypedParamsAddDouble":                 "1.0.2",
+	"virTypedParamsAddFromString":             "1.0.2",
+	"virTypedParamsAddInt":                    "1.0.2",
+	"virTypedParamsAddLLong":                  "1.0.2",
+	"virTypedParamsAddString":                 "1.0.2",
+	"virTypedParamsAddStringList":             "1.2.17",
+	"virTypedParamsAddUInt":                   "1.0.2",
+	"virTypedParamsAddULLong":                 "1.0.2",
+	"virTypedParamsClear":                     "1.0.2",
+	"virTypedParamsFree":                      "1.0.2",
+	"virTypedParamsGet":                       "1.0.2",
+	"virTypedParamsGetBoolean":                "1.0.2",
+	"virTypedParamsGetDouble":                 "1.0.2",
+	"virTypedParamsGetInt":                    "1.0.2",
+	"virTypedParamsGetLLong":                  "1.0.2",
+	"virTypedParamsGetString":                 "1.0.2",
+	"virTypedParamsGetUInt":                   "1.0.2",
+	"virTypedParamsGetULLong":                 "1.0.2",
+}
+
+// VirConnCopyLastError calls virConnCopyLastError using its raw C ABI contract.
+func (raw *RawAPI) VirConnCopyLastError(conn unsafe.Pointer, to unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnCopyLastError"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnCopyLastError(conn, to), nil
+}
+
+// VirConnGetLastError calls virConnGetLastError using its raw C ABI contract.
+func (raw *RawAPI) VirConnGetLastError(conn unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnGetLastError"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnGetLastError(conn), nil
+}
+
+// VirConnResetLastError calls virConnResetLastError using its raw C ABI contract.
+func (raw *RawAPI) VirConnResetLastError(conn unsafe.Pointer) error {
+	if err := raw.requireSymbol("virConnResetLastError"); err != nil {
+		return err
+	}
+	raw.api.virConnResetLastError(conn)
+	return nil
+}
+
+// VirConnSetErrorFunc calls virConnSetErrorFunc using its raw C ABI contract.
+func (raw *RawAPI) VirConnSetErrorFunc(conn unsafe.Pointer, userData unsafe.Pointer, handler uintptr) error {
+	if err := raw.requireSymbol("virConnSetErrorFunc"); err != nil {
+		return err
+	}
+	raw.api.virConnSetErrorFunc(conn, userData, handler)
+	return nil
+}
+
+// VirConnectBaselineCPU calls virConnectBaselineCPU using its raw C ABI contract.
+func (raw *RawAPI) VirConnectBaselineCPU(conn unsafe.Pointer, xmlCPUs *unsafe.Pointer, ncpus uint32, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectBaselineCPU"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectBaselineCPU(conn, xmlCPUs, ncpus, flags), nil
+}
+
+// VirConnectBaselineHypervisorCPU calls virConnectBaselineHypervisorCPU using its raw C ABI contract.
+func (raw *RawAPI) VirConnectBaselineHypervisorCPU(conn unsafe.Pointer, emulator *byte, arch *byte, machine *byte, virttype *byte, xmlCPUs *unsafe.Pointer, ncpus uint32, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectBaselineHypervisorCPU"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectBaselineHypervisorCPU(conn, emulator, arch, machine, virttype, xmlCPUs, ncpus, flags), nil
+}
+
+// VirConnectClose calls virConnectClose using its raw C ABI contract.
+func (raw *RawAPI) VirConnectClose(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectClose"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectClose(conn), nil
+}
+
+// VirConnectCompareCPU calls virConnectCompareCPU using its raw C ABI contract.
+func (raw *RawAPI) VirConnectCompareCPU(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectCompareCPU"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectCompareCPU(conn, xmlDesc, flags), nil
+}
+
+// VirConnectCompareHypervisorCPU calls virConnectCompareHypervisorCPU using its raw C ABI contract.
+func (raw *RawAPI) VirConnectCompareHypervisorCPU(conn unsafe.Pointer, emulator *byte, arch *byte, machine *byte, virttype *byte, xmlCPU *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectCompareHypervisorCPU"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectCompareHypervisorCPU(conn, emulator, arch, machine, virttype, xmlCPU, flags), nil
+}
+
+// VirConnectDomainEventDeregister calls virConnectDomainEventDeregister using its raw C ABI contract.
+func (raw *RawAPI) VirConnectDomainEventDeregister(conn unsafe.Pointer, cb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectDomainEventDeregister"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectDomainEventDeregister(conn, cb), nil
+}
+
+// VirConnectDomainEventDeregisterAny calls virConnectDomainEventDeregisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectDomainEventDeregisterAny(conn unsafe.Pointer, callbackID int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectDomainEventDeregisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectDomainEventDeregisterAny(conn, callbackID), nil
+}
+
+// VirConnectDomainEventRegister calls virConnectDomainEventRegister using its raw C ABI contract.
+func (raw *RawAPI) VirConnectDomainEventRegister(conn unsafe.Pointer, cb uintptr, opaque unsafe.Pointer, freecb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectDomainEventRegister"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectDomainEventRegister(conn, cb, opaque, freecb), nil
+}
+
+// VirConnectDomainEventRegisterAny calls virConnectDomainEventRegisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectDomainEventRegisterAny(conn unsafe.Pointer, dom unsafe.Pointer, eventID int32, cb uintptr, opaque unsafe.Pointer, freecb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectDomainEventRegisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectDomainEventRegisterAny(conn, dom, eventID, cb, opaque, freecb), nil
+}
+
+// VirConnectDomainXMLFromNative calls virConnectDomainXMLFromNative using its raw C ABI contract.
+func (raw *RawAPI) VirConnectDomainXMLFromNative(conn unsafe.Pointer, nativeFormat *byte, nativeConfig *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectDomainXMLFromNative"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectDomainXMLFromNative(conn, nativeFormat, nativeConfig, flags), nil
+}
+
+// VirConnectDomainXMLToNative calls virConnectDomainXMLToNative using its raw C ABI contract.
+func (raw *RawAPI) VirConnectDomainXMLToNative(conn unsafe.Pointer, nativeFormat *byte, domainXml *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectDomainXMLToNative"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectDomainXMLToNative(conn, nativeFormat, domainXml, flags), nil
+}
+
+// VirConnectFindStoragePoolSources calls virConnectFindStoragePoolSources using its raw C ABI contract.
+func (raw *RawAPI) VirConnectFindStoragePoolSources(conn unsafe.Pointer, type_ *byte, srcSpec *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectFindStoragePoolSources"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectFindStoragePoolSources(conn, type_, srcSpec, flags), nil
+}
+
+// VirConnectGetAllDomainStats calls virConnectGetAllDomainStats using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetAllDomainStats(conn unsafe.Pointer, stats uint32, retStats *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectGetAllDomainStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectGetAllDomainStats(conn, stats, retStats, flags), nil
+}
+
+// VirConnectGetCPUModelNames calls virConnectGetCPUModelNames using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetCPUModelNames(conn unsafe.Pointer, arch *byte, models *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectGetCPUModelNames"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectGetCPUModelNames(conn, arch, models, flags), nil
+}
+
+// VirConnectGetCapabilities calls virConnectGetCapabilities using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetCapabilities(conn unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectGetCapabilities"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectGetCapabilities(conn), nil
+}
+
+// VirConnectGetDomainCapabilities calls virConnectGetDomainCapabilities using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetDomainCapabilities(conn unsafe.Pointer, emulatorbin *byte, arch *byte, machine *byte, virttype *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectGetDomainCapabilities"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectGetDomainCapabilities(conn, emulatorbin, arch, machine, virttype, flags), nil
+}
+
+// VirConnectGetHostname calls virConnectGetHostname using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetHostname(conn unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectGetHostname"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectGetHostname(conn), nil
+}
+
+// VirConnectGetLibVersion calls virConnectGetLibVersion using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetLibVersion(conn unsafe.Pointer, libVer *uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectGetLibVersion"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectGetLibVersion(conn, libVer), nil
+}
+
+// VirConnectGetMaxVcpus calls virConnectGetMaxVcpus using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetMaxVcpus(conn unsafe.Pointer, type_ *byte) (int32, error) {
+	if err := raw.requireSymbol("virConnectGetMaxVcpus"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectGetMaxVcpus(conn, type_), nil
+}
+
+// VirConnectGetStoragePoolCapabilities calls virConnectGetStoragePoolCapabilities using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetStoragePoolCapabilities(conn unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectGetStoragePoolCapabilities"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectGetStoragePoolCapabilities(conn, flags), nil
+}
+
+// VirConnectGetSysinfo calls virConnectGetSysinfo using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetSysinfo(conn unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectGetSysinfo"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectGetSysinfo(conn, flags), nil
+}
+
+// VirConnectGetType calls virConnectGetType using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetType(conn unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectGetType"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectGetType(conn), nil
+}
+
+// VirConnectGetURI calls virConnectGetURI using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetURI(conn unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectGetURI"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectGetURI(conn), nil
+}
+
+// VirConnectGetVersion calls virConnectGetVersion using its raw C ABI contract.
+func (raw *RawAPI) VirConnectGetVersion(conn unsafe.Pointer, hvVer *uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectGetVersion"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectGetVersion(conn, hvVer), nil
+}
+
+// VirConnectIsAlive calls virConnectIsAlive using its raw C ABI contract.
+func (raw *RawAPI) VirConnectIsAlive(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectIsAlive"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectIsAlive(conn), nil
+}
+
+// VirConnectIsEncrypted calls virConnectIsEncrypted using its raw C ABI contract.
+func (raw *RawAPI) VirConnectIsEncrypted(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectIsEncrypted"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectIsEncrypted(conn), nil
+}
+
+// VirConnectIsSecure calls virConnectIsSecure using its raw C ABI contract.
+func (raw *RawAPI) VirConnectIsSecure(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectIsSecure"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectIsSecure(conn), nil
+}
+
+// VirConnectListAllDomains calls virConnectListAllDomains using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllDomains(conn unsafe.Pointer, domains *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllDomains"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllDomains(conn, domains, flags), nil
+}
+
+// VirConnectListAllInterfaces calls virConnectListAllInterfaces using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllInterfaces(conn unsafe.Pointer, ifaces *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllInterfaces"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllInterfaces(conn, ifaces, flags), nil
+}
+
+// VirConnectListAllNWFilterBindings calls virConnectListAllNWFilterBindings using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllNWFilterBindings(conn unsafe.Pointer, bindings *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllNWFilterBindings"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllNWFilterBindings(conn, bindings, flags), nil
+}
+
+// VirConnectListAllNWFilters calls virConnectListAllNWFilters using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllNWFilters(conn unsafe.Pointer, filters *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllNWFilters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllNWFilters(conn, filters, flags), nil
+}
+
+// VirConnectListAllNetworks calls virConnectListAllNetworks using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllNetworks(conn unsafe.Pointer, nets *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllNetworks"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllNetworks(conn, nets, flags), nil
+}
+
+// VirConnectListAllNodeDevices calls virConnectListAllNodeDevices using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllNodeDevices(conn unsafe.Pointer, devices *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllNodeDevices"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllNodeDevices(conn, devices, flags), nil
+}
+
+// VirConnectListAllSecrets calls virConnectListAllSecrets using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllSecrets(conn unsafe.Pointer, secrets *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllSecrets"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllSecrets(conn, secrets, flags), nil
+}
+
+// VirConnectListAllStoragePools calls virConnectListAllStoragePools using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListAllStoragePools(conn unsafe.Pointer, pools *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListAllStoragePools"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListAllStoragePools(conn, pools, flags), nil
+}
+
+// VirConnectListDefinedDomains calls virConnectListDefinedDomains using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListDefinedDomains(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListDefinedDomains"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListDefinedDomains(conn, names, maxnames), nil
+}
+
+// VirConnectListDefinedInterfaces calls virConnectListDefinedInterfaces using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListDefinedInterfaces(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListDefinedInterfaces"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListDefinedInterfaces(conn, names, maxnames), nil
+}
+
+// VirConnectListDefinedNetworks calls virConnectListDefinedNetworks using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListDefinedNetworks(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListDefinedNetworks"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListDefinedNetworks(conn, names, maxnames), nil
+}
+
+// VirConnectListDefinedStoragePools calls virConnectListDefinedStoragePools using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListDefinedStoragePools(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListDefinedStoragePools"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListDefinedStoragePools(conn, names, maxnames), nil
+}
+
+// VirConnectListDomains calls virConnectListDomains using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListDomains(conn unsafe.Pointer, ids *int32, maxids int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListDomains"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListDomains(conn, ids, maxids), nil
+}
+
+// VirConnectListInterfaces calls virConnectListInterfaces using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListInterfaces(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListInterfaces"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListInterfaces(conn, names, maxnames), nil
+}
+
+// VirConnectListNWFilters calls virConnectListNWFilters using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListNWFilters(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListNWFilters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListNWFilters(conn, names, maxnames), nil
+}
+
+// VirConnectListNetworks calls virConnectListNetworks using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListNetworks(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListNetworks"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListNetworks(conn, names, maxnames), nil
+}
+
+// VirConnectListSecrets calls virConnectListSecrets using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListSecrets(conn unsafe.Pointer, uuids *unsafe.Pointer, maxuuids int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListSecrets"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListSecrets(conn, uuids, maxuuids), nil
+}
+
+// VirConnectListStoragePools calls virConnectListStoragePools using its raw C ABI contract.
+func (raw *RawAPI) VirConnectListStoragePools(conn unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectListStoragePools"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectListStoragePools(conn, names, maxnames), nil
+}
+
+// VirConnectNetworkEventDeregisterAny calls virConnectNetworkEventDeregisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNetworkEventDeregisterAny(conn unsafe.Pointer, callbackID int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectNetworkEventDeregisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNetworkEventDeregisterAny(conn, callbackID), nil
+}
+
+// VirConnectNetworkEventRegisterAny calls virConnectNetworkEventRegisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNetworkEventRegisterAny(conn unsafe.Pointer, net unsafe.Pointer, eventID int32, cb uintptr, opaque unsafe.Pointer, freecb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectNetworkEventRegisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNetworkEventRegisterAny(conn, net, eventID, cb, opaque, freecb), nil
+}
+
+// VirConnectNodeDeviceEventDeregisterAny calls virConnectNodeDeviceEventDeregisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNodeDeviceEventDeregisterAny(conn unsafe.Pointer, callbackID int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectNodeDeviceEventDeregisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNodeDeviceEventDeregisterAny(conn, callbackID), nil
+}
+
+// VirConnectNodeDeviceEventRegisterAny calls virConnectNodeDeviceEventRegisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNodeDeviceEventRegisterAny(conn unsafe.Pointer, dev unsafe.Pointer, eventID int32, cb uintptr, opaque unsafe.Pointer, freecb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectNodeDeviceEventRegisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNodeDeviceEventRegisterAny(conn, dev, eventID, cb, opaque, freecb), nil
+}
+
+// VirConnectNumOfDefinedDomains calls virConnectNumOfDefinedDomains using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfDefinedDomains(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfDefinedDomains"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfDefinedDomains(conn), nil
+}
+
+// VirConnectNumOfDefinedInterfaces calls virConnectNumOfDefinedInterfaces using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfDefinedInterfaces(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfDefinedInterfaces"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfDefinedInterfaces(conn), nil
+}
+
+// VirConnectNumOfDefinedNetworks calls virConnectNumOfDefinedNetworks using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfDefinedNetworks(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfDefinedNetworks"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfDefinedNetworks(conn), nil
+}
+
+// VirConnectNumOfDefinedStoragePools calls virConnectNumOfDefinedStoragePools using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfDefinedStoragePools(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfDefinedStoragePools"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfDefinedStoragePools(conn), nil
+}
+
+// VirConnectNumOfDomains calls virConnectNumOfDomains using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfDomains(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfDomains"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfDomains(conn), nil
+}
+
+// VirConnectNumOfInterfaces calls virConnectNumOfInterfaces using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfInterfaces(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfInterfaces"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfInterfaces(conn), nil
+}
+
+// VirConnectNumOfNWFilters calls virConnectNumOfNWFilters using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfNWFilters(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfNWFilters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfNWFilters(conn), nil
+}
+
+// VirConnectNumOfNetworks calls virConnectNumOfNetworks using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfNetworks(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfNetworks"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfNetworks(conn), nil
+}
+
+// VirConnectNumOfSecrets calls virConnectNumOfSecrets using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfSecrets(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfSecrets"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfSecrets(conn), nil
+}
+
+// VirConnectNumOfStoragePools calls virConnectNumOfStoragePools using its raw C ABI contract.
+func (raw *RawAPI) VirConnectNumOfStoragePools(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectNumOfStoragePools"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectNumOfStoragePools(conn), nil
+}
+
+// VirConnectOpen calls virConnectOpen using its raw C ABI contract.
+func (raw *RawAPI) VirConnectOpen(name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectOpen"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectOpen(name), nil
+}
+
+// VirConnectOpenAuth calls virConnectOpenAuth using its raw C ABI contract.
+func (raw *RawAPI) VirConnectOpenAuth(name *byte, auth unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectOpenAuth"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectOpenAuth(name, auth, flags), nil
+}
+
+// VirConnectOpenReadOnly calls virConnectOpenReadOnly using its raw C ABI contract.
+func (raw *RawAPI) VirConnectOpenReadOnly(name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virConnectOpenReadOnly"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virConnectOpenReadOnly(name), nil
+}
+
+// VirConnectRef calls virConnectRef using its raw C ABI contract.
+func (raw *RawAPI) VirConnectRef(conn unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virConnectRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectRef(conn), nil
+}
+
+// VirConnectRegisterCloseCallback calls virConnectRegisterCloseCallback using its raw C ABI contract.
+func (raw *RawAPI) VirConnectRegisterCloseCallback(conn unsafe.Pointer, cb uintptr, opaque unsafe.Pointer, freecb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectRegisterCloseCallback"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectRegisterCloseCallback(conn, cb, opaque, freecb), nil
+}
+
+// VirConnectSecretEventDeregisterAny calls virConnectSecretEventDeregisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectSecretEventDeregisterAny(conn unsafe.Pointer, callbackID int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectSecretEventDeregisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectSecretEventDeregisterAny(conn, callbackID), nil
+}
+
+// VirConnectSecretEventRegisterAny calls virConnectSecretEventRegisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectSecretEventRegisterAny(conn unsafe.Pointer, secret unsafe.Pointer, eventID int32, cb uintptr, opaque unsafe.Pointer, freecb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectSecretEventRegisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectSecretEventRegisterAny(conn, secret, eventID, cb, opaque, freecb), nil
+}
+
+// VirConnectSetIdentity calls virConnectSetIdentity using its raw C ABI contract.
+func (raw *RawAPI) VirConnectSetIdentity(conn unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectSetIdentity"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectSetIdentity(conn, params, nparams, flags), nil
+}
+
+// VirConnectSetKeepAlive calls virConnectSetKeepAlive using its raw C ABI contract.
+func (raw *RawAPI) VirConnectSetKeepAlive(conn unsafe.Pointer, interval int32, count uint32) (int32, error) {
+	if err := raw.requireSymbol("virConnectSetKeepAlive"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectSetKeepAlive(conn, interval, count), nil
+}
+
+// VirConnectStoragePoolEventDeregisterAny calls virConnectStoragePoolEventDeregisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectStoragePoolEventDeregisterAny(conn unsafe.Pointer, callbackID int32) (int32, error) {
+	if err := raw.requireSymbol("virConnectStoragePoolEventDeregisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectStoragePoolEventDeregisterAny(conn, callbackID), nil
+}
+
+// VirConnectStoragePoolEventRegisterAny calls virConnectStoragePoolEventRegisterAny using its raw C ABI contract.
+func (raw *RawAPI) VirConnectStoragePoolEventRegisterAny(conn unsafe.Pointer, pool unsafe.Pointer, eventID int32, cb uintptr, opaque unsafe.Pointer, freecb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectStoragePoolEventRegisterAny"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectStoragePoolEventRegisterAny(conn, pool, eventID, cb, opaque, freecb), nil
+}
+
+// VirConnectUnregisterCloseCallback calls virConnectUnregisterCloseCallback using its raw C ABI contract.
+func (raw *RawAPI) VirConnectUnregisterCloseCallback(conn unsafe.Pointer, cb uintptr) (int32, error) {
+	if err := raw.requireSymbol("virConnectUnregisterCloseCallback"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virConnectUnregisterCloseCallback(conn, cb), nil
+}
+
+// VirCopyLastError calls virCopyLastError using its raw C ABI contract.
+func (raw *RawAPI) VirCopyLastError(to unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virCopyLastError"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virCopyLastError(to), nil
+}
+
+// VirDefaultErrorFunc calls virDefaultErrorFunc using its raw C ABI contract.
+func (raw *RawAPI) VirDefaultErrorFunc(err unsafe.Pointer) error {
+	if err := raw.requireSymbol("virDefaultErrorFunc"); err != nil {
+		return err
+	}
+	raw.api.virDefaultErrorFunc(err)
+	return nil
+}
+
+// VirDomainAbortJob calls virDomainAbortJob using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAbortJob(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainAbortJob"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAbortJob(domain), nil
+}
+
+// VirDomainAbortJobFlags calls virDomainAbortJobFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAbortJobFlags(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainAbortJobFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAbortJobFlags(domain, flags), nil
+}
+
+// VirDomainAddIOThread calls virDomainAddIOThread using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAddIOThread(domain unsafe.Pointer, iothread_id uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainAddIOThread"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAddIOThread(domain, iothread_id, flags), nil
+}
+
+// VirDomainAgentSetResponseTimeout calls virDomainAgentSetResponseTimeout using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAgentSetResponseTimeout(domain unsafe.Pointer, timeout int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainAgentSetResponseTimeout"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAgentSetResponseTimeout(domain, timeout, flags), nil
+}
+
+// VirDomainAttachDevice calls virDomainAttachDevice using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAttachDevice(domain unsafe.Pointer, xml *byte) (int32, error) {
+	if err := raw.requireSymbol("virDomainAttachDevice"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAttachDevice(domain, xml), nil
+}
+
+// VirDomainAttachDeviceFlags calls virDomainAttachDeviceFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAttachDeviceFlags(domain unsafe.Pointer, xml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainAttachDeviceFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAttachDeviceFlags(domain, xml, flags), nil
+}
+
+// VirDomainAuthorizedSSHKeysGet calls virDomainAuthorizedSSHKeysGet using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAuthorizedSSHKeysGet(domain unsafe.Pointer, user *byte, keys *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainAuthorizedSSHKeysGet"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAuthorizedSSHKeysGet(domain, user, keys, flags), nil
+}
+
+// VirDomainAuthorizedSSHKeysSet calls virDomainAuthorizedSSHKeysSet using its raw C ABI contract.
+func (raw *RawAPI) VirDomainAuthorizedSSHKeysSet(domain unsafe.Pointer, user *byte, keys *unsafe.Pointer, nkeys uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainAuthorizedSSHKeysSet"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainAuthorizedSSHKeysSet(domain, user, keys, nkeys, flags), nil
+}
+
+// VirDomainBackupBegin calls virDomainBackupBegin using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBackupBegin(domain unsafe.Pointer, backupXML *byte, checkpointXML *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBackupBegin"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBackupBegin(domain, backupXML, checkpointXML, flags), nil
+}
+
+// VirDomainBackupGetXMLDesc calls virDomainBackupGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBackupGetXMLDesc(domain unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainBackupGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainBackupGetXMLDesc(domain, flags), nil
+}
+
+// VirDomainBlockCommit calls virDomainBlockCommit using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockCommit(dom unsafe.Pointer, disk *byte, base *byte, top *byte, bandwidth uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockCommit"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockCommit(dom, disk, base, top, bandwidth, flags), nil
+}
+
+// VirDomainBlockCopy calls virDomainBlockCopy using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockCopy(dom unsafe.Pointer, disk *byte, destxml *byte, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockCopy"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockCopy(dom, disk, destxml, params, nparams, flags), nil
+}
+
+// VirDomainBlockJobAbort calls virDomainBlockJobAbort using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockJobAbort(dom unsafe.Pointer, disk *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockJobAbort"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockJobAbort(dom, disk, flags), nil
+}
+
+// VirDomainBlockJobSetSpeed calls virDomainBlockJobSetSpeed using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockJobSetSpeed(dom unsafe.Pointer, disk *byte, bandwidth uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockJobSetSpeed"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockJobSetSpeed(dom, disk, bandwidth, flags), nil
+}
+
+// VirDomainBlockPeek calls virDomainBlockPeek using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockPeek(dom unsafe.Pointer, disk *byte, offset uint64, size uintptr, buffer unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockPeek"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockPeek(dom, disk, offset, size, buffer, flags), nil
+}
+
+// VirDomainBlockPull calls virDomainBlockPull using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockPull(dom unsafe.Pointer, disk *byte, bandwidth uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockPull"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockPull(dom, disk, bandwidth, flags), nil
+}
+
+// VirDomainBlockRebase calls virDomainBlockRebase using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockRebase(dom unsafe.Pointer, disk *byte, base *byte, bandwidth uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockRebase"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockRebase(dom, disk, base, bandwidth, flags), nil
+}
+
+// VirDomainBlockResize calls virDomainBlockResize using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockResize(dom unsafe.Pointer, disk *byte, size uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockResize"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockResize(dom, disk, size, flags), nil
+}
+
+// VirDomainBlockStats calls virDomainBlockStats using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockStats(dom unsafe.Pointer, disk *byte, stats unsafe.Pointer, size uintptr) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockStats(dom, disk, stats, size), nil
+}
+
+// VirDomainBlockStatsFlags calls virDomainBlockStatsFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainBlockStatsFlags(dom unsafe.Pointer, disk *byte, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainBlockStatsFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainBlockStatsFlags(dom, disk, params, nparams, flags), nil
+}
+
+// VirDomainCheckpointCreateXML calls virDomainCheckpointCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointCreateXML(domain unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCheckpointCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointCreateXML(domain, xmlDesc, flags), nil
+}
+
+// VirDomainCheckpointDelete calls virDomainCheckpointDelete using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointDelete(checkpoint unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainCheckpointDelete"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointDelete(checkpoint, flags), nil
+}
+
+// VirDomainCheckpointFree calls virDomainCheckpointFree using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointFree(checkpoint unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainCheckpointFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointFree(checkpoint), nil
+}
+
+// VirDomainCheckpointGetConnect calls virDomainCheckpointGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointGetConnect(checkpoint unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCheckpointGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointGetConnect(checkpoint), nil
+}
+
+// VirDomainCheckpointGetDomain calls virDomainCheckpointGetDomain using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointGetDomain(checkpoint unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCheckpointGetDomain"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointGetDomain(checkpoint), nil
+}
+
+// VirDomainCheckpointGetName calls virDomainCheckpointGetName using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointGetName(checkpoint unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCheckpointGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointGetName(checkpoint), nil
+}
+
+// VirDomainCheckpointGetParent calls virDomainCheckpointGetParent using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointGetParent(checkpoint unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCheckpointGetParent"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointGetParent(checkpoint, flags), nil
+}
+
+// VirDomainCheckpointGetXMLDesc calls virDomainCheckpointGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointGetXMLDesc(checkpoint unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCheckpointGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointGetXMLDesc(checkpoint, flags), nil
+}
+
+// VirDomainCheckpointListAllChildren calls virDomainCheckpointListAllChildren using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointListAllChildren(checkpoint unsafe.Pointer, children *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainCheckpointListAllChildren"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointListAllChildren(checkpoint, children, flags), nil
+}
+
+// VirDomainCheckpointLookupByName calls virDomainCheckpointLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointLookupByName(domain unsafe.Pointer, name *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCheckpointLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointLookupByName(domain, name, flags), nil
+}
+
+// VirDomainCheckpointRef calls virDomainCheckpointRef using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCheckpointRef(checkpoint unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainCheckpointRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCheckpointRef(checkpoint), nil
+}
+
+// VirDomainCoreDump calls virDomainCoreDump using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCoreDump(domain unsafe.Pointer, to *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainCoreDump"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCoreDump(domain, to, flags), nil
+}
+
+// VirDomainCoreDumpWithFormat calls virDomainCoreDumpWithFormat using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCoreDumpWithFormat(domain unsafe.Pointer, to *byte, dumpformat uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainCoreDumpWithFormat"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCoreDumpWithFormat(domain, to, dumpformat, flags), nil
+}
+
+// VirDomainCreate calls virDomainCreate using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCreate(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainCreate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCreate(domain), nil
+}
+
+// VirDomainCreateLinux calls virDomainCreateLinux using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCreateLinux(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCreateLinux"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCreateLinux(conn, xmlDesc, flags), nil
+}
+
+// VirDomainCreateWithFiles calls virDomainCreateWithFiles using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCreateWithFiles(domain unsafe.Pointer, nfiles uint32, files *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainCreateWithFiles"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCreateWithFiles(domain, nfiles, files, flags), nil
+}
+
+// VirDomainCreateWithFlags calls virDomainCreateWithFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCreateWithFlags(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainCreateWithFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainCreateWithFlags(domain, flags), nil
+}
+
+// VirDomainCreateXML calls virDomainCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCreateXML(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCreateXML(conn, xmlDesc, flags), nil
+}
+
+// VirDomainCreateXMLWithFiles calls virDomainCreateXMLWithFiles using its raw C ABI contract.
+func (raw *RawAPI) VirDomainCreateXMLWithFiles(conn unsafe.Pointer, xmlDesc *byte, nfiles uint32, files *int32, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainCreateXMLWithFiles"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainCreateXMLWithFiles(conn, xmlDesc, nfiles, files, flags), nil
+}
+
+// VirDomainDefineXML calls virDomainDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDefineXML(conn unsafe.Pointer, xml *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainDefineXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainDefineXML(conn, xml), nil
+}
+
+// VirDomainDefineXMLFlags calls virDomainDefineXMLFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDefineXMLFlags(conn unsafe.Pointer, xml *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainDefineXMLFlags"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainDefineXMLFlags(conn, xml, flags), nil
+}
+
+// VirDomainDelIOThread calls virDomainDelIOThread using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDelIOThread(domain unsafe.Pointer, iothread_id uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainDelIOThread"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainDelIOThread(domain, iothread_id, flags), nil
+}
+
+// VirDomainDelThrottleGroup calls virDomainDelThrottleGroup using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDelThrottleGroup(dom unsafe.Pointer, group *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainDelThrottleGroup"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainDelThrottleGroup(dom, group, flags), nil
+}
+
+// VirDomainDestroy calls virDomainDestroy using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDestroy(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainDestroy"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainDestroy(domain), nil
+}
+
+// VirDomainDestroyFlags calls virDomainDestroyFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDestroyFlags(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainDestroyFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainDestroyFlags(domain, flags), nil
+}
+
+// VirDomainDetachDevice calls virDomainDetachDevice using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDetachDevice(domain unsafe.Pointer, xml *byte) (int32, error) {
+	if err := raw.requireSymbol("virDomainDetachDevice"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainDetachDevice(domain, xml), nil
+}
+
+// VirDomainDetachDeviceAlias calls virDomainDetachDeviceAlias using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDetachDeviceAlias(domain unsafe.Pointer, alias *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainDetachDeviceAlias"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainDetachDeviceAlias(domain, alias, flags), nil
+}
+
+// VirDomainDetachDeviceFlags calls virDomainDetachDeviceFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainDetachDeviceFlags(domain unsafe.Pointer, xml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainDetachDeviceFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainDetachDeviceFlags(domain, xml, flags), nil
+}
+
+// VirDomainFDAssociate calls virDomainFDAssociate using its raw C ABI contract.
+func (raw *RawAPI) VirDomainFDAssociate(domain unsafe.Pointer, name *byte, nfds uint32, fds *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainFDAssociate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainFDAssociate(domain, name, nfds, fds, flags), nil
+}
+
+// VirDomainFSFreeze calls virDomainFSFreeze using its raw C ABI contract.
+func (raw *RawAPI) VirDomainFSFreeze(dom unsafe.Pointer, mountpoints *unsafe.Pointer, nmountpoints uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainFSFreeze"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainFSFreeze(dom, mountpoints, nmountpoints, flags), nil
+}
+
+// VirDomainFSInfoFree calls virDomainFSInfoFree using its raw C ABI contract.
+func (raw *RawAPI) VirDomainFSInfoFree(info unsafe.Pointer) error {
+	if err := raw.requireSymbol("virDomainFSInfoFree"); err != nil {
+		return err
+	}
+	raw.api.virDomainFSInfoFree(info)
+	return nil
+}
+
+// VirDomainFSThaw calls virDomainFSThaw using its raw C ABI contract.
+func (raw *RawAPI) VirDomainFSThaw(dom unsafe.Pointer, mountpoints *unsafe.Pointer, nmountpoints uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainFSThaw"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainFSThaw(dom, mountpoints, nmountpoints, flags), nil
+}
+
+// VirDomainFSTrim calls virDomainFSTrim using its raw C ABI contract.
+func (raw *RawAPI) VirDomainFSTrim(dom unsafe.Pointer, mountPoint *byte, minimum uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainFSTrim"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainFSTrim(dom, mountPoint, minimum, flags), nil
+}
+
+// VirDomainFree calls virDomainFree using its raw C ABI contract.
+func (raw *RawAPI) VirDomainFree(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainFree(domain), nil
+}
+
+// VirDomainGetAutostart calls virDomainGetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetAutostart(domain unsafe.Pointer, autostart *int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetAutostart(domain, autostart), nil
+}
+
+// VirDomainGetAutostartOnce calls virDomainGetAutostartOnce using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetAutostartOnce(domain unsafe.Pointer, autostart *int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetAutostartOnce"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetAutostartOnce(domain, autostart), nil
+}
+
+// VirDomainGetBlkioParameters calls virDomainGetBlkioParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetBlkioParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetBlkioParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetBlkioParameters(domain, params, nparams, flags), nil
+}
+
+// VirDomainGetBlockInfo calls virDomainGetBlockInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetBlockInfo(domain unsafe.Pointer, disk *byte, info unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetBlockInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetBlockInfo(domain, disk, info, flags), nil
+}
+
+// VirDomainGetBlockIoTune calls virDomainGetBlockIoTune using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetBlockIoTune(dom unsafe.Pointer, disk *byte, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetBlockIoTune"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetBlockIoTune(dom, disk, params, nparams, flags), nil
+}
+
+// VirDomainGetBlockJobInfo calls virDomainGetBlockJobInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetBlockJobInfo(dom unsafe.Pointer, disk *byte, info unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetBlockJobInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetBlockJobInfo(dom, disk, info, flags), nil
+}
+
+// VirDomainGetCPUStats calls virDomainGetCPUStats using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetCPUStats(domain unsafe.Pointer, params unsafe.Pointer, nparams uint32, start_cpu int32, ncpus uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetCPUStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetCPUStats(domain, params, nparams, start_cpu, ncpus, flags), nil
+}
+
+// VirDomainGetConnect calls virDomainGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetConnect(dom unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainGetConnect(dom), nil
+}
+
+// VirDomainGetControlInfo calls virDomainGetControlInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetControlInfo(domain unsafe.Pointer, info unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetControlInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetControlInfo(domain, info, flags), nil
+}
+
+// VirDomainGetDiskErrors calls virDomainGetDiskErrors using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetDiskErrors(dom unsafe.Pointer, errors unsafe.Pointer, maxerrors uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetDiskErrors"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetDiskErrors(dom, errors, maxerrors, flags), nil
+}
+
+// VirDomainGetEmulatorPinInfo calls virDomainGetEmulatorPinInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetEmulatorPinInfo(domain unsafe.Pointer, cpumap *byte, maplen int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetEmulatorPinInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetEmulatorPinInfo(domain, cpumap, maplen, flags), nil
+}
+
+// VirDomainGetFSInfo calls virDomainGetFSInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetFSInfo(dom unsafe.Pointer, info *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetFSInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetFSInfo(dom, info, flags), nil
+}
+
+// VirDomainGetGuestInfo calls virDomainGetGuestInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetGuestInfo(domain unsafe.Pointer, types uint32, params *unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetGuestInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetGuestInfo(domain, types, params, nparams, flags), nil
+}
+
+// VirDomainGetGuestVcpus calls virDomainGetGuestVcpus using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetGuestVcpus(domain unsafe.Pointer, params *unsafe.Pointer, nparams *uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetGuestVcpus"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetGuestVcpus(domain, params, nparams, flags), nil
+}
+
+// VirDomainGetHostname calls virDomainGetHostname using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetHostname(domain unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainGetHostname"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainGetHostname(domain, flags), nil
+}
+
+// VirDomainGetID calls virDomainGetID using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetID(domain unsafe.Pointer) (uint32, error) {
+	if err := raw.requireSymbol("virDomainGetID"); err != nil {
+		var zero uint32
+		return zero, err
+	}
+	return raw.api.virDomainGetID(domain), nil
+}
+
+// VirDomainGetIOThreadInfo calls virDomainGetIOThreadInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetIOThreadInfo(dom unsafe.Pointer, info *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetIOThreadInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetIOThreadInfo(dom, info, flags), nil
+}
+
+// VirDomainGetInfo calls virDomainGetInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetInfo(domain unsafe.Pointer, info unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetInfo(domain, info), nil
+}
+
+// VirDomainGetInterfaceParameters calls virDomainGetInterfaceParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetInterfaceParameters(domain unsafe.Pointer, device *byte, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetInterfaceParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetInterfaceParameters(domain, device, params, nparams, flags), nil
+}
+
+// VirDomainGetJobInfo calls virDomainGetJobInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetJobInfo(domain unsafe.Pointer, info unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetJobInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetJobInfo(domain, info), nil
+}
+
+// VirDomainGetJobStats calls virDomainGetJobStats using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetJobStats(domain unsafe.Pointer, type_ *int32, params *unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetJobStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetJobStats(domain, type_, params, nparams, flags), nil
+}
+
+// VirDomainGetLaunchSecurityInfo calls virDomainGetLaunchSecurityInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetLaunchSecurityInfo(domain unsafe.Pointer, params *unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetLaunchSecurityInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetLaunchSecurityInfo(domain, params, nparams, flags), nil
+}
+
+// VirDomainGetMaxMemory calls virDomainGetMaxMemory using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetMaxMemory(domain unsafe.Pointer) (uintptr, error) {
+	if err := raw.requireSymbol("virDomainGetMaxMemory"); err != nil {
+		var zero uintptr
+		return zero, err
+	}
+	return raw.api.virDomainGetMaxMemory(domain), nil
+}
+
+// VirDomainGetMaxVcpus calls virDomainGetMaxVcpus using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetMaxVcpus(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetMaxVcpus"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetMaxVcpus(domain), nil
+}
+
+// VirDomainGetMemoryParameters calls virDomainGetMemoryParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetMemoryParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetMemoryParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetMemoryParameters(domain, params, nparams, flags), nil
+}
+
+// VirDomainGetMessages calls virDomainGetMessages using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetMessages(domain unsafe.Pointer, msgs *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetMessages"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetMessages(domain, msgs, flags), nil
+}
+
+// VirDomainGetMetadata calls virDomainGetMetadata using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetMetadata(domain unsafe.Pointer, type_ int32, uri *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainGetMetadata"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainGetMetadata(domain, type_, uri, flags), nil
+}
+
+// VirDomainGetName calls virDomainGetName using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetName(domain unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainGetName(domain), nil
+}
+
+// VirDomainGetNumaParameters calls virDomainGetNumaParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetNumaParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetNumaParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetNumaParameters(domain, params, nparams, flags), nil
+}
+
+// VirDomainGetOSType calls virDomainGetOSType using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetOSType(domain unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainGetOSType"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainGetOSType(domain), nil
+}
+
+// VirDomainGetPerfEvents calls virDomainGetPerfEvents using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetPerfEvents(domain unsafe.Pointer, params *unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetPerfEvents"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetPerfEvents(domain, params, nparams, flags), nil
+}
+
+// VirDomainGetSchedulerParameters calls virDomainGetSchedulerParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetSchedulerParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams *int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetSchedulerParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetSchedulerParameters(domain, params, nparams), nil
+}
+
+// VirDomainGetSchedulerParametersFlags calls virDomainGetSchedulerParametersFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetSchedulerParametersFlags(domain unsafe.Pointer, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetSchedulerParametersFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetSchedulerParametersFlags(domain, params, nparams, flags), nil
+}
+
+// VirDomainGetSchedulerType calls virDomainGetSchedulerType using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetSchedulerType(domain unsafe.Pointer, nparams *int32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainGetSchedulerType"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainGetSchedulerType(domain, nparams), nil
+}
+
+// VirDomainGetSecurityLabel calls virDomainGetSecurityLabel using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetSecurityLabel(domain unsafe.Pointer, seclabel unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetSecurityLabel"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetSecurityLabel(domain, seclabel), nil
+}
+
+// VirDomainGetSecurityLabelList calls virDomainGetSecurityLabelList using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetSecurityLabelList(domain unsafe.Pointer, seclabels *unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetSecurityLabelList"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetSecurityLabelList(domain, seclabels), nil
+}
+
+// VirDomainGetState calls virDomainGetState using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetState(domain unsafe.Pointer, state *int32, reason *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetState"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetState(domain, state, reason, flags), nil
+}
+
+// VirDomainGetTime calls virDomainGetTime using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetTime(dom unsafe.Pointer, seconds *int64, nseconds *uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetTime"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetTime(dom, seconds, nseconds, flags), nil
+}
+
+// VirDomainGetUUID calls virDomainGetUUID using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetUUID(domain unsafe.Pointer, uuid *byte) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetUUID"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetUUID(domain, uuid), nil
+}
+
+// VirDomainGetUUIDString calls virDomainGetUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetUUIDString(domain unsafe.Pointer, buf *byte) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetUUIDString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetUUIDString(domain, buf), nil
+}
+
+// VirDomainGetVcpuPinInfo calls virDomainGetVcpuPinInfo using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetVcpuPinInfo(domain unsafe.Pointer, ncpumaps int32, cpumaps *byte, maplen int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetVcpuPinInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetVcpuPinInfo(domain, ncpumaps, cpumaps, maplen, flags), nil
+}
+
+// VirDomainGetVcpus calls virDomainGetVcpus using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetVcpus(domain unsafe.Pointer, info unsafe.Pointer, maxinfo int32, cpumaps *byte, maplen int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetVcpus"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetVcpus(domain, info, maxinfo, cpumaps, maplen), nil
+}
+
+// VirDomainGetVcpusFlags calls virDomainGetVcpusFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetVcpusFlags(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGetVcpusFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGetVcpusFlags(domain, flags), nil
+}
+
+// VirDomainGetXMLDesc calls virDomainGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGetXMLDesc(domain unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainGetXMLDesc(domain, flags), nil
+}
+
+// VirDomainGraphicsReload calls virDomainGraphicsReload using its raw C ABI contract.
+func (raw *RawAPI) VirDomainGraphicsReload(domain unsafe.Pointer, type_ uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainGraphicsReload"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainGraphicsReload(domain, type_, flags), nil
+}
+
+// VirDomainHasCurrentSnapshot calls virDomainHasCurrentSnapshot using its raw C ABI contract.
+func (raw *RawAPI) VirDomainHasCurrentSnapshot(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainHasCurrentSnapshot"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainHasCurrentSnapshot(domain, flags), nil
+}
+
+// VirDomainHasManagedSaveImage calls virDomainHasManagedSaveImage using its raw C ABI contract.
+func (raw *RawAPI) VirDomainHasManagedSaveImage(dom unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainHasManagedSaveImage"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainHasManagedSaveImage(dom, flags), nil
+}
+
+// VirDomainIOThreadInfoFree calls virDomainIOThreadInfoFree using its raw C ABI contract.
+func (raw *RawAPI) VirDomainIOThreadInfoFree(info unsafe.Pointer) error {
+	if err := raw.requireSymbol("virDomainIOThreadInfoFree"); err != nil {
+		return err
+	}
+	raw.api.virDomainIOThreadInfoFree(info)
+	return nil
+}
+
+// VirDomainInjectNMI calls virDomainInjectNMI using its raw C ABI contract.
+func (raw *RawAPI) VirDomainInjectNMI(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainInjectNMI"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainInjectNMI(domain, flags), nil
+}
+
+// VirDomainInterfaceAddresses calls virDomainInterfaceAddresses using its raw C ABI contract.
+func (raw *RawAPI) VirDomainInterfaceAddresses(dom unsafe.Pointer, ifaces *unsafe.Pointer, source uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainInterfaceAddresses"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainInterfaceAddresses(dom, ifaces, source, flags), nil
+}
+
+// VirDomainInterfaceFree calls virDomainInterfaceFree using its raw C ABI contract.
+func (raw *RawAPI) VirDomainInterfaceFree(iface unsafe.Pointer) error {
+	if err := raw.requireSymbol("virDomainInterfaceFree"); err != nil {
+		return err
+	}
+	raw.api.virDomainInterfaceFree(iface)
+	return nil
+}
+
+// VirDomainInterfaceStats calls virDomainInterfaceStats using its raw C ABI contract.
+func (raw *RawAPI) VirDomainInterfaceStats(dom unsafe.Pointer, device *byte, stats unsafe.Pointer, size uintptr) (int32, error) {
+	if err := raw.requireSymbol("virDomainInterfaceStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainInterfaceStats(dom, device, stats, size), nil
+}
+
+// VirDomainIsActive calls virDomainIsActive using its raw C ABI contract.
+func (raw *RawAPI) VirDomainIsActive(dom unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainIsActive"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainIsActive(dom), nil
+}
+
+// VirDomainIsPersistent calls virDomainIsPersistent using its raw C ABI contract.
+func (raw *RawAPI) VirDomainIsPersistent(dom unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainIsPersistent"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainIsPersistent(dom), nil
+}
+
+// VirDomainIsUpdated calls virDomainIsUpdated using its raw C ABI contract.
+func (raw *RawAPI) VirDomainIsUpdated(dom unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainIsUpdated"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainIsUpdated(dom), nil
+}
+
+// VirDomainListAllCheckpoints calls virDomainListAllCheckpoints using its raw C ABI contract.
+func (raw *RawAPI) VirDomainListAllCheckpoints(domain unsafe.Pointer, checkpoints *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainListAllCheckpoints"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainListAllCheckpoints(domain, checkpoints, flags), nil
+}
+
+// VirDomainListAllSnapshots calls virDomainListAllSnapshots using its raw C ABI contract.
+func (raw *RawAPI) VirDomainListAllSnapshots(domain unsafe.Pointer, snaps *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainListAllSnapshots"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainListAllSnapshots(domain, snaps, flags), nil
+}
+
+// VirDomainListGetStats calls virDomainListGetStats using its raw C ABI contract.
+func (raw *RawAPI) VirDomainListGetStats(doms *unsafe.Pointer, stats uint32, retStats *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainListGetStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainListGetStats(doms, stats, retStats, flags), nil
+}
+
+// VirDomainLookupByID calls virDomainLookupByID using its raw C ABI contract.
+func (raw *RawAPI) VirDomainLookupByID(conn unsafe.Pointer, id int32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainLookupByID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainLookupByID(conn, id), nil
+}
+
+// VirDomainLookupByName calls virDomainLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirDomainLookupByName(conn unsafe.Pointer, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainLookupByName(conn, name), nil
+}
+
+// VirDomainLookupByUUID calls virDomainLookupByUUID using its raw C ABI contract.
+func (raw *RawAPI) VirDomainLookupByUUID(conn unsafe.Pointer, uuid *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainLookupByUUID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainLookupByUUID(conn, uuid), nil
+}
+
+// VirDomainLookupByUUIDString calls virDomainLookupByUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirDomainLookupByUUIDString(conn unsafe.Pointer, uuidstr *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainLookupByUUIDString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainLookupByUUIDString(conn, uuidstr), nil
+}
+
+// VirDomainManagedSave calls virDomainManagedSave using its raw C ABI contract.
+func (raw *RawAPI) VirDomainManagedSave(dom unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainManagedSave"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainManagedSave(dom, flags), nil
+}
+
+// VirDomainManagedSaveDefineXML calls virDomainManagedSaveDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirDomainManagedSaveDefineXML(domain unsafe.Pointer, dxml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainManagedSaveDefineXML"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainManagedSaveDefineXML(domain, dxml, flags), nil
+}
+
+// VirDomainManagedSaveGetXMLDesc calls virDomainManagedSaveGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirDomainManagedSaveGetXMLDesc(domain unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainManagedSaveGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainManagedSaveGetXMLDesc(domain, flags), nil
+}
+
+// VirDomainManagedSaveRemove calls virDomainManagedSaveRemove using its raw C ABI contract.
+func (raw *RawAPI) VirDomainManagedSaveRemove(dom unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainManagedSaveRemove"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainManagedSaveRemove(dom, flags), nil
+}
+
+// VirDomainMemoryPeek calls virDomainMemoryPeek using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMemoryPeek(dom unsafe.Pointer, start uint64, size uintptr, buffer unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMemoryPeek"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMemoryPeek(dom, start, size, buffer, flags), nil
+}
+
+// VirDomainMemoryStats calls virDomainMemoryStats using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMemoryStats(dom unsafe.Pointer, stats unsafe.Pointer, nr_stats uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMemoryStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMemoryStats(dom, stats, nr_stats, flags), nil
+}
+
+// VirDomainMigrate calls virDomainMigrate using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrate(domain unsafe.Pointer, dconn unsafe.Pointer, flags uintptr, dname *byte, uri *byte, bandwidth uintptr) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainMigrate"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainMigrate(domain, dconn, flags, dname, uri, bandwidth), nil
+}
+
+// VirDomainMigrate2 calls virDomainMigrate2 using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrate2(domain unsafe.Pointer, dconn unsafe.Pointer, dxml *byte, flags uintptr, dname *byte, uri *byte, bandwidth uintptr) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainMigrate2"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainMigrate2(domain, dconn, dxml, flags, dname, uri, bandwidth), nil
+}
+
+// VirDomainMigrate3 calls virDomainMigrate3 using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrate3(domain unsafe.Pointer, dconn unsafe.Pointer, params unsafe.Pointer, nparams uint32, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainMigrate3"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainMigrate3(domain, dconn, params, nparams, flags), nil
+}
+
+// VirDomainMigrateGetCompressionCache calls virDomainMigrateGetCompressionCache using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateGetCompressionCache(domain unsafe.Pointer, cacheSize *uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateGetCompressionCache"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateGetCompressionCache(domain, cacheSize, flags), nil
+}
+
+// VirDomainMigrateGetMaxDowntime calls virDomainMigrateGetMaxDowntime using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateGetMaxDowntime(domain unsafe.Pointer, downtime *uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateGetMaxDowntime"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateGetMaxDowntime(domain, downtime, flags), nil
+}
+
+// VirDomainMigrateGetMaxSpeed calls virDomainMigrateGetMaxSpeed using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateGetMaxSpeed(domain unsafe.Pointer, bandwidth *uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateGetMaxSpeed"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateGetMaxSpeed(domain, bandwidth, flags), nil
+}
+
+// VirDomainMigrateSetCompressionCache calls virDomainMigrateSetCompressionCache using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateSetCompressionCache(domain unsafe.Pointer, cacheSize uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateSetCompressionCache"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateSetCompressionCache(domain, cacheSize, flags), nil
+}
+
+// VirDomainMigrateSetMaxDowntime calls virDomainMigrateSetMaxDowntime using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateSetMaxDowntime(domain unsafe.Pointer, downtime uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateSetMaxDowntime"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateSetMaxDowntime(domain, downtime, flags), nil
+}
+
+// VirDomainMigrateSetMaxSpeed calls virDomainMigrateSetMaxSpeed using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateSetMaxSpeed(domain unsafe.Pointer, bandwidth uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateSetMaxSpeed"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateSetMaxSpeed(domain, bandwidth, flags), nil
+}
+
+// VirDomainMigrateStartPostCopy calls virDomainMigrateStartPostCopy using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateStartPostCopy(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateStartPostCopy"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateStartPostCopy(domain, flags), nil
+}
+
+// VirDomainMigrateToURI calls virDomainMigrateToURI using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateToURI(domain unsafe.Pointer, duri *byte, flags uintptr, dname *byte, bandwidth uintptr) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateToURI"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateToURI(domain, duri, flags, dname, bandwidth), nil
+}
+
+// VirDomainMigrateToURI2 calls virDomainMigrateToURI2 using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateToURI2(domain unsafe.Pointer, dconnuri *byte, miguri *byte, dxml *byte, flags uintptr, dname *byte, bandwidth uintptr) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateToURI2"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateToURI2(domain, dconnuri, miguri, dxml, flags, dname, bandwidth), nil
+}
+
+// VirDomainMigrateToURI3 calls virDomainMigrateToURI3 using its raw C ABI contract.
+func (raw *RawAPI) VirDomainMigrateToURI3(domain unsafe.Pointer, dconnuri *byte, params unsafe.Pointer, nparams uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainMigrateToURI3"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainMigrateToURI3(domain, dconnuri, params, nparams, flags), nil
+}
+
+// VirDomainOpenChannel calls virDomainOpenChannel using its raw C ABI contract.
+func (raw *RawAPI) VirDomainOpenChannel(dom unsafe.Pointer, name *byte, st unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainOpenChannel"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainOpenChannel(dom, name, st, flags), nil
+}
+
+// VirDomainOpenConsole calls virDomainOpenConsole using its raw C ABI contract.
+func (raw *RawAPI) VirDomainOpenConsole(dom unsafe.Pointer, dev_name *byte, st unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainOpenConsole"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainOpenConsole(dom, dev_name, st, flags), nil
+}
+
+// VirDomainOpenGraphics calls virDomainOpenGraphics using its raw C ABI contract.
+func (raw *RawAPI) VirDomainOpenGraphics(dom unsafe.Pointer, idx uint32, fd int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainOpenGraphics"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainOpenGraphics(dom, idx, fd, flags), nil
+}
+
+// VirDomainOpenGraphicsFD calls virDomainOpenGraphicsFD using its raw C ABI contract.
+func (raw *RawAPI) VirDomainOpenGraphicsFD(dom unsafe.Pointer, idx uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainOpenGraphicsFD"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainOpenGraphicsFD(dom, idx, flags), nil
+}
+
+// VirDomainPMSuspendForDuration calls virDomainPMSuspendForDuration using its raw C ABI contract.
+func (raw *RawAPI) VirDomainPMSuspendForDuration(dom unsafe.Pointer, target uint32, duration uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainPMSuspendForDuration"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainPMSuspendForDuration(dom, target, duration, flags), nil
+}
+
+// VirDomainPMWakeup calls virDomainPMWakeup using its raw C ABI contract.
+func (raw *RawAPI) VirDomainPMWakeup(dom unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainPMWakeup"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainPMWakeup(dom, flags), nil
+}
+
+// VirDomainPinEmulator calls virDomainPinEmulator using its raw C ABI contract.
+func (raw *RawAPI) VirDomainPinEmulator(domain unsafe.Pointer, cpumap *byte, maplen int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainPinEmulator"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainPinEmulator(domain, cpumap, maplen, flags), nil
+}
+
+// VirDomainPinIOThread calls virDomainPinIOThread using its raw C ABI contract.
+func (raw *RawAPI) VirDomainPinIOThread(domain unsafe.Pointer, iothread_id uint32, cpumap *byte, maplen int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainPinIOThread"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainPinIOThread(domain, iothread_id, cpumap, maplen, flags), nil
+}
+
+// VirDomainPinVcpu calls virDomainPinVcpu using its raw C ABI contract.
+func (raw *RawAPI) VirDomainPinVcpu(domain unsafe.Pointer, vcpu uint32, cpumap *byte, maplen int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainPinVcpu"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainPinVcpu(domain, vcpu, cpumap, maplen), nil
+}
+
+// VirDomainPinVcpuFlags calls virDomainPinVcpuFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainPinVcpuFlags(domain unsafe.Pointer, vcpu uint32, cpumap *byte, maplen int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainPinVcpuFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainPinVcpuFlags(domain, vcpu, cpumap, maplen, flags), nil
+}
+
+// VirDomainReboot calls virDomainReboot using its raw C ABI contract.
+func (raw *RawAPI) VirDomainReboot(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainReboot"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainReboot(domain, flags), nil
+}
+
+// VirDomainRef calls virDomainRef using its raw C ABI contract.
+func (raw *RawAPI) VirDomainRef(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainRef(domain), nil
+}
+
+// VirDomainRename calls virDomainRename using its raw C ABI contract.
+func (raw *RawAPI) VirDomainRename(dom unsafe.Pointer, new_name *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainRename"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainRename(dom, new_name, flags), nil
+}
+
+// VirDomainReset calls virDomainReset using its raw C ABI contract.
+func (raw *RawAPI) VirDomainReset(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainReset"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainReset(domain, flags), nil
+}
+
+// VirDomainRestore calls virDomainRestore using its raw C ABI contract.
+func (raw *RawAPI) VirDomainRestore(conn unsafe.Pointer, from *byte) (int32, error) {
+	if err := raw.requireSymbol("virDomainRestore"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainRestore(conn, from), nil
+}
+
+// VirDomainRestoreFlags calls virDomainRestoreFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainRestoreFlags(conn unsafe.Pointer, from *byte, dxml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainRestoreFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainRestoreFlags(conn, from, dxml, flags), nil
+}
+
+// VirDomainRestoreParams calls virDomainRestoreParams using its raw C ABI contract.
+func (raw *RawAPI) VirDomainRestoreParams(conn unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainRestoreParams"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainRestoreParams(conn, params, nparams, flags), nil
+}
+
+// VirDomainResume calls virDomainResume using its raw C ABI contract.
+func (raw *RawAPI) VirDomainResume(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainResume"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainResume(domain), nil
+}
+
+// VirDomainRevertToSnapshot calls virDomainRevertToSnapshot using its raw C ABI contract.
+func (raw *RawAPI) VirDomainRevertToSnapshot(snapshot unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainRevertToSnapshot"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainRevertToSnapshot(snapshot, flags), nil
+}
+
+// VirDomainSave calls virDomainSave using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSave(domain unsafe.Pointer, to *byte) (int32, error) {
+	if err := raw.requireSymbol("virDomainSave"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSave(domain, to), nil
+}
+
+// VirDomainSaveFlags calls virDomainSaveFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSaveFlags(domain unsafe.Pointer, to *byte, dxml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSaveFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSaveFlags(domain, to, dxml, flags), nil
+}
+
+// VirDomainSaveImageDefineXML calls virDomainSaveImageDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSaveImageDefineXML(conn unsafe.Pointer, file *byte, dxml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSaveImageDefineXML"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSaveImageDefineXML(conn, file, dxml, flags), nil
+}
+
+// VirDomainSaveImageGetXMLDesc calls virDomainSaveImageGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSaveImageGetXMLDesc(conn unsafe.Pointer, file *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSaveImageGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSaveImageGetXMLDesc(conn, file, flags), nil
+}
+
+// VirDomainSaveParams calls virDomainSaveParams using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSaveParams(domain unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSaveParams"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSaveParams(domain, params, nparams, flags), nil
+}
+
+// VirDomainScreenshot calls virDomainScreenshot using its raw C ABI contract.
+func (raw *RawAPI) VirDomainScreenshot(domain unsafe.Pointer, stream unsafe.Pointer, screen uint32, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainScreenshot"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainScreenshot(domain, stream, screen, flags), nil
+}
+
+// VirDomainSendKey calls virDomainSendKey using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSendKey(domain unsafe.Pointer, codeset uint32, holdtime uint32, keycodes *uint32, nkeycodes int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSendKey"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSendKey(domain, codeset, holdtime, keycodes, nkeycodes, flags), nil
+}
+
+// VirDomainSendProcessSignal calls virDomainSendProcessSignal using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSendProcessSignal(domain unsafe.Pointer, pid_value int64, signum uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSendProcessSignal"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSendProcessSignal(domain, pid_value, signum, flags), nil
+}
+
+// VirDomainSetAutostart calls virDomainSetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetAutostart(domain unsafe.Pointer, autostart int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetAutostart(domain, autostart), nil
+}
+
+// VirDomainSetAutostartOnce calls virDomainSetAutostartOnce using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetAutostartOnce(domain unsafe.Pointer, autostart int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetAutostartOnce"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetAutostartOnce(domain, autostart), nil
+}
+
+// VirDomainSetBlkioParameters calls virDomainSetBlkioParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetBlkioParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetBlkioParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetBlkioParameters(domain, params, nparams, flags), nil
+}
+
+// VirDomainSetBlockIoTune calls virDomainSetBlockIoTune using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetBlockIoTune(dom unsafe.Pointer, disk *byte, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetBlockIoTune"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetBlockIoTune(dom, disk, params, nparams, flags), nil
+}
+
+// VirDomainSetBlockThreshold calls virDomainSetBlockThreshold using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetBlockThreshold(domain unsafe.Pointer, dev *byte, threshold uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetBlockThreshold"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetBlockThreshold(domain, dev, threshold, flags), nil
+}
+
+// VirDomainSetGuestVcpus calls virDomainSetGuestVcpus using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetGuestVcpus(domain unsafe.Pointer, cpumap *byte, state int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetGuestVcpus"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetGuestVcpus(domain, cpumap, state, flags), nil
+}
+
+// VirDomainSetIOThreadParams calls virDomainSetIOThreadParams using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetIOThreadParams(domain unsafe.Pointer, iothread_id uint32, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetIOThreadParams"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetIOThreadParams(domain, iothread_id, params, nparams, flags), nil
+}
+
+// VirDomainSetInterfaceParameters calls virDomainSetInterfaceParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetInterfaceParameters(domain unsafe.Pointer, device *byte, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetInterfaceParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetInterfaceParameters(domain, device, params, nparams, flags), nil
+}
+
+// VirDomainSetLaunchSecurityState calls virDomainSetLaunchSecurityState using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetLaunchSecurityState(domain unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetLaunchSecurityState"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetLaunchSecurityState(domain, params, nparams, flags), nil
+}
+
+// VirDomainSetLifecycleAction calls virDomainSetLifecycleAction using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetLifecycleAction(domain unsafe.Pointer, type_ uint32, action uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetLifecycleAction"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetLifecycleAction(domain, type_, action, flags), nil
+}
+
+// VirDomainSetMaxMemory calls virDomainSetMaxMemory using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetMaxMemory(domain unsafe.Pointer, memory uintptr) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetMaxMemory"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetMaxMemory(domain, memory), nil
+}
+
+// VirDomainSetMemory calls virDomainSetMemory using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetMemory(domain unsafe.Pointer, memory uintptr) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetMemory"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetMemory(domain, memory), nil
+}
+
+// VirDomainSetMemoryFlags calls virDomainSetMemoryFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetMemoryFlags(domain unsafe.Pointer, memory uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetMemoryFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetMemoryFlags(domain, memory, flags), nil
+}
+
+// VirDomainSetMemoryParameters calls virDomainSetMemoryParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetMemoryParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetMemoryParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetMemoryParameters(domain, params, nparams, flags), nil
+}
+
+// VirDomainSetMemoryStatsPeriod calls virDomainSetMemoryStatsPeriod using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetMemoryStatsPeriod(domain unsafe.Pointer, period int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetMemoryStatsPeriod"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetMemoryStatsPeriod(domain, period, flags), nil
+}
+
+// VirDomainSetMetadata calls virDomainSetMetadata using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetMetadata(domain unsafe.Pointer, type_ int32, metadata *byte, key *byte, uri *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetMetadata"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetMetadata(domain, type_, metadata, key, uri, flags), nil
+}
+
+// VirDomainSetNumaParameters calls virDomainSetNumaParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetNumaParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetNumaParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetNumaParameters(domain, params, nparams, flags), nil
+}
+
+// VirDomainSetPerfEvents calls virDomainSetPerfEvents using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetPerfEvents(domain unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetPerfEvents"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetPerfEvents(domain, params, nparams, flags), nil
+}
+
+// VirDomainSetSchedulerParameters calls virDomainSetSchedulerParameters using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetSchedulerParameters(domain unsafe.Pointer, params unsafe.Pointer, nparams int32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetSchedulerParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetSchedulerParameters(domain, params, nparams), nil
+}
+
+// VirDomainSetSchedulerParametersFlags calls virDomainSetSchedulerParametersFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetSchedulerParametersFlags(domain unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetSchedulerParametersFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetSchedulerParametersFlags(domain, params, nparams, flags), nil
+}
+
+// VirDomainSetThrottleGroup calls virDomainSetThrottleGroup using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetThrottleGroup(dom unsafe.Pointer, group *byte, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetThrottleGroup"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetThrottleGroup(dom, group, params, nparams, flags), nil
+}
+
+// VirDomainSetTime calls virDomainSetTime using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetTime(dom unsafe.Pointer, seconds int64, nseconds uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetTime"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetTime(dom, seconds, nseconds, flags), nil
+}
+
+// VirDomainSetUserPassword calls virDomainSetUserPassword using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetUserPassword(dom unsafe.Pointer, user *byte, password *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetUserPassword"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetUserPassword(dom, user, password, flags), nil
+}
+
+// VirDomainSetVcpu calls virDomainSetVcpu using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetVcpu(domain unsafe.Pointer, vcpumap *byte, state int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetVcpu"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetVcpu(domain, vcpumap, state, flags), nil
+}
+
+// VirDomainSetVcpus calls virDomainSetVcpus using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetVcpus(domain unsafe.Pointer, nvcpus uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetVcpus"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetVcpus(domain, nvcpus), nil
+}
+
+// VirDomainSetVcpusFlags calls virDomainSetVcpusFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSetVcpusFlags(domain unsafe.Pointer, nvcpus uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSetVcpusFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSetVcpusFlags(domain, nvcpus, flags), nil
+}
+
+// VirDomainShutdown calls virDomainShutdown using its raw C ABI contract.
+func (raw *RawAPI) VirDomainShutdown(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainShutdown"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainShutdown(domain), nil
+}
+
+// VirDomainShutdownFlags calls virDomainShutdownFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainShutdownFlags(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainShutdownFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainShutdownFlags(domain, flags), nil
+}
+
+// VirDomainSnapshotCreateXML calls virDomainSnapshotCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotCreateXML(domain unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotCreateXML(domain, xmlDesc, flags), nil
+}
+
+// VirDomainSnapshotCurrent calls virDomainSnapshotCurrent using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotCurrent(domain unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotCurrent"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotCurrent(domain, flags), nil
+}
+
+// VirDomainSnapshotDelete calls virDomainSnapshotDelete using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotDelete(snapshot unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotDelete"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotDelete(snapshot, flags), nil
+}
+
+// VirDomainSnapshotFree calls virDomainSnapshotFree using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotFree(snapshot unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotFree(snapshot), nil
+}
+
+// VirDomainSnapshotGetConnect calls virDomainSnapshotGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotGetConnect(snapshot unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotGetConnect(snapshot), nil
+}
+
+// VirDomainSnapshotGetDomain calls virDomainSnapshotGetDomain using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotGetDomain(snapshot unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotGetDomain"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotGetDomain(snapshot), nil
+}
+
+// VirDomainSnapshotGetName calls virDomainSnapshotGetName using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotGetName(snapshot unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotGetName(snapshot), nil
+}
+
+// VirDomainSnapshotGetParent calls virDomainSnapshotGetParent using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotGetParent(snapshot unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotGetParent"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotGetParent(snapshot, flags), nil
+}
+
+// VirDomainSnapshotGetXMLDesc calls virDomainSnapshotGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotGetXMLDesc(snapshot unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotGetXMLDesc(snapshot, flags), nil
+}
+
+// VirDomainSnapshotHasMetadata calls virDomainSnapshotHasMetadata using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotHasMetadata(snapshot unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotHasMetadata"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotHasMetadata(snapshot, flags), nil
+}
+
+// VirDomainSnapshotIsCurrent calls virDomainSnapshotIsCurrent using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotIsCurrent(snapshot unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotIsCurrent"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotIsCurrent(snapshot, flags), nil
+}
+
+// VirDomainSnapshotListAllChildren calls virDomainSnapshotListAllChildren using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotListAllChildren(snapshot unsafe.Pointer, snaps *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotListAllChildren"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotListAllChildren(snapshot, snaps, flags), nil
+}
+
+// VirDomainSnapshotListChildrenNames calls virDomainSnapshotListChildrenNames using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotListChildrenNames(snapshot unsafe.Pointer, names *unsafe.Pointer, nameslen int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotListChildrenNames"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotListChildrenNames(snapshot, names, nameslen, flags), nil
+}
+
+// VirDomainSnapshotListNames calls virDomainSnapshotListNames using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotListNames(domain unsafe.Pointer, names *unsafe.Pointer, nameslen int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotListNames"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotListNames(domain, names, nameslen, flags), nil
+}
+
+// VirDomainSnapshotLookupByName calls virDomainSnapshotLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotLookupByName(domain unsafe.Pointer, name *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virDomainSnapshotLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotLookupByName(domain, name, flags), nil
+}
+
+// VirDomainSnapshotNum calls virDomainSnapshotNum using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotNum(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotNum"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotNum(domain, flags), nil
+}
+
+// VirDomainSnapshotNumChildren calls virDomainSnapshotNumChildren using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotNumChildren(snapshot unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotNumChildren"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotNumChildren(snapshot, flags), nil
+}
+
+// VirDomainSnapshotRef calls virDomainSnapshotRef using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSnapshotRef(snapshot unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainSnapshotRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSnapshotRef(snapshot), nil
+}
+
+// VirDomainStartDirtyRateCalc calls virDomainStartDirtyRateCalc using its raw C ABI contract.
+func (raw *RawAPI) VirDomainStartDirtyRateCalc(domain unsafe.Pointer, seconds int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainStartDirtyRateCalc"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainStartDirtyRateCalc(domain, seconds, flags), nil
+}
+
+// VirDomainStatsRecordListFree calls virDomainStatsRecordListFree using its raw C ABI contract.
+func (raw *RawAPI) VirDomainStatsRecordListFree(stats *unsafe.Pointer) error {
+	if err := raw.requireSymbol("virDomainStatsRecordListFree"); err != nil {
+		return err
+	}
+	raw.api.virDomainStatsRecordListFree(stats)
+	return nil
+}
+
+// VirDomainSuspend calls virDomainSuspend using its raw C ABI contract.
+func (raw *RawAPI) VirDomainSuspend(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainSuspend"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainSuspend(domain), nil
+}
+
+// VirDomainUndefine calls virDomainUndefine using its raw C ABI contract.
+func (raw *RawAPI) VirDomainUndefine(domain unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virDomainUndefine"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainUndefine(domain), nil
+}
+
+// VirDomainUndefineFlags calls virDomainUndefineFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainUndefineFlags(domain unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainUndefineFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainUndefineFlags(domain, flags), nil
+}
+
+// VirDomainUpdateDeviceFlags calls virDomainUpdateDeviceFlags using its raw C ABI contract.
+func (raw *RawAPI) VirDomainUpdateDeviceFlags(domain unsafe.Pointer, xml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virDomainUpdateDeviceFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virDomainUpdateDeviceFlags(domain, xml, flags), nil
+}
+
+// VirEventAddHandle calls virEventAddHandle using its raw C ABI contract.
+func (raw *RawAPI) VirEventAddHandle(fd int32, events int32, cb uintptr, opaque unsafe.Pointer, ff uintptr) (int32, error) {
+	if err := raw.requireSymbol("virEventAddHandle"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virEventAddHandle(fd, events, cb, opaque, ff), nil
+}
+
+// VirEventAddTimeout calls virEventAddTimeout using its raw C ABI contract.
+func (raw *RawAPI) VirEventAddTimeout(timeout int32, cb uintptr, opaque unsafe.Pointer, ff uintptr) (int32, error) {
+	if err := raw.requireSymbol("virEventAddTimeout"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virEventAddTimeout(timeout, cb, opaque, ff), nil
+}
+
+// VirEventRegisterDefaultImpl calls virEventRegisterDefaultImpl using its raw C ABI contract.
+func (raw *RawAPI) VirEventRegisterDefaultImpl() (int32, error) {
+	if err := raw.requireSymbol("virEventRegisterDefaultImpl"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virEventRegisterDefaultImpl(), nil
+}
+
+// VirEventRegisterImpl calls virEventRegisterImpl using its raw C ABI contract.
+func (raw *RawAPI) VirEventRegisterImpl(addHandle uintptr, updateHandle uintptr, removeHandle uintptr, addTimeout uintptr, updateTimeout uintptr, removeTimeout uintptr) error {
+	if err := raw.requireSymbol("virEventRegisterImpl"); err != nil {
+		return err
+	}
+	raw.api.virEventRegisterImpl(addHandle, updateHandle, removeHandle, addTimeout, updateTimeout, removeTimeout)
+	return nil
+}
+
+// VirEventRemoveHandle calls virEventRemoveHandle using its raw C ABI contract.
+func (raw *RawAPI) VirEventRemoveHandle(watch int32) (int32, error) {
+	if err := raw.requireSymbol("virEventRemoveHandle"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virEventRemoveHandle(watch), nil
+}
+
+// VirEventRemoveTimeout calls virEventRemoveTimeout using its raw C ABI contract.
+func (raw *RawAPI) VirEventRemoveTimeout(timer int32) (int32, error) {
+	if err := raw.requireSymbol("virEventRemoveTimeout"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virEventRemoveTimeout(timer), nil
+}
+
+// VirEventRunDefaultImpl calls virEventRunDefaultImpl using its raw C ABI contract.
+func (raw *RawAPI) VirEventRunDefaultImpl() (int32, error) {
+	if err := raw.requireSymbol("virEventRunDefaultImpl"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virEventRunDefaultImpl(), nil
+}
+
+// VirEventUpdateHandle calls virEventUpdateHandle using its raw C ABI contract.
+func (raw *RawAPI) VirEventUpdateHandle(watch int32, events int32) error {
+	if err := raw.requireSymbol("virEventUpdateHandle"); err != nil {
+		return err
+	}
+	raw.api.virEventUpdateHandle(watch, events)
+	return nil
+}
+
+// VirEventUpdateTimeout calls virEventUpdateTimeout using its raw C ABI contract.
+func (raw *RawAPI) VirEventUpdateTimeout(timer int32, timeout int32) error {
+	if err := raw.requireSymbol("virEventUpdateTimeout"); err != nil {
+		return err
+	}
+	raw.api.virEventUpdateTimeout(timer, timeout)
+	return nil
+}
+
+// VirFreeError calls virFreeError using its raw C ABI contract.
+func (raw *RawAPI) VirFreeError(err unsafe.Pointer) error {
+	if err := raw.requireSymbol("virFreeError"); err != nil {
+		return err
+	}
+	raw.api.virFreeError(err)
+	return nil
+}
+
+// VirGetLastError calls virGetLastError using its raw C ABI contract.
+func (raw *RawAPI) VirGetLastError() (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virGetLastError"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virGetLastError(), nil
+}
+
+// VirGetLastErrorCode calls virGetLastErrorCode using its raw C ABI contract.
+func (raw *RawAPI) VirGetLastErrorCode() (int32, error) {
+	if err := raw.requireSymbol("virGetLastErrorCode"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virGetLastErrorCode(), nil
+}
+
+// VirGetLastErrorDomain calls virGetLastErrorDomain using its raw C ABI contract.
+func (raw *RawAPI) VirGetLastErrorDomain() (int32, error) {
+	if err := raw.requireSymbol("virGetLastErrorDomain"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virGetLastErrorDomain(), nil
+}
+
+// VirGetLastErrorMessage calls virGetLastErrorMessage using its raw C ABI contract.
+func (raw *RawAPI) VirGetLastErrorMessage() (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virGetLastErrorMessage"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virGetLastErrorMessage(), nil
+}
+
+// VirGetVersion calls virGetVersion using its raw C ABI contract.
+func (raw *RawAPI) VirGetVersion(libVer *uintptr, type_ *byte, typeVer *uintptr) (int32, error) {
+	if err := raw.requireSymbol("virGetVersion"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virGetVersion(libVer, type_, typeVer), nil
+}
+
+// VirInitialize calls virInitialize using its raw C ABI contract.
+func (raw *RawAPI) VirInitialize() (int32, error) {
+	if err := raw.requireSymbol("virInitialize"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInitialize(), nil
+}
+
+// VirInterfaceChangeBegin calls virInterfaceChangeBegin using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceChangeBegin(conn unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceChangeBegin"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceChangeBegin(conn, flags), nil
+}
+
+// VirInterfaceChangeCommit calls virInterfaceChangeCommit using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceChangeCommit(conn unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceChangeCommit"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceChangeCommit(conn, flags), nil
+}
+
+// VirInterfaceChangeRollback calls virInterfaceChangeRollback using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceChangeRollback(conn unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceChangeRollback"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceChangeRollback(conn, flags), nil
+}
+
+// VirInterfaceCreate calls virInterfaceCreate using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceCreate(iface unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceCreate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceCreate(iface, flags), nil
+}
+
+// VirInterfaceDefineXML calls virInterfaceDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceDefineXML(conn unsafe.Pointer, xml *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virInterfaceDefineXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virInterfaceDefineXML(conn, xml, flags), nil
+}
+
+// VirInterfaceDestroy calls virInterfaceDestroy using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceDestroy(iface unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceDestroy"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceDestroy(iface, flags), nil
+}
+
+// VirInterfaceFree calls virInterfaceFree using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceFree(iface unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceFree(iface), nil
+}
+
+// VirInterfaceGetConnect calls virInterfaceGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceGetConnect(iface unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virInterfaceGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virInterfaceGetConnect(iface), nil
+}
+
+// VirInterfaceGetMACString calls virInterfaceGetMACString using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceGetMACString(iface unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virInterfaceGetMACString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virInterfaceGetMACString(iface), nil
+}
+
+// VirInterfaceGetName calls virInterfaceGetName using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceGetName(iface unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virInterfaceGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virInterfaceGetName(iface), nil
+}
+
+// VirInterfaceGetXMLDesc calls virInterfaceGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceGetXMLDesc(iface unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virInterfaceGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virInterfaceGetXMLDesc(iface, flags), nil
+}
+
+// VirInterfaceIsActive calls virInterfaceIsActive using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceIsActive(iface unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceIsActive"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceIsActive(iface), nil
+}
+
+// VirInterfaceLookupByMACString calls virInterfaceLookupByMACString using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceLookupByMACString(conn unsafe.Pointer, macstr *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virInterfaceLookupByMACString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virInterfaceLookupByMACString(conn, macstr), nil
+}
+
+// VirInterfaceLookupByName calls virInterfaceLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceLookupByName(conn unsafe.Pointer, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virInterfaceLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virInterfaceLookupByName(conn, name), nil
+}
+
+// VirInterfaceRef calls virInterfaceRef using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceRef(iface unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceRef(iface), nil
+}
+
+// VirInterfaceUndefine calls virInterfaceUndefine using its raw C ABI contract.
+func (raw *RawAPI) VirInterfaceUndefine(iface unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virInterfaceUndefine"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virInterfaceUndefine(iface), nil
+}
+
+// VirNWFilterBindingCreateXML calls virNWFilterBindingCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingCreateXML(conn unsafe.Pointer, xml *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterBindingCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingCreateXML(conn, xml, flags), nil
+}
+
+// VirNWFilterBindingDelete calls virNWFilterBindingDelete using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingDelete(binding unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterBindingDelete"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingDelete(binding), nil
+}
+
+// VirNWFilterBindingFree calls virNWFilterBindingFree using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingFree(binding unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterBindingFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingFree(binding), nil
+}
+
+// VirNWFilterBindingGetFilterName calls virNWFilterBindingGetFilterName using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingGetFilterName(binding unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterBindingGetFilterName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingGetFilterName(binding), nil
+}
+
+// VirNWFilterBindingGetPortDev calls virNWFilterBindingGetPortDev using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingGetPortDev(binding unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterBindingGetPortDev"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingGetPortDev(binding), nil
+}
+
+// VirNWFilterBindingGetXMLDesc calls virNWFilterBindingGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingGetXMLDesc(binding unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterBindingGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingGetXMLDesc(binding, flags), nil
+}
+
+// VirNWFilterBindingLookupByPortDev calls virNWFilterBindingLookupByPortDev using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingLookupByPortDev(conn unsafe.Pointer, portdev *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterBindingLookupByPortDev"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingLookupByPortDev(conn, portdev), nil
+}
+
+// VirNWFilterBindingRef calls virNWFilterBindingRef using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterBindingRef(binding unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterBindingRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterBindingRef(binding), nil
+}
+
+// VirNWFilterDefineXML calls virNWFilterDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterDefineXML(conn unsafe.Pointer, xmlDesc *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterDefineXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterDefineXML(conn, xmlDesc), nil
+}
+
+// VirNWFilterDefineXMLFlags calls virNWFilterDefineXMLFlags using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterDefineXMLFlags(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterDefineXMLFlags"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterDefineXMLFlags(conn, xmlDesc, flags), nil
+}
+
+// VirNWFilterFree calls virNWFilterFree using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterFree(nwfilter unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterFree(nwfilter), nil
+}
+
+// VirNWFilterGetName calls virNWFilterGetName using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterGetName(nwfilter unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterGetName(nwfilter), nil
+}
+
+// VirNWFilterGetUUID calls virNWFilterGetUUID using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterGetUUID(nwfilter unsafe.Pointer, uuid *byte) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterGetUUID"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterGetUUID(nwfilter, uuid), nil
+}
+
+// VirNWFilterGetUUIDString calls virNWFilterGetUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterGetUUIDString(nwfilter unsafe.Pointer, buf *byte) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterGetUUIDString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterGetUUIDString(nwfilter, buf), nil
+}
+
+// VirNWFilterGetXMLDesc calls virNWFilterGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterGetXMLDesc(nwfilter unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterGetXMLDesc(nwfilter, flags), nil
+}
+
+// VirNWFilterLookupByName calls virNWFilterLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterLookupByName(conn unsafe.Pointer, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterLookupByName(conn, name), nil
+}
+
+// VirNWFilterLookupByUUID calls virNWFilterLookupByUUID using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterLookupByUUID(conn unsafe.Pointer, uuid *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterLookupByUUID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterLookupByUUID(conn, uuid), nil
+}
+
+// VirNWFilterLookupByUUIDString calls virNWFilterLookupByUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterLookupByUUIDString(conn unsafe.Pointer, uuidstr *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNWFilterLookupByUUIDString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNWFilterLookupByUUIDString(conn, uuidstr), nil
+}
+
+// VirNWFilterRef calls virNWFilterRef using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterRef(nwfilter unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterRef(nwfilter), nil
+}
+
+// VirNWFilterUndefine calls virNWFilterUndefine using its raw C ABI contract.
+func (raw *RawAPI) VirNWFilterUndefine(nwfilter unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNWFilterUndefine"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNWFilterUndefine(nwfilter), nil
+}
+
+// VirNetworkCreate calls virNetworkCreate using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkCreate(network unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkCreate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkCreate(network), nil
+}
+
+// VirNetworkCreateXML calls virNetworkCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkCreateXML(conn unsafe.Pointer, xmlDesc *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkCreateXML(conn, xmlDesc), nil
+}
+
+// VirNetworkCreateXMLFlags calls virNetworkCreateXMLFlags using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkCreateXMLFlags(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkCreateXMLFlags"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkCreateXMLFlags(conn, xmlDesc, flags), nil
+}
+
+// VirNetworkDHCPLeaseFree calls virNetworkDHCPLeaseFree using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkDHCPLeaseFree(lease unsafe.Pointer) error {
+	if err := raw.requireSymbol("virNetworkDHCPLeaseFree"); err != nil {
+		return err
+	}
+	raw.api.virNetworkDHCPLeaseFree(lease)
+	return nil
+}
+
+// VirNetworkDefineXML calls virNetworkDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkDefineXML(conn unsafe.Pointer, xml *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkDefineXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkDefineXML(conn, xml), nil
+}
+
+// VirNetworkDefineXMLFlags calls virNetworkDefineXMLFlags using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkDefineXMLFlags(conn unsafe.Pointer, xml *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkDefineXMLFlags"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkDefineXMLFlags(conn, xml, flags), nil
+}
+
+// VirNetworkDestroy calls virNetworkDestroy using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkDestroy(network unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkDestroy"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkDestroy(network), nil
+}
+
+// VirNetworkFree calls virNetworkFree using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkFree(network unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkFree(network), nil
+}
+
+// VirNetworkGetAutostart calls virNetworkGetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetAutostart(network unsafe.Pointer, autostart *int32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkGetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkGetAutostart(network, autostart), nil
+}
+
+// VirNetworkGetBridgeName calls virNetworkGetBridgeName using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetBridgeName(network unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkGetBridgeName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkGetBridgeName(network), nil
+}
+
+// VirNetworkGetConnect calls virNetworkGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetConnect(net unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkGetConnect(net), nil
+}
+
+// VirNetworkGetDHCPLeases calls virNetworkGetDHCPLeases using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetDHCPLeases(network unsafe.Pointer, mac *byte, leases *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkGetDHCPLeases"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkGetDHCPLeases(network, mac, leases, flags), nil
+}
+
+// VirNetworkGetMetadata calls virNetworkGetMetadata using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetMetadata(network unsafe.Pointer, type_ int32, uri *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkGetMetadata"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkGetMetadata(network, type_, uri, flags), nil
+}
+
+// VirNetworkGetName calls virNetworkGetName using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetName(network unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkGetName(network), nil
+}
+
+// VirNetworkGetUUID calls virNetworkGetUUID using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetUUID(network unsafe.Pointer, uuid *byte) (int32, error) {
+	if err := raw.requireSymbol("virNetworkGetUUID"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkGetUUID(network, uuid), nil
+}
+
+// VirNetworkGetUUIDString calls virNetworkGetUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetUUIDString(network unsafe.Pointer, buf *byte) (int32, error) {
+	if err := raw.requireSymbol("virNetworkGetUUIDString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkGetUUIDString(network, buf), nil
+}
+
+// VirNetworkGetXMLDesc calls virNetworkGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkGetXMLDesc(network unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkGetXMLDesc(network, flags), nil
+}
+
+// VirNetworkIsActive calls virNetworkIsActive using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkIsActive(net unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkIsActive"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkIsActive(net), nil
+}
+
+// VirNetworkIsPersistent calls virNetworkIsPersistent using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkIsPersistent(net unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkIsPersistent"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkIsPersistent(net), nil
+}
+
+// VirNetworkListAllPorts calls virNetworkListAllPorts using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkListAllPorts(network unsafe.Pointer, ports *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkListAllPorts"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkListAllPorts(network, ports, flags), nil
+}
+
+// VirNetworkLookupByName calls virNetworkLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkLookupByName(conn unsafe.Pointer, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkLookupByName(conn, name), nil
+}
+
+// VirNetworkLookupByUUID calls virNetworkLookupByUUID using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkLookupByUUID(conn unsafe.Pointer, uuid *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkLookupByUUID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkLookupByUUID(conn, uuid), nil
+}
+
+// VirNetworkLookupByUUIDString calls virNetworkLookupByUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkLookupByUUIDString(conn unsafe.Pointer, uuidstr *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkLookupByUUIDString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkLookupByUUIDString(conn, uuidstr), nil
+}
+
+// VirNetworkPortCreateXML calls virNetworkPortCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortCreateXML(net unsafe.Pointer, xmldesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkPortCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkPortCreateXML(net, xmldesc, flags), nil
+}
+
+// VirNetworkPortDelete calls virNetworkPortDelete using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortDelete(port unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkPortDelete"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkPortDelete(port, flags), nil
+}
+
+// VirNetworkPortFree calls virNetworkPortFree using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortFree(port unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkPortFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkPortFree(port), nil
+}
+
+// VirNetworkPortGetNetwork calls virNetworkPortGetNetwork using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortGetNetwork(port unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkPortGetNetwork"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkPortGetNetwork(port), nil
+}
+
+// VirNetworkPortGetParameters calls virNetworkPortGetParameters using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortGetParameters(port unsafe.Pointer, params *unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkPortGetParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkPortGetParameters(port, params, nparams, flags), nil
+}
+
+// VirNetworkPortGetUUID calls virNetworkPortGetUUID using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortGetUUID(port unsafe.Pointer, uuid *byte) (int32, error) {
+	if err := raw.requireSymbol("virNetworkPortGetUUID"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkPortGetUUID(port, uuid), nil
+}
+
+// VirNetworkPortGetUUIDString calls virNetworkPortGetUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortGetUUIDString(port unsafe.Pointer, buf *byte) (int32, error) {
+	if err := raw.requireSymbol("virNetworkPortGetUUIDString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkPortGetUUIDString(port, buf), nil
+}
+
+// VirNetworkPortGetXMLDesc calls virNetworkPortGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortGetXMLDesc(port unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkPortGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkPortGetXMLDesc(port, flags), nil
+}
+
+// VirNetworkPortLookupByUUID calls virNetworkPortLookupByUUID using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortLookupByUUID(net unsafe.Pointer, uuid *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkPortLookupByUUID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkPortLookupByUUID(net, uuid), nil
+}
+
+// VirNetworkPortLookupByUUIDString calls virNetworkPortLookupByUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortLookupByUUIDString(net unsafe.Pointer, uuidstr *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNetworkPortLookupByUUIDString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNetworkPortLookupByUUIDString(net, uuidstr), nil
+}
+
+// VirNetworkPortRef calls virNetworkPortRef using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortRef(port unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkPortRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkPortRef(port), nil
+}
+
+// VirNetworkPortSetParameters calls virNetworkPortSetParameters using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkPortSetParameters(port unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkPortSetParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkPortSetParameters(port, params, nparams, flags), nil
+}
+
+// VirNetworkRef calls virNetworkRef using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkRef(network unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkRef(network), nil
+}
+
+// VirNetworkSetAutostart calls virNetworkSetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkSetAutostart(network unsafe.Pointer, autostart int32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkSetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkSetAutostart(network, autostart), nil
+}
+
+// VirNetworkSetMetadata calls virNetworkSetMetadata using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkSetMetadata(network unsafe.Pointer, type_ int32, metadata *byte, key *byte, uri *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkSetMetadata"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkSetMetadata(network, type_, metadata, key, uri, flags), nil
+}
+
+// VirNetworkUndefine calls virNetworkUndefine using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkUndefine(network unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNetworkUndefine"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkUndefine(network), nil
+}
+
+// VirNetworkUpdate calls virNetworkUpdate using its raw C ABI contract.
+func (raw *RawAPI) VirNetworkUpdate(network unsafe.Pointer, command uint32, section uint32, parentIndex int32, xml *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNetworkUpdate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNetworkUpdate(network, command, section, parentIndex, xml, flags), nil
+}
+
+// VirNodeAllocPages calls virNodeAllocPages using its raw C ABI contract.
+func (raw *RawAPI) VirNodeAllocPages(conn unsafe.Pointer, npages uint32, pageSizes *uint32, pageCounts *uint64, startCell int32, cellCount uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeAllocPages"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeAllocPages(conn, npages, pageSizes, pageCounts, startCell, cellCount, flags), nil
+}
+
+// VirNodeDeviceCreate calls virNodeDeviceCreate using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceCreate(dev unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceCreate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceCreate(dev, flags), nil
+}
+
+// VirNodeDeviceCreateXML calls virNodeDeviceCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceCreateXML(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNodeDeviceCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNodeDeviceCreateXML(conn, xmlDesc, flags), nil
+}
+
+// VirNodeDeviceDefineXML calls virNodeDeviceDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceDefineXML(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNodeDeviceDefineXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNodeDeviceDefineXML(conn, xmlDesc, flags), nil
+}
+
+// VirNodeDeviceDestroy calls virNodeDeviceDestroy using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceDestroy(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceDestroy"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceDestroy(dev), nil
+}
+
+// VirNodeDeviceDetachFlags calls virNodeDeviceDetachFlags using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceDetachFlags(dev unsafe.Pointer, driverName *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceDetachFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceDetachFlags(dev, driverName, flags), nil
+}
+
+// VirNodeDeviceDettach calls virNodeDeviceDettach using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceDettach(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceDettach"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceDettach(dev), nil
+}
+
+// VirNodeDeviceFree calls virNodeDeviceFree using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceFree(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceFree(dev), nil
+}
+
+// VirNodeDeviceGetAutostart calls virNodeDeviceGetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceGetAutostart(dev unsafe.Pointer, autostart *int32) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceGetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceGetAutostart(dev, autostart), nil
+}
+
+// VirNodeDeviceGetName calls virNodeDeviceGetName using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceGetName(dev unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNodeDeviceGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNodeDeviceGetName(dev), nil
+}
+
+// VirNodeDeviceGetParent calls virNodeDeviceGetParent using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceGetParent(dev unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNodeDeviceGetParent"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNodeDeviceGetParent(dev), nil
+}
+
+// VirNodeDeviceGetXMLDesc calls virNodeDeviceGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceGetXMLDesc(dev unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNodeDeviceGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNodeDeviceGetXMLDesc(dev, flags), nil
+}
+
+// VirNodeDeviceIsActive calls virNodeDeviceIsActive using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceIsActive(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceIsActive"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceIsActive(dev), nil
+}
+
+// VirNodeDeviceIsPersistent calls virNodeDeviceIsPersistent using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceIsPersistent(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceIsPersistent"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceIsPersistent(dev), nil
+}
+
+// VirNodeDeviceListCaps calls virNodeDeviceListCaps using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceListCaps(dev unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceListCaps"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceListCaps(dev, names, maxnames), nil
+}
+
+// VirNodeDeviceLookupByName calls virNodeDeviceLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceLookupByName(conn unsafe.Pointer, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNodeDeviceLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNodeDeviceLookupByName(conn, name), nil
+}
+
+// VirNodeDeviceLookupSCSIHostByWWN calls virNodeDeviceLookupSCSIHostByWWN using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceLookupSCSIHostByWWN(conn unsafe.Pointer, wwnn *byte, wwpn *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virNodeDeviceLookupSCSIHostByWWN"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virNodeDeviceLookupSCSIHostByWWN(conn, wwnn, wwpn, flags), nil
+}
+
+// VirNodeDeviceNumOfCaps calls virNodeDeviceNumOfCaps using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceNumOfCaps(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceNumOfCaps"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceNumOfCaps(dev), nil
+}
+
+// VirNodeDeviceReAttach calls virNodeDeviceReAttach using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceReAttach(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceReAttach"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceReAttach(dev), nil
+}
+
+// VirNodeDeviceRef calls virNodeDeviceRef using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceRef(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceRef(dev), nil
+}
+
+// VirNodeDeviceReset calls virNodeDeviceReset using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceReset(dev unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceReset"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceReset(dev), nil
+}
+
+// VirNodeDeviceSetAutostart calls virNodeDeviceSetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceSetAutostart(dev unsafe.Pointer, autostart int32) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceSetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceSetAutostart(dev, autostart), nil
+}
+
+// VirNodeDeviceUndefine calls virNodeDeviceUndefine using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceUndefine(dev unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceUndefine"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceUndefine(dev, flags), nil
+}
+
+// VirNodeDeviceUpdate calls virNodeDeviceUpdate using its raw C ABI contract.
+func (raw *RawAPI) VirNodeDeviceUpdate(dev unsafe.Pointer, xmlDesc *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeDeviceUpdate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeDeviceUpdate(dev, xmlDesc, flags), nil
+}
+
+// VirNodeGetCPUMap calls virNodeGetCPUMap using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetCPUMap(conn unsafe.Pointer, cpumap *unsafe.Pointer, online *uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetCPUMap"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetCPUMap(conn, cpumap, online, flags), nil
+}
+
+// VirNodeGetCPUStats calls virNodeGetCPUStats using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetCPUStats(conn unsafe.Pointer, cpuNum int32, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetCPUStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetCPUStats(conn, cpuNum, params, nparams, flags), nil
+}
+
+// VirNodeGetCellsFreeMemory calls virNodeGetCellsFreeMemory using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetCellsFreeMemory(conn unsafe.Pointer, freeMems *uint64, startCell int32, maxCells int32) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetCellsFreeMemory"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetCellsFreeMemory(conn, freeMems, startCell, maxCells), nil
+}
+
+// VirNodeGetFreeMemory calls virNodeGetFreeMemory using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetFreeMemory(conn unsafe.Pointer) (uint64, error) {
+	if err := raw.requireSymbol("virNodeGetFreeMemory"); err != nil {
+		var zero uint64
+		return zero, err
+	}
+	return raw.api.virNodeGetFreeMemory(conn), nil
+}
+
+// VirNodeGetFreePages calls virNodeGetFreePages using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetFreePages(conn unsafe.Pointer, npages uint32, pages *uint32, startCell int32, cellCount uint32, counts *uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetFreePages"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetFreePages(conn, npages, pages, startCell, cellCount, counts, flags), nil
+}
+
+// VirNodeGetInfo calls virNodeGetInfo using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetInfo(conn unsafe.Pointer, info unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetInfo(conn, info), nil
+}
+
+// VirNodeGetMemoryParameters calls virNodeGetMemoryParameters using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetMemoryParameters(conn unsafe.Pointer, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetMemoryParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetMemoryParameters(conn, params, nparams, flags), nil
+}
+
+// VirNodeGetMemoryStats calls virNodeGetMemoryStats using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetMemoryStats(conn unsafe.Pointer, cellNum int32, params unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetMemoryStats"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetMemoryStats(conn, cellNum, params, nparams, flags), nil
+}
+
+// VirNodeGetSEVInfo calls virNodeGetSEVInfo using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetSEVInfo(conn unsafe.Pointer, params *unsafe.Pointer, nparams *int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetSEVInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetSEVInfo(conn, params, nparams, flags), nil
+}
+
+// VirNodeGetSecurityModel calls virNodeGetSecurityModel using its raw C ABI contract.
+func (raw *RawAPI) VirNodeGetSecurityModel(conn unsafe.Pointer, secmodel unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virNodeGetSecurityModel"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeGetSecurityModel(conn, secmodel), nil
+}
+
+// VirNodeListDevices calls virNodeListDevices using its raw C ABI contract.
+func (raw *RawAPI) VirNodeListDevices(conn unsafe.Pointer, cap *byte, names *unsafe.Pointer, maxnames int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeListDevices"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeListDevices(conn, cap, names, maxnames, flags), nil
+}
+
+// VirNodeNumOfDevices calls virNodeNumOfDevices using its raw C ABI contract.
+func (raw *RawAPI) VirNodeNumOfDevices(conn unsafe.Pointer, cap *byte, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeNumOfDevices"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeNumOfDevices(conn, cap, flags), nil
+}
+
+// VirNodeSetMemoryParameters calls virNodeSetMemoryParameters using its raw C ABI contract.
+func (raw *RawAPI) VirNodeSetMemoryParameters(conn unsafe.Pointer, params unsafe.Pointer, nparams int32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeSetMemoryParameters"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeSetMemoryParameters(conn, params, nparams, flags), nil
+}
+
+// VirNodeSuspendForDuration calls virNodeSuspendForDuration using its raw C ABI contract.
+func (raw *RawAPI) VirNodeSuspendForDuration(conn unsafe.Pointer, target uint32, duration uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virNodeSuspendForDuration"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virNodeSuspendForDuration(conn, target, duration, flags), nil
+}
+
+// VirResetError calls virResetError using its raw C ABI contract.
+func (raw *RawAPI) VirResetError(err unsafe.Pointer) error {
+	if err := raw.requireSymbol("virResetError"); err != nil {
+		return err
+	}
+	raw.api.virResetError(err)
+	return nil
+}
+
+// VirResetLastError calls virResetLastError using its raw C ABI contract.
+func (raw *RawAPI) VirResetLastError() error {
+	if err := raw.requireSymbol("virResetLastError"); err != nil {
+		return err
+	}
+	raw.api.virResetLastError()
+	return nil
+}
+
+// VirSaveLastError calls virSaveLastError using its raw C ABI contract.
+func (raw *RawAPI) VirSaveLastError() (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSaveLastError"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSaveLastError(), nil
+}
+
+// VirSecretDefineXML calls virSecretDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirSecretDefineXML(conn unsafe.Pointer, xml *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretDefineXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretDefineXML(conn, xml, flags), nil
+}
+
+// VirSecretFree calls virSecretFree using its raw C ABI contract.
+func (raw *RawAPI) VirSecretFree(secret unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virSecretFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virSecretFree(secret), nil
+}
+
+// VirSecretGetConnect calls virSecretGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirSecretGetConnect(secret unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretGetConnect(secret), nil
+}
+
+// VirSecretGetUUID calls virSecretGetUUID using its raw C ABI contract.
+func (raw *RawAPI) VirSecretGetUUID(secret unsafe.Pointer, uuid *byte) (int32, error) {
+	if err := raw.requireSymbol("virSecretGetUUID"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virSecretGetUUID(secret, uuid), nil
+}
+
+// VirSecretGetUUIDString calls virSecretGetUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirSecretGetUUIDString(secret unsafe.Pointer, buf *byte) (int32, error) {
+	if err := raw.requireSymbol("virSecretGetUUIDString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virSecretGetUUIDString(secret, buf), nil
+}
+
+// VirSecretGetUsageID calls virSecretGetUsageID using its raw C ABI contract.
+func (raw *RawAPI) VirSecretGetUsageID(secret unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretGetUsageID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretGetUsageID(secret), nil
+}
+
+// VirSecretGetUsageType calls virSecretGetUsageType using its raw C ABI contract.
+func (raw *RawAPI) VirSecretGetUsageType(secret unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virSecretGetUsageType"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virSecretGetUsageType(secret), nil
+}
+
+// VirSecretGetValue calls virSecretGetValue using its raw C ABI contract.
+func (raw *RawAPI) VirSecretGetValue(secret unsafe.Pointer, value_size *uintptr, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretGetValue"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretGetValue(secret, value_size, flags), nil
+}
+
+// VirSecretGetXMLDesc calls virSecretGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirSecretGetXMLDesc(secret unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretGetXMLDesc(secret, flags), nil
+}
+
+// VirSecretLookupByUUID calls virSecretLookupByUUID using its raw C ABI contract.
+func (raw *RawAPI) VirSecretLookupByUUID(conn unsafe.Pointer, uuid *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretLookupByUUID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretLookupByUUID(conn, uuid), nil
+}
+
+// VirSecretLookupByUUIDString calls virSecretLookupByUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirSecretLookupByUUIDString(conn unsafe.Pointer, uuidstr *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretLookupByUUIDString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretLookupByUUIDString(conn, uuidstr), nil
+}
+
+// VirSecretLookupByUsage calls virSecretLookupByUsage using its raw C ABI contract.
+func (raw *RawAPI) VirSecretLookupByUsage(conn unsafe.Pointer, usageType int32, usageID *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virSecretLookupByUsage"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virSecretLookupByUsage(conn, usageType, usageID), nil
+}
+
+// VirSecretRef calls virSecretRef using its raw C ABI contract.
+func (raw *RawAPI) VirSecretRef(secret unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virSecretRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virSecretRef(secret), nil
+}
+
+// VirSecretSetValue calls virSecretSetValue using its raw C ABI contract.
+func (raw *RawAPI) VirSecretSetValue(secret unsafe.Pointer, value *byte, value_size uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virSecretSetValue"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virSecretSetValue(secret, value, value_size, flags), nil
+}
+
+// VirSecretUndefine calls virSecretUndefine using its raw C ABI contract.
+func (raw *RawAPI) VirSecretUndefine(secret unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virSecretUndefine"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virSecretUndefine(secret), nil
+}
+
+// VirSetErrorFunc calls virSetErrorFunc using its raw C ABI contract.
+func (raw *RawAPI) VirSetErrorFunc(userData unsafe.Pointer, handler uintptr) error {
+	if err := raw.requireSymbol("virSetErrorFunc"); err != nil {
+		return err
+	}
+	raw.api.virSetErrorFunc(userData, handler)
+	return nil
+}
+
+// VirStoragePoolBuild calls virStoragePoolBuild using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolBuild(pool unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolBuild"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolBuild(pool, flags), nil
+}
+
+// VirStoragePoolCreate calls virStoragePoolCreate using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolCreate(pool unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolCreate"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolCreate(pool, flags), nil
+}
+
+// VirStoragePoolCreateXML calls virStoragePoolCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolCreateXML(conn unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolCreateXML(conn, xmlDesc, flags), nil
+}
+
+// VirStoragePoolDefineXML calls virStoragePoolDefineXML using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolDefineXML(conn unsafe.Pointer, xml *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolDefineXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolDefineXML(conn, xml, flags), nil
+}
+
+// VirStoragePoolDelete calls virStoragePoolDelete using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolDelete(pool unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolDelete"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolDelete(pool, flags), nil
+}
+
+// VirStoragePoolDestroy calls virStoragePoolDestroy using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolDestroy(pool unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolDestroy"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolDestroy(pool), nil
+}
+
+// VirStoragePoolFree calls virStoragePoolFree using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolFree(pool unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolFree(pool), nil
+}
+
+// VirStoragePoolGetAutostart calls virStoragePoolGetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolGetAutostart(pool unsafe.Pointer, autostart *int32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolGetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolGetAutostart(pool, autostart), nil
+}
+
+// VirStoragePoolGetConnect calls virStoragePoolGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolGetConnect(pool unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolGetConnect(pool), nil
+}
+
+// VirStoragePoolGetInfo calls virStoragePoolGetInfo using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolGetInfo(pool unsafe.Pointer, info unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolGetInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolGetInfo(pool, info), nil
+}
+
+// VirStoragePoolGetName calls virStoragePoolGetName using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolGetName(pool unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolGetName(pool), nil
+}
+
+// VirStoragePoolGetUUID calls virStoragePoolGetUUID using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolGetUUID(pool unsafe.Pointer, uuid *byte) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolGetUUID"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolGetUUID(pool, uuid), nil
+}
+
+// VirStoragePoolGetUUIDString calls virStoragePoolGetUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolGetUUIDString(pool unsafe.Pointer, buf *byte) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolGetUUIDString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolGetUUIDString(pool, buf), nil
+}
+
+// VirStoragePoolGetXMLDesc calls virStoragePoolGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolGetXMLDesc(pool unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolGetXMLDesc(pool, flags), nil
+}
+
+// VirStoragePoolIsActive calls virStoragePoolIsActive using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolIsActive(pool unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolIsActive"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolIsActive(pool), nil
+}
+
+// VirStoragePoolIsPersistent calls virStoragePoolIsPersistent using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolIsPersistent(pool unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolIsPersistent"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolIsPersistent(pool), nil
+}
+
+// VirStoragePoolListAllVolumes calls virStoragePoolListAllVolumes using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolListAllVolumes(pool unsafe.Pointer, vols *unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolListAllVolumes"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolListAllVolumes(pool, vols, flags), nil
+}
+
+// VirStoragePoolListVolumes calls virStoragePoolListVolumes using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolListVolumes(pool unsafe.Pointer, names *unsafe.Pointer, maxnames int32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolListVolumes"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolListVolumes(pool, names, maxnames), nil
+}
+
+// VirStoragePoolLookupByName calls virStoragePoolLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolLookupByName(conn unsafe.Pointer, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolLookupByName(conn, name), nil
+}
+
+// VirStoragePoolLookupByTargetPath calls virStoragePoolLookupByTargetPath using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolLookupByTargetPath(conn unsafe.Pointer, path *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolLookupByTargetPath"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolLookupByTargetPath(conn, path), nil
+}
+
+// VirStoragePoolLookupByUUID calls virStoragePoolLookupByUUID using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolLookupByUUID(conn unsafe.Pointer, uuid *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolLookupByUUID"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolLookupByUUID(conn, uuid), nil
+}
+
+// VirStoragePoolLookupByUUIDString calls virStoragePoolLookupByUUIDString using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolLookupByUUIDString(conn unsafe.Pointer, uuidstr *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolLookupByUUIDString"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolLookupByUUIDString(conn, uuidstr), nil
+}
+
+// VirStoragePoolLookupByVolume calls virStoragePoolLookupByVolume using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolLookupByVolume(vol unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStoragePoolLookupByVolume"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStoragePoolLookupByVolume(vol), nil
+}
+
+// VirStoragePoolNumOfVolumes calls virStoragePoolNumOfVolumes using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolNumOfVolumes(pool unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolNumOfVolumes"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolNumOfVolumes(pool), nil
+}
+
+// VirStoragePoolRef calls virStoragePoolRef using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolRef(pool unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolRef(pool), nil
+}
+
+// VirStoragePoolRefresh calls virStoragePoolRefresh using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolRefresh(pool unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolRefresh"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolRefresh(pool, flags), nil
+}
+
+// VirStoragePoolSetAutostart calls virStoragePoolSetAutostart using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolSetAutostart(pool unsafe.Pointer, autostart int32) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolSetAutostart"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolSetAutostart(pool, autostart), nil
+}
+
+// VirStoragePoolUndefine calls virStoragePoolUndefine using its raw C ABI contract.
+func (raw *RawAPI) VirStoragePoolUndefine(pool unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStoragePoolUndefine"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStoragePoolUndefine(pool), nil
+}
+
+// VirStorageVolCreateXML calls virStorageVolCreateXML using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolCreateXML(pool unsafe.Pointer, xmlDesc *byte, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolCreateXML"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolCreateXML(pool, xmlDesc, flags), nil
+}
+
+// VirStorageVolCreateXMLFrom calls virStorageVolCreateXMLFrom using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolCreateXMLFrom(pool unsafe.Pointer, xmlDesc *byte, clonevol unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolCreateXMLFrom"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolCreateXMLFrom(pool, xmlDesc, clonevol, flags), nil
+}
+
+// VirStorageVolDelete calls virStorageVolDelete using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolDelete(vol unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolDelete"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolDelete(vol, flags), nil
+}
+
+// VirStorageVolDownload calls virStorageVolDownload using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolDownload(vol unsafe.Pointer, stream unsafe.Pointer, offset uint64, length uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolDownload"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolDownload(vol, stream, offset, length, flags), nil
+}
+
+// VirStorageVolFree calls virStorageVolFree using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolFree(vol unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolFree(vol), nil
+}
+
+// VirStorageVolGetConnect calls virStorageVolGetConnect using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolGetConnect(vol unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolGetConnect"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolGetConnect(vol), nil
+}
+
+// VirStorageVolGetInfo calls virStorageVolGetInfo using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolGetInfo(vol unsafe.Pointer, info unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolGetInfo"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolGetInfo(vol, info), nil
+}
+
+// VirStorageVolGetInfoFlags calls virStorageVolGetInfoFlags using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolGetInfoFlags(vol unsafe.Pointer, info unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolGetInfoFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolGetInfoFlags(vol, info, flags), nil
+}
+
+// VirStorageVolGetKey calls virStorageVolGetKey using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolGetKey(vol unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolGetKey"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolGetKey(vol), nil
+}
+
+// VirStorageVolGetName calls virStorageVolGetName using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolGetName(vol unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolGetName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolGetName(vol), nil
+}
+
+// VirStorageVolGetPath calls virStorageVolGetPath using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolGetPath(vol unsafe.Pointer) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolGetPath"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolGetPath(vol), nil
+}
+
+// VirStorageVolGetXMLDesc calls virStorageVolGetXMLDesc using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolGetXMLDesc(vol unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolGetXMLDesc"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolGetXMLDesc(vol, flags), nil
+}
+
+// VirStorageVolLookupByKey calls virStorageVolLookupByKey using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolLookupByKey(conn unsafe.Pointer, key *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolLookupByKey"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolLookupByKey(conn, key), nil
+}
+
+// VirStorageVolLookupByName calls virStorageVolLookupByName using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolLookupByName(pool unsafe.Pointer, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolLookupByName"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolLookupByName(pool, name), nil
+}
+
+// VirStorageVolLookupByPath calls virStorageVolLookupByPath using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolLookupByPath(conn unsafe.Pointer, path *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStorageVolLookupByPath"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStorageVolLookupByPath(conn, path), nil
+}
+
+// VirStorageVolRef calls virStorageVolRef using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolRef(vol unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolRef(vol), nil
+}
+
+// VirStorageVolResize calls virStorageVolResize using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolResize(vol unsafe.Pointer, capacity uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolResize"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolResize(vol, capacity, flags), nil
+}
+
+// VirStorageVolUpload calls virStorageVolUpload using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolUpload(vol unsafe.Pointer, stream unsafe.Pointer, offset uint64, length uint64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolUpload"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolUpload(vol, stream, offset, length, flags), nil
+}
+
+// VirStorageVolWipe calls virStorageVolWipe using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolWipe(vol unsafe.Pointer, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolWipe"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolWipe(vol, flags), nil
+}
+
+// VirStorageVolWipePattern calls virStorageVolWipePattern using its raw C ABI contract.
+func (raw *RawAPI) VirStorageVolWipePattern(vol unsafe.Pointer, algorithm uint32, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStorageVolWipePattern"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStorageVolWipePattern(vol, algorithm, flags), nil
+}
+
+// VirStreamAbort calls virStreamAbort using its raw C ABI contract.
+func (raw *RawAPI) VirStreamAbort(stream unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamAbort"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamAbort(stream), nil
+}
+
+// VirStreamEventAddCallback calls virStreamEventAddCallback using its raw C ABI contract.
+func (raw *RawAPI) VirStreamEventAddCallback(stream unsafe.Pointer, events int32, cb uintptr, opaque unsafe.Pointer, ff uintptr) (int32, error) {
+	if err := raw.requireSymbol("virStreamEventAddCallback"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamEventAddCallback(stream, events, cb, opaque, ff), nil
+}
+
+// VirStreamEventRemoveCallback calls virStreamEventRemoveCallback using its raw C ABI contract.
+func (raw *RawAPI) VirStreamEventRemoveCallback(stream unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamEventRemoveCallback"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamEventRemoveCallback(stream), nil
+}
+
+// VirStreamEventUpdateCallback calls virStreamEventUpdateCallback using its raw C ABI contract.
+func (raw *RawAPI) VirStreamEventUpdateCallback(stream unsafe.Pointer, events int32) (int32, error) {
+	if err := raw.requireSymbol("virStreamEventUpdateCallback"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamEventUpdateCallback(stream, events), nil
+}
+
+// VirStreamFinish calls virStreamFinish using its raw C ABI contract.
+func (raw *RawAPI) VirStreamFinish(stream unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamFinish"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamFinish(stream), nil
+}
+
+// VirStreamFree calls virStreamFree using its raw C ABI contract.
+func (raw *RawAPI) VirStreamFree(stream unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamFree"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamFree(stream), nil
+}
+
+// VirStreamNew calls virStreamNew using its raw C ABI contract.
+func (raw *RawAPI) VirStreamNew(conn unsafe.Pointer, flags uint32) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virStreamNew"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virStreamNew(conn, flags), nil
+}
+
+// VirStreamRecv calls virStreamRecv using its raw C ABI contract.
+func (raw *RawAPI) VirStreamRecv(stream unsafe.Pointer, data *byte, nbytes uintptr) (int32, error) {
+	if err := raw.requireSymbol("virStreamRecv"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamRecv(stream, data, nbytes), nil
+}
+
+// VirStreamRecvAll calls virStreamRecvAll using its raw C ABI contract.
+func (raw *RawAPI) VirStreamRecvAll(stream unsafe.Pointer, handler uintptr, opaque unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamRecvAll"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamRecvAll(stream, handler, opaque), nil
+}
+
+// VirStreamRecvFlags calls virStreamRecvFlags using its raw C ABI contract.
+func (raw *RawAPI) VirStreamRecvFlags(stream unsafe.Pointer, data *byte, nbytes uintptr, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStreamRecvFlags"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamRecvFlags(stream, data, nbytes, flags), nil
+}
+
+// VirStreamRecvHole calls virStreamRecvHole using its raw C ABI contract.
+func (raw *RawAPI) VirStreamRecvHole(stream unsafe.Pointer, length *int64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStreamRecvHole"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamRecvHole(stream, length, flags), nil
+}
+
+// VirStreamRef calls virStreamRef using its raw C ABI contract.
+func (raw *RawAPI) VirStreamRef(stream unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamRef"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamRef(stream), nil
+}
+
+// VirStreamSend calls virStreamSend using its raw C ABI contract.
+func (raw *RawAPI) VirStreamSend(stream unsafe.Pointer, data *byte, nbytes uintptr) (int32, error) {
+	if err := raw.requireSymbol("virStreamSend"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamSend(stream, data, nbytes), nil
+}
+
+// VirStreamSendAll calls virStreamSendAll using its raw C ABI contract.
+func (raw *RawAPI) VirStreamSendAll(stream unsafe.Pointer, handler uintptr, opaque unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamSendAll"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamSendAll(stream, handler, opaque), nil
+}
+
+// VirStreamSendHole calls virStreamSendHole using its raw C ABI contract.
+func (raw *RawAPI) VirStreamSendHole(stream unsafe.Pointer, length int64, flags uint32) (int32, error) {
+	if err := raw.requireSymbol("virStreamSendHole"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamSendHole(stream, length, flags), nil
+}
+
+// VirStreamSparseRecvAll calls virStreamSparseRecvAll using its raw C ABI contract.
+func (raw *RawAPI) VirStreamSparseRecvAll(stream unsafe.Pointer, handler uintptr, holeHandler uintptr, opaque unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamSparseRecvAll"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamSparseRecvAll(stream, handler, holeHandler, opaque), nil
+}
+
+// VirStreamSparseSendAll calls virStreamSparseSendAll using its raw C ABI contract.
+func (raw *RawAPI) VirStreamSparseSendAll(stream unsafe.Pointer, handler uintptr, holeHandler uintptr, skipHandler uintptr, opaque unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virStreamSparseSendAll"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virStreamSparseSendAll(stream, handler, holeHandler, skipHandler, opaque), nil
+}
+
+// VirTypedParamsAddBoolean calls virTypedParamsAddBoolean using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddBoolean(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, value int32) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddBoolean"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddBoolean(params, nparams, maxparams, name, value), nil
+}
+
+// VirTypedParamsAddDouble calls virTypedParamsAddDouble using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddDouble(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, value float64) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddDouble"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddDouble(params, nparams, maxparams, name, value), nil
+}
+
+// VirTypedParamsAddFromString calls virTypedParamsAddFromString using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddFromString(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, type_ int32, value *byte) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddFromString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddFromString(params, nparams, maxparams, name, type_, value), nil
+}
+
+// VirTypedParamsAddInt calls virTypedParamsAddInt using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddInt(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, value int32) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddInt"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddInt(params, nparams, maxparams, name, value), nil
+}
+
+// VirTypedParamsAddLLong calls virTypedParamsAddLLong using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddLLong(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, value int64) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddLLong"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddLLong(params, nparams, maxparams, name, value), nil
+}
+
+// VirTypedParamsAddString calls virTypedParamsAddString using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddString(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, value *byte) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddString(params, nparams, maxparams, name, value), nil
+}
+
+// VirTypedParamsAddStringList calls virTypedParamsAddStringList using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddStringList(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, values *unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddStringList"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddStringList(params, nparams, maxparams, name, values), nil
+}
+
+// VirTypedParamsAddUInt calls virTypedParamsAddUInt using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddUInt(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, value uint32) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddUInt"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddUInt(params, nparams, maxparams, name, value), nil
+}
+
+// VirTypedParamsAddULLong calls virTypedParamsAddULLong using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsAddULLong(params *unsafe.Pointer, nparams *int32, maxparams *int32, name *byte, value uint64) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsAddULLong"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsAddULLong(params, nparams, maxparams, name, value), nil
+}
+
+// VirTypedParamsClear calls virTypedParamsClear using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsClear(params unsafe.Pointer, nparams int32) error {
+	if err := raw.requireSymbol("virTypedParamsClear"); err != nil {
+		return err
+	}
+	raw.api.virTypedParamsClear(params, nparams)
+	return nil
+}
+
+// VirTypedParamsFree calls virTypedParamsFree using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsFree(params unsafe.Pointer, nparams int32) error {
+	if err := raw.requireSymbol("virTypedParamsFree"); err != nil {
+		return err
+	}
+	raw.api.virTypedParamsFree(params, nparams)
+	return nil
+}
+
+// VirTypedParamsGet calls virTypedParamsGet using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGet(params unsafe.Pointer, nparams int32, name *byte) (unsafe.Pointer, error) {
+	if err := raw.requireSymbol("virTypedParamsGet"); err != nil {
+		var zero unsafe.Pointer
+		return zero, err
+	}
+	return raw.api.virTypedParamsGet(params, nparams, name), nil
+}
+
+// VirTypedParamsGetBoolean calls virTypedParamsGetBoolean using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGetBoolean(params unsafe.Pointer, nparams int32, name *byte, value *int32) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsGetBoolean"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsGetBoolean(params, nparams, name, value), nil
+}
+
+// VirTypedParamsGetDouble calls virTypedParamsGetDouble using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGetDouble(params unsafe.Pointer, nparams int32, name *byte, value *float64) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsGetDouble"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsGetDouble(params, nparams, name, value), nil
+}
+
+// VirTypedParamsGetInt calls virTypedParamsGetInt using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGetInt(params unsafe.Pointer, nparams int32, name *byte, value *int32) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsGetInt"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsGetInt(params, nparams, name, value), nil
+}
+
+// VirTypedParamsGetLLong calls virTypedParamsGetLLong using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGetLLong(params unsafe.Pointer, nparams int32, name *byte, value *int64) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsGetLLong"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsGetLLong(params, nparams, name, value), nil
+}
+
+// VirTypedParamsGetString calls virTypedParamsGetString using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGetString(params unsafe.Pointer, nparams int32, name *byte, value *unsafe.Pointer) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsGetString"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsGetString(params, nparams, name, value), nil
+}
+
+// VirTypedParamsGetUInt calls virTypedParamsGetUInt using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGetUInt(params unsafe.Pointer, nparams int32, name *byte, value *uint32) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsGetUInt"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsGetUInt(params, nparams, name, value), nil
+}
+
+// VirTypedParamsGetULLong calls virTypedParamsGetULLong using its raw C ABI contract.
+func (raw *RawAPI) VirTypedParamsGetULLong(params unsafe.Pointer, nparams int32, name *byte, value *uint64) (int32, error) {
+	if err := raw.requireSymbol("virTypedParamsGetULLong"); err != nil {
+		var zero int32
+		return zero, err
+	}
+	return raw.api.virTypedParamsGetULLong(params, nparams, name, value), nil
 }
 
 // Raw constants retain libvirt's C names so the full enum catalog updates automatically.

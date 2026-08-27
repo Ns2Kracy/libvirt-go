@@ -41,18 +41,16 @@ func loadNativeAPIFrom(path string) (*nativeAPI, error) {
 		return nil, err
 	}
 
-	api := &nativeAPI{handle: handle, path: path}
+	api := &nativeAPI{handle: handle, path: path, missing: make(map[string]string)}
 	if err := registerSymbol(purego.RTLD_DEFAULT, "free", &api.free); err != nil {
 		_ = purego.Dlclose(handle)
 		return nil, err
 	}
-	// The generated table contains exactly the vir* selectors used by wrappers.
-	for _, binding := range libvirtSymbolBindings(api) {
-		if err := registerSymbol(handle, binding.name, binding.target); err != nil {
-			_ = purego.Dlclose(handle)
-			return nil, err
-		}
-	}
+	// Missing generated symbols are expected when a new binding loads an older
+	// libvirt. Calls are rejected individually with SymbolUnavailableError.
+	bindLibvirtSymbols(api, func(binding nativeSymbolBinding) error {
+		return registerSymbol(handle, binding.name, binding.target)
+	})
 
 	if _, err := nativeCall(api, "virInitialize", func() (int32, bool) {
 		result := api.virInitialize()

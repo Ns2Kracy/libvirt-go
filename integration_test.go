@@ -20,6 +20,26 @@ func TestIntegrationTestDriver(t *testing.T) {
 		t.Fatalf("invalid library version %d", rawVersion)
 	}
 
+	raw, err := NewRawAPI()
+	if err != nil {
+		t.Fatalf("NewRawAPI: %v", err)
+	}
+	var rawAPIVersion uintptr
+	status, err := raw.VirGetVersion(&rawAPIVersion, nil, nil)
+	if err != nil || status != 0 || uint64(rawAPIVersion) != rawVersion {
+		t.Fatalf("RawAPI.VirGetVersion = (%d, %d, %v), want (0, %d, nil)", status, rawAPIVersion, err, rawVersion)
+	}
+
+	for _, symbol := range []string{"virGetVersion", "virConnectOpenReadOnly", "virDomainGetName"} {
+		available, availableErr := HasSymbol(symbol)
+		if availableErr != nil || !available {
+			t.Fatalf("HasSymbol(%q) = (%t, %v), want (true, nil)", symbol, available, availableErr)
+		}
+		if since, known := SymbolVersion(symbol); !known || since == "" {
+			t.Fatalf("SymbolVersion(%q) = (%q, %t)", symbol, since, known)
+		}
+	}
+
 	conn, err := NewConnectReadOnly("test:///default")
 	if err != nil {
 		t.Fatalf("NewConnectReadOnly: %v", err)

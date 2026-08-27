@@ -10,15 +10,17 @@ import (
 
 // nativeAPI combines process-local loader state with generated libvirt ABI fields.
 type nativeAPI struct {
-	handle uintptr
-	path   string
-	free   func(unsafe.Pointer)
+	handle  uintptr
+	path    string
+	free    func(unsafe.Pointer)
+	missing map[string]string
 
 	generatedNativeAPI
 }
 
 type nativeSymbolBinding struct {
 	name   string
+	since  string
 	target any
 }
 
@@ -35,9 +37,55 @@ func getNativeAPI() (*nativeAPI, error) {
 	return api, apiErr
 }
 
+// HasSymbol reports whether the loaded libvirt exports a generated API symbol.
+func HasSymbol(name string) (bool, error) {
+	api, err := getNativeAPI()
+	if err != nil {
+		return false, err
+	}
+	return api.hasSymbol(name), nil
+}
+
+// SymbolVersion returns the libvirt version that introduced a generated symbol.
+func SymbolVersion(name string) (string, bool) {
+	version, ok := generatedLibvirtSymbolVersions[name]
+	return version, ok
+}
+
+func (api *nativeAPI) hasSymbol(name string) bool {
+	if _, known := generatedLibvirtSymbolVersions[name]; !known {
+		return false
+	}
+	_, missing := api.missing[name]
+	return !missing
+}
+
+func (api *nativeAPI) requireSymbol(name string) error {
+	if version, missing := api.missing[name]; missing {
+		return &SymbolUnavailableError{Symbol: name, Since: version}
+	}
+	return nil
+}
+
+func bindLibvirtSymbols(api *nativeAPI, bind func(nativeSymbolBinding) error) {
+	if api.missing == nil {
+		api.missing = make(map[string]string)
+	}
+	for _, binding := range libvirtSymbolBindings(api) {
+		if err := bind(binding); err != nil {
+			api.missing[binding.name] = binding.since
+		}
+	}
+}
+
 // nativeCall keeps the failed API call and virGetLastError on the same OS
 // thread because libvirt stores errors in thread-local storage.
 func nativeCall[T any](api *nativeAPI, operation string, call func() (T, bool)) (T, error) {
+	if err := api.requireSymbol(operation); err != nil {
+		var zero T
+		return zero, err
+	}
+
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 

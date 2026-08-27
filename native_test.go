@@ -93,3 +93,69 @@ func TestConnectCloseConsumesReferenceOnce(t *testing.T) {
 		t.Fatalf("virConnectClose called %d times, want 1", calls)
 	}
 }
+
+func TestMissingGeneratedSymbolIsCompatible(t *testing.T) {
+	api := &nativeAPI{}
+	bindLibvirtSymbols(api, func(binding nativeSymbolBinding) error {
+		if binding.name == "virConnectListAllDomains" {
+			return errors.New("not exported by old libvirt")
+		}
+		return nil
+	})
+
+	called := false
+	_, err := nativeCall(api, "virConnectListAllDomains", func() (int32, bool) {
+		called = true
+		return 0, false
+	})
+	if called {
+		t.Fatal("nativeCall invoked a function missing from the loaded libvirt")
+	}
+	if !errors.Is(err, ErrSymbolUnavailable) {
+		t.Fatalf("nativeCall error = %v, want ErrSymbolUnavailable", err)
+	}
+	var unavailable *SymbolUnavailableError
+	if !errors.As(err, &unavailable) {
+		t.Fatalf("nativeCall error = %T, want *SymbolUnavailableError", err)
+	}
+	if unavailable.Symbol != "virConnectListAllDomains" || unavailable.Since != "0.9.13" {
+		t.Fatalf("SymbolUnavailableError = %#v", unavailable)
+	}
+	if api.hasSymbol("virConnectListAllDomains") {
+		t.Fatal("hasSymbol reported a missing old-libvirt function")
+	}
+	if !api.hasSymbol("virConnectOpen") {
+		t.Fatal("hasSymbol rejected an available baseline function")
+	}
+}
+
+func TestGeneratedMainAPICatalogComplete(t *testing.T) {
+	bindings := libvirtSymbolBindings(&nativeAPI{})
+	if len(bindings) < 500 {
+		t.Fatalf("generated only %d libvirt functions, want the complete main API", len(bindings))
+	}
+	if len(bindings) != len(generatedLibvirtSymbolVersions) {
+		t.Fatalf("binding/version metadata counts differ: %d != %d", len(bindings), len(generatedLibvirtSymbolVersions))
+	}
+	seen := make(map[string]struct{}, len(bindings))
+	for _, binding := range bindings {
+		if binding.name == "" || binding.since == "" || binding.target == nil {
+			t.Fatalf("incomplete generated binding: %#v", binding)
+		}
+		if _, duplicate := seen[binding.name]; duplicate {
+			t.Fatalf("duplicate generated binding %s", binding.name)
+		}
+		seen[binding.name] = struct{}{}
+	}
+}
+
+func TestRawAPIMethodGuardsMissingSymbol(t *testing.T) {
+	api := &nativeAPI{missing: map[string]string{"virConnectListAllDomains": "0.9.13"}}
+	raw := &RawAPI{api: api}
+	if _, err := raw.VirConnectListAllDomains(nil, nil, 0); !errors.Is(err, ErrSymbolUnavailable) {
+		t.Fatalf("VirConnectListAllDomains error = %v, want ErrSymbolUnavailable", err)
+	}
+	if raw.HasSymbol("virConnectListAllDomains") {
+		t.Fatal("RawAPI.HasSymbol reported a missing function")
+	}
+}

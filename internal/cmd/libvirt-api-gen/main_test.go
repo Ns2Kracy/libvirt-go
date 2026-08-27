@@ -12,6 +12,7 @@ import (
 )
 
 func TestGoABIType(t *testing.T) {
+	callbackTypes := map[string]struct{}{"virFreeCallback": {}}
 	tests := []struct {
 		cType  string
 		result bool
@@ -24,11 +25,14 @@ func TestGoABIType(t *testing.T) {
 		{"char *", true, "unsafe.Pointer"},
 		{"virConnectPtr", false, "unsafe.Pointer"},
 		{"virDomainPtr **", false, "*unsafe.Pointer"},
+		{"char ** const", false, "*unsafe.Pointer"},
+		{"double *", false, "*float64"},
+		{"virFreeCallback", false, "uintptr"},
 		{"void", true, ""},
 	}
 	for _, test := range tests {
 		t.Run(test.cType, func(t *testing.T) {
-			got, err := goABIType(test.cType, test.result)
+			got, err := goABIType(test.cType, test.result, callbackTypes)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -84,6 +88,24 @@ func use(api *nativeAPI, domain *Domain) {
 	}
 }
 
+func TestSelectNativeSymbolsAll(t *testing.T) {
+	document := &apiDocument{Functions: []apiFunction{
+		{Name: "virZed"},
+		{Name: "virAlpha"},
+	}}
+	symbols, err := selectNativeSymbols(document, "all", t.TempDir(), defaultOutput)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"virAlpha", "virZed"}
+	if !reflect.DeepEqual(symbols, want) {
+		t.Fatalf("selectNativeSymbols(all) = %v, want %v", symbols, want)
+	}
+	if _, err := selectNativeSymbols(document, "invalid", t.TempDir(), defaultOutput); err == nil {
+		t.Fatal("selectNativeSymbols accepted an invalid mode")
+	}
+}
+
 func TestRenderGenerated(t *testing.T) {
 	input := `<api><symbols>
 <function name="virConnectOpen" version="0.0.3"><return type="virConnectPtr"/><arg name="name" type="const char *"/></function>
@@ -105,7 +127,9 @@ func TestRenderGenerated(t *testing.T) {
 	text := strings.Join(strings.Fields(string(generated)), " ")
 	for _, expected := range []string{
 		"virConnectOpen func(*byte) unsafe.Pointer",
-		`{name: "virConnectOpen", target: &api.virConnectOpen}`,
+		"func (raw *RawAPI) VirConnectOpen(name *byte) (unsafe.Pointer, error)",
+		`{name: "virConnectOpen", since: "0.0.3", target: &api.virConnectOpen}`,
+		`"virConnectOpen": "0.0.3"`,
 		"VIR_DOMAIN_NOSTATE = 0",
 		"DomainNoState DomainState = DomainState(VIR_DOMAIN_NOSTATE)",
 	} {
