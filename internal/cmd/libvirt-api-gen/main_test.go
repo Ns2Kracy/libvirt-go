@@ -88,6 +88,40 @@ func use(api *nativeAPI, domain *Domain) {
 	}
 }
 
+func TestLoadAPIDocuments(t *testing.T) {
+	dir := t.TempDir()
+	sources := map[string]string{
+		"libvirt-api.xml":       "virMain",
+		"libvirt-admin-api.xml": "virAdmTest",
+		"libvirt-lxc-api.xml":   "virLxcTest",
+		"libvirt-qemu-api.xml":  "virQemuTest",
+	}
+	for filename, function := range sources {
+		xml := `<api><symbols><function name="` + function + `" version="1.0.0"><return type="int"/></function></symbols></api>`
+		if err := os.WriteFile(filepath.Join(dir, filename), []byte(xml), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	document, hash, err := loadAPIDocuments(filepath.Join(dir, "libvirt-api.xml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(document.Functions) != 4 || len(hash) != 64 {
+		t.Fatalf("loadAPIDocuments = %d functions, hash %q", len(document.Functions), hash)
+	}
+	libraries := make(map[string]string)
+	for _, function := range document.Functions {
+		libraries[function.Name] = function.Library
+	}
+	for function, library := range map[string]string{
+		"virMain": "main", "virAdmTest": "admin", "virLxcTest": "lxc", "virQemuTest": "qemu",
+	} {
+		if libraries[function] != library {
+			t.Errorf("function %s library = %q, want %q", function, libraries[function], library)
+		}
+	}
+}
+
 func TestSelectNativeSymbolsAll(t *testing.T) {
 	document := &apiDocument{Functions: []apiFunction{
 		{Name: "virZed"},
@@ -128,7 +162,7 @@ func TestRenderGenerated(t *testing.T) {
 	for _, expected := range []string{
 		"virConnectOpen func(*byte) unsafe.Pointer",
 		"func (raw *RawAPI) VirConnectOpen(name *byte) (unsafe.Pointer, error)",
-		`{name: "virConnectOpen", since: "0.0.3", target: &api.virConnectOpen}`,
+		`{name: "virConnectOpen", since: "0.0.3", library: "main", target: &api.virConnectOpen}`,
 		`"virConnectOpen": "0.0.3"`,
 		"VIR_DOMAIN_NOSTATE = 0",
 		"DomainNoState DomainState = DomainState(VIR_DOMAIN_NOSTATE)",

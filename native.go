@@ -10,18 +10,22 @@ import (
 
 // nativeAPI combines process-local loader state with generated libvirt ABI fields.
 type nativeAPI struct {
-	handle  uintptr
-	path    string
-	free    func(unsafe.Pointer)
-	missing map[string]string
+	handle           uintptr
+	path             string
+	malloc           func(uintptr) unsafe.Pointer
+	calloc           func(uintptr, uintptr) unsafe.Pointer
+	free             func(unsafe.Pointer)
+	missing          map[string]string
+	extensionHandles map[string]uintptr
 
 	generatedNativeAPI
 }
 
 type nativeSymbolBinding struct {
-	name   string
-	since  string
-	target any
+	name    string
+	since   string
+	library string
+	target  any
 }
 
 var (

@@ -6,6 +6,12 @@ A cgo-free Go binding for libvirt, loaded at runtime with
 This project is an independent implementation. It does not import or wrap
 `gitlab.com/libvirt/libvirt-go-module`.
 
+> [!WARNING]
+> This project is experimental. It has only been exercised on Linux with
+> libvirt's synthetic `test:///default` driver. It has not been validated in a
+> production libvirt/QEMU/KVM environment and is not currently recommended for
+> production workloads. macOS, FreeBSD, and NetBSD are untested and unsupported.
+
 ## Why
 
 - Build with `CGO_ENABLED=0`.
@@ -15,17 +21,18 @@ This project is an independent implementation. It does not import or wrap
 - Preserve libvirt's reference-counting and structured error information in an
   idiomatic Go API.
 
-A compatible libvirt shared library is still required at runtime. The loader
-tries `libvirt.so.0`/`libvirt.so` on ELF systems and
-`libvirt.0.dylib`/`libvirt.dylib` on macOS. Set `LIBVIRT_GO_LIBRARY` before the
-first API call to use an explicit path.
+A compatible Linux libvirt shared library is still required at runtime. The
+loader tries `libvirt.so.0`/`libvirt.so`; set `LIBVIRT_GO_LIBRARY` before the
+first API call to use an explicit path. Admin, QEMU, and LXC extension libraries
+can be overridden with `LIBVIRT_ADMIN_LIBRARY`, `LIBVIRT_QEMU_LIBRARY`, and
+`LIBVIRT_LXC_LIBRARY`.
 
 ## Generated API metadata
 
 A shared library exposes symbol names, but it does not describe C parameter
-types, enum values, or ownership rules. Generation therefore uses libvirt's
-official `libvirt-api.xml`, which is produced upstream from the public headers
-and installed by libvirt development packages.
+types, enum values, or ownership rules. Generation therefore uses libvirt's official main, admin, QEMU, and
+LXC API XML files, which are produced upstream from the public headers and
+installed by libvirt development packages.
 
 `go generate ./...` resolves the XML in this order:
 
@@ -34,10 +41,15 @@ and installed by libvirt development packages.
 3. `/usr/share/libvirt/api/libvirt-api.xml` or the corresponding
    `/usr/local` path.
 
-The generator emits every function declared by the main API XML (524 functions
-for libvirt 11.6), including purego signatures, introduction versions, the
-symbol registration table, and public `RawAPI.Vir*` methods. It also emits all
-raw `VIR_*` enums and the idiomatic aliases used by the current public API.
+The admin, LXC, and QEMU XML files must be present beside the resolved main XML
+file. Their runtime shared libraries are optional; absent extension libraries
+make only their corresponding symbols unavailable.
+
+The generator emits every function declared by all four API XML files (567
+functions and 1,071 enums for the installed libvirt 11.6 metadata), including
+purego signatures, introduction versions, source-library routing, the symbol
+registration table, and public `RawAPI.Vir*` methods. It also emits idiomatic
+enum aliases used by the high-level API.
 The generated `libvirt_api.gen.go` is committed, so package consumers still
 need only the runtime shared library.
 
@@ -71,18 +83,19 @@ table.
 
 ## Current scope
 
-The generated low-level surface covers all functions and enums in the main
-`libvirt-api.xml`. The ownership-aware high-level API currently covers library
-and hypervisor versions, read-write and read-only connections, connection
-liveness and URI inspection, domain listing, lookup and definition, domain
-identity/state/XML inspection, and basic domain lifecycle operations. The
-separate admin, QEMU, and LXC API XML files are not generated yet.
+The generated low-level surface covers the main, admin, QEMU, and LXC API XML
+files. The ownership-aware high-level API covers connections, domains, networks
+and ports, storage pools and volumes, secrets, node devices, host interfaces,
+network filters, snapshots, checkpoints, streams, typed domain parameters, the
+default event loop, connection-close callbacks, and domain lifecycle callbacks.
+Other specialized operations remain available through `RawAPI`.
 
-The public API owns native references explicitly:
+The public API owns native resources explicitly:
 
 - call `(*Connect).Close` for every successful open;
-- call `(*Domain).Free` for every domain returned by list, lookup, or define;
-- do not copy `Connect` or `Domain` values after first use.
+- call `Free` for every returned object or stream reference;
+- call callback handle `Close` methods to unregister callbacks;
+- do not copy handle values after first use.
 
 ## Example
 
@@ -134,10 +147,9 @@ CGO_ENABLED=0 go run ./path/to/your/program
 
 ## Platform and ABI notes
 
-The dynamic loader is implemented for Linux, macOS, FreeBSD, and NetBSD. The
-most important no-cgo targets are purego's tier-1 Linux amd64/arm64 and macOS
-amd64/arm64 targets. Other architectures inherit purego's support level and may
-need its documented compiler flags.
+Only Linux amd64 is currently runtime-tested and supported. Linux arm64 has only
+been compile-checked. The macOS, FreeBSD, and NetBSD loader code has not been
+tested by this project and must be treated as unsupported.
 
 Foreign signatures must exactly match libvirt's C ABI. Failed calls and
 `virGetLastError` are kept on one OS thread so libvirt's thread-local error
@@ -154,13 +166,17 @@ CGO_ENABLED=0 go test ./...
 LIBVIRT_INTEGRATION=1 CGO_ENABLED=0 go test -run Integration ./...
 ```
 
-The integration test uses libvirt's `test:///default` driver. The second command
-requires a local libvirt runtime.
+The integration test uses libvirt's synthetic `test:///default` driver on Linux.
+It exercises resource ownership, typed parameters, callback registration, and
+main/admin/QEMU/LXC symbol loading, but it does not start real virtual machines,
+connect to production daemons, transfer real storage, or validate failure and
+recovery behavior under production load. No production-environment validation
+has been performed.
 
 ## Next areas
 
-The generator now owns the complete main low-level function catalog, versioned
-registrations, and all enum values. Remaining work is ownership-aware high-level
-wrappers for events and callbacks, typed parameters, streams, storage, networks,
-secrets, and node devices, followed by generation from the separate admin, QEMU,
-and LXC API XML files.
+Before a stable release, this project still needs real Linux libvirtd/virtqemud
+integration tests, QEMU/KVM guest lifecycle tests, storage and stream transfer
+tests, callback delivery stress tests, race/fuzz testing, security review, and
+validation against multiple old and new libvirt versions. Additional typed and
+event-specific convenience wrappers can then be added over the complete raw API.

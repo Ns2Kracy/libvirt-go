@@ -15,6 +15,8 @@ var (
 	ErrLibraryNotFound = errors.New("libvirt: shared library not found")
 	// ErrSymbolUnavailable indicates that the loaded libvirt predates an API function.
 	ErrSymbolUnavailable = errors.New("libvirt: symbol unavailable")
+	// ErrStreamWouldBlock indicates nonblocking stream I/O cannot currently progress.
+	ErrStreamWouldBlock = errors.New("libvirt: stream would block")
 	// ErrUnsupportedPlatform indicates that no dynamic loader is implemented for this GOOS.
 	ErrUnsupportedPlatform = fmt.Errorf("libvirt: unsupported platform %s", runtime.GOOS)
 )
