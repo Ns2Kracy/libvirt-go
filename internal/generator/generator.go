@@ -445,7 +445,9 @@ func goABIType(cType string, result bool, callbackTypes map[string]struct{}) (st
 		pointerDepth++
 		typeName = strings.TrimSpace(strings.TrimSuffix(typeName, "*"))
 	}
-	if _, callback := callbackTypes[typeName]; callback {
+	_, documentedCallback := callbackTypes[typeName]
+	callback := documentedCallback || strings.HasSuffix(typeName, "Callback") || strings.HasSuffix(typeName, "Func")
+	if callback {
 		if pointerDepth == 0 {
 			return "uintptr", nil
 		}

@@ -7,6 +7,7 @@ in its own directory.
 
 ```text
 .
+├── api/                       vendored libvirt API XML metadata
 ├── cmd/libvirt-api-gen/       generator executable
 ├── docs/                      architecture and testing documentation
 ├── examples/list-domains/     buildable public-API example

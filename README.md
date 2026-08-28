@@ -29,6 +29,7 @@ can be overridden with `LIBVIRT_ADMIN_LIBRARY`, `LIBVIRT_QEMU_LIBRARY`, and
 
 ## Repository layout
 
+- `api/`: vendored libvirt 12.6.0 API XML metadata;
 - `cmd/libvirt-api-gen/`: generator executable;
 - `internal/generator/`: XML parsing, templates, and Go source generation;
 - `integration/`: black-box synthetic and gated real-libvirt tests;
@@ -42,9 +43,9 @@ boundaries follow directories. See `docs/architecture.md` for the rationale.
 ## Generated API metadata
 
 A shared library exposes symbol names, but it does not describe C parameter
-types, enum values, or ownership rules. Generation therefore uses libvirt's official main, admin, QEMU, and
-LXC API XML files, which are produced upstream from the public headers and
-installed by libvirt development packages.
+types, enum values, or ownership rules. Generation therefore uses libvirt's
+official main, admin, QEMU, and LXC API XML files. The repository vendors the
+libvirt 12.6.0 metadata under `api/`; see `api/README.md` for provenance.
 
 `go generate ./...` resolves the XML in this order:
 
@@ -57,8 +58,8 @@ The admin, LXC, and QEMU XML files must be present beside the resolved main XML
 file. Their runtime shared libraries are optional; absent extension libraries
 make only their corresponding symbols unavailable.
 
-The generator emits every function declared by all four API XML files (567
-functions and 1,071 enums for the installed libvirt 11.6 metadata), including
+The generator emits every function declared by all four API XML files (568
+functions and 1,093 enums for the vendored libvirt 12.6.0 metadata), including
 purego signatures, introduction versions, source-library routing, the symbol
 registration table, and public `RawAPI.Vir*` methods. It also emits idiomatic
 enum aliases used by the high-level API.

@@ -13,7 +13,7 @@ import (
 )
 
 func TestGoABIType(t *testing.T) {
-	callbackTypes := map[string]struct{}{"virFreeCallback": {}}
+	callbackTypes := map[string]struct{}{"virKnownFunc": {}}
 	tests := []struct {
 		cType  string
 		result bool
@@ -28,6 +28,7 @@ func TestGoABIType(t *testing.T) {
 		{"virDomainPtr **", false, "*unsafe.Pointer"},
 		{"char ** const", false, "*unsafe.Pointer"},
 		{"double *", false, "*float64"},
+		{"virKnownFunc", false, "uintptr"},
 		{"virFreeCallback", false, "uintptr"},
 		{"void", true, ""},
 	}
