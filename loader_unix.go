@@ -67,10 +67,9 @@ func loadNativeAPIFrom(path string) (*nativeAPI, error) {
 	}
 
 	api := &nativeAPI{
-		handle:           handle,
-		path:             path,
-		missing:          make(map[string]string),
-		extensionHandles: loadExtensionLibraries(),
+		handle:  handle,
+		path:    path,
+		missing: make(map[string]string),
 	}
 	for _, allocator := range []nativeSymbolBinding{
 		{name: "malloc", target: &api.malloc},
@@ -82,17 +81,13 @@ func loadNativeAPIFrom(path string) (*nativeAPI, error) {
 			return nil, err
 		}
 	}
-	// Missing generated symbols are expected when a new binding loads an older
-	// libvirt. Calls are rejected individually with SymbolUnavailableError.
+	// Initialize the main library before dlopen of admin, QEMU, or LXC. Older
+	// libvirt releases can corrupt allocator state if extensions load first.
 	bindLibvirtSymbols(api, func(binding nativeSymbolBinding) error {
-		libraryHandle := handle
 		if binding.library != "main" {
-			libraryHandle = api.extensionHandles[binding.library]
-			if libraryHandle == 0 {
-				return fmt.Errorf("%s extension library is unavailable", binding.library)
-			}
+			return fmt.Errorf("%s extension library is not loaded yet", binding.library)
 		}
-		return registerSymbol(libraryHandle, binding.name, binding.target)
+		return registerSymbol(handle, binding.name, binding.target)
 	})
 
 	if _, err := nativeCall(api, "virInitialize", func() (int32, bool) {
@@ -102,6 +97,18 @@ func loadNativeAPIFrom(path string) (*nativeAPI, error) {
 		_ = purego.Dlclose(handle)
 		return nil, err
 	}
+
+	api.extensionHandles = loadExtensionLibraries()
+	bindLibvirtSymbols(api, func(binding nativeSymbolBinding) error {
+		if binding.library == "main" {
+			return nil
+		}
+		libraryHandle := api.extensionHandles[binding.library]
+		if libraryHandle == 0 {
+			return fmt.Errorf("%s extension library is unavailable", binding.library)
+		}
+		return registerSymbol(libraryHandle, binding.name, binding.target)
+	})
 
 	// Registered function values remain valid only while the library is loaded,
 	// so the successful handle intentionally lives for the process lifetime.

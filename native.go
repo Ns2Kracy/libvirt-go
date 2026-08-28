@@ -78,6 +78,8 @@ func bindLibvirtSymbols(api *nativeAPI, bind func(nativeSymbolBinding) error) {
 	for _, binding := range libvirtSymbolBindings(api) {
 		if err := bind(binding); err != nil {
 			api.missing[binding.name] = binding.since
+		} else {
+			delete(api.missing, binding.name)
 		}
 	}
 }

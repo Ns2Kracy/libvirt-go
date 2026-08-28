@@ -129,6 +129,24 @@ func TestMissingGeneratedSymbolIsCompatible(t *testing.T) {
 	}
 }
 
+func TestLateBindingClearsMissingSymbol(t *testing.T) {
+	api := &nativeAPI{}
+	bindLibvirtSymbols(api, func(binding nativeSymbolBinding) error {
+		if binding.name == "virAdmConnectOpen" {
+			return errors.New("extension not loaded")
+		}
+		return nil
+	})
+	if api.hasSymbol("virAdmConnectOpen") {
+		t.Fatal("extension symbol unexpectedly available before late binding")
+	}
+
+	bindLibvirtSymbols(api, func(nativeSymbolBinding) error { return nil })
+	if !api.hasSymbol("virAdmConnectOpen") {
+		t.Fatal("successful late binding did not clear missing symbol state")
+	}
+}
+
 func TestGeneratedAPICatalogComplete(t *testing.T) {
 	bindings := libvirtSymbolBindings(&nativeAPI{})
 	if len(bindings) < 560 {
