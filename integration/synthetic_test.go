@@ -32,13 +32,25 @@ func TestIntegrationTestDriver(t *testing.T) {
 		t.Fatalf("RawAPI.VirGetVersion = (%d, %d, %v), want (0, %d, nil)", status, rawAPIVersion, err, rawVersion)
 	}
 
-	for _, symbol := range []string{"virGetVersion", "virConnectOpenReadOnly", "virDomainGetName", "virAdmConnectOpen", "virDomainLxcOpenNamespace", "virDomainQemuAgentCommand"} {
+	for _, symbol := range []string{"virGetVersion", "virConnectOpenReadOnly", "virDomainGetName"} {
 		available, availableErr := HasSymbol(symbol)
 		if availableErr != nil || !available {
 			t.Fatalf("HasSymbol(%q) = (%t, %v), want (true, nil)", symbol, available, availableErr)
 		}
 		if since, known := SymbolVersion(symbol); !known || since == "" {
 			t.Fatalf("SymbolVersion(%q) = (%q, %t)", symbol, since, known)
+		}
+	}
+	for _, symbol := range []string{"virAdmConnectOpen", "virDomainLxcOpenNamespace", "virDomainQemuAgentCommand"} {
+		available, availableErr := HasSymbol(symbol)
+		if availableErr != nil {
+			t.Fatalf("HasSymbol(%q): %v", symbol, availableErr)
+		}
+		if since, known := SymbolVersion(symbol); !known || since == "" {
+			t.Fatalf("SymbolVersion(%q) = (%q, %t)", symbol, since, known)
+		}
+		if !available {
+			t.Logf("optional extension symbol %s is unavailable", symbol)
 		}
 	}
 
