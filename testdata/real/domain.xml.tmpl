@@ -1,0 +1,22 @@
+<domain type='qemu'>
+  <name>{{.Name}}</name>
+  <uuid>{{.UUID}}</uuid>
+  <title>libvirt-go real integration fixture</title>
+  <memory unit='MiB'>64</memory>
+  <currentMemory unit='MiB'>64</currentMemory>
+  <vcpu placement='static'>1</vcpu>
+  <os>
+    <type arch='x86_64'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+  <features>
+    <acpi/>
+  </features>
+  <clock offset='utc'/>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <devices>
+    <memballoon model='none'/>
+  </devices>
+</domain>

@@ -163,6 +163,20 @@ func (d *Domain) Destroy() error {
 	})
 }
 
+// Undefine removes a persistent domain definition.
+func (d *Domain) Undefine() error {
+	return d.callStatus("virDomainUndefine", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainUndefine(ptr)
+	})
+}
+
+// UndefineFlags removes a persistent domain definition with flags.
+func (d *Domain) UndefineFlags(flags uint32) error {
+	return d.callStatus("virDomainUndefineFlags", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainUndefineFlags(ptr, flags)
+	})
+}
+
 func (d *Domain) callStatus(operation string, call func(*nativeAPI, unsafe.Pointer) int32) error {
 	if d == nil {
 		return fmt.Errorf("%w: domain", ErrClosed)

@@ -168,15 +168,27 @@ LIBVIRT_INTEGRATION=1 CGO_ENABLED=0 go test -run Integration ./...
 
 The integration test uses libvirt's synthetic `test:///default` driver on Linux.
 It exercises resource ownership, typed parameters, callback registration, and
-main/admin/QEMU/LXC symbol loading, but it does not start real virtual machines,
-connect to production daemons, transfer real storage, or validate failure and
-recovery behavior under production load. No production-environment validation
-has been performed.
+main/admin/QEMU/LXC symbol loading.
+
+Real Linux fixtures live in `testdata/real` and are protected by explicit
+mutation gates:
+
+```sh
+LIBVIRT_REAL_INTEGRATION=1 \
+LIBVIRT_REAL_ALLOW_MUTATION=1 \
+LIBVIRT_REAL_URI=qemu:///session \
+CGO_ENABLED=0 go test -run RealIntegration -v ./...
+```
+
+Set `LIBVIRT_REAL_START_GUEST=1` to additionally start the no-disk fixture VM
+and wait for a lifecycle callback. Run this only on a disposable Linux host or
+VM; see `testdata/real/README.md`. This development machine has no QEMU binary
+or libvirt daemon, so the real fixture suite has been compiled but not executed.
+No production-environment validation has been performed.
 
 ## Next areas
 
-Before a stable release, this project still needs real Linux libvirtd/virtqemud
-integration tests, QEMU/KVM guest lifecycle tests, storage and stream transfer
-tests, callback delivery stress tests, race/fuzz testing, security review, and
-validation against multiple old and new libvirt versions. Additional typed and
-event-specific convenience wrappers can then be added over the complete raw API.
+Before a stable release, the real fixture suite must be run in disposable
+libvirtd/virtqemud environments with QEMU/KVM, storage/stream transfers and
+callback delivery need stress coverage, and the binding needs race/fuzz tests,
+security review, and validation against multiple old and new libvirt versions.

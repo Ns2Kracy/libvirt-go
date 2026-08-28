@@ -42,6 +42,9 @@ type cTypedParameter struct {
 }
 
 func decodeTypedParameters(memory unsafe.Pointer, count int32) ([]TypedParameter, error) {
+	if count < 0 {
+		return nil, fmt.Errorf("libvirt: negative typed parameter count %d", count)
+	}
 	if count == 0 {
 		return []TypedParameter{}, nil
 	}
@@ -237,6 +240,9 @@ func getDomainTypedParameters(domain *Domain, operation string, flags uint32, ge
 	if err != nil || count == 0 {
 		return []TypedParameter{}, err
 	}
+	if count < 0 {
+		return nil, fmt.Errorf("libvirt: negative typed parameter count %d", count)
+	}
 	api := domain.api
 	memory := api.calloc(uintptr(count), unsafe.Sizeof(cTypedParameter{}))
 	if memory == nil {
@@ -253,6 +259,9 @@ func getDomainTypedParameters(domain *Domain, operation string, flags uint32, ge
 	})
 	if err != nil {
 		return nil, err
+	}
+	if count < 0 || count > allocatedCount {
+		return nil, fmt.Errorf("libvirt: typed parameter count changed from %d to %d", allocatedCount, count)
 	}
 	return decodeTypedParameters(memory, count)
 }

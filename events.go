@@ -86,18 +86,26 @@ func discardCallbackRecord(api *nativeAPI, opaque unsafe.Pointer) {
 	api.free(opaque)
 }
 
+var (
+	defaultEventOnce sync.Once
+	defaultEventErr  error
+)
+
 // RegisterDefaultEventImpl installs libvirt's poll-based default event loop.
-// It must be called before registering event callbacks and only once per process.
+// Repeated calls return the result of the process-wide first registration.
 func RegisterDefaultEventImpl() error {
-	api, err := getNativeAPI()
-	if err != nil {
-		return err
-	}
-	_, err = nativeCall(api, "virEventRegisterDefaultImpl", func() (int32, bool) {
-		result := api.virEventRegisterDefaultImpl()
-		return result, result < 0
+	defaultEventOnce.Do(func() {
+		api, err := getNativeAPI()
+		if err != nil {
+			defaultEventErr = err
+			return
+		}
+		_, defaultEventErr = nativeCall(api, "virEventRegisterDefaultImpl", func() (int32, bool) {
+			result := api.virEventRegisterDefaultImpl()
+			return result, result < 0
+		})
 	})
-	return err
+	return defaultEventErr
 }
 
 // RunDefaultEventImpl runs one iteration of libvirt's default event loop.
