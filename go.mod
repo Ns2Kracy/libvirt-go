@@ -1,5 +1,5 @@
 module github.com/Ns2Kracy/libvirt-go
 
-go 1.26.1
+go 1.26.6
 
 require github.com/ebitengine/purego v0.10.2
