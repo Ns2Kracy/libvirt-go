@@ -74,6 +74,11 @@ jobs:
           status=${PIPESTATUS[0]}
           set -e
           if ((status != 0)); then
+            annotation=$(tail -n 80 /tmp/synthetic-integration.log)
+            annotation=${annotation//'%'/'%25'}
+            annotation=${annotation//$'\r'/'%0D'}
+            annotation=${annotation//$'\n'/'%0A'}
+            echo "::error title=Synthetic integration failure (${{ matrix.os }})::$annotation"
             {
               echo "### Synthetic integration failure (${{ matrix.os }})"
               echo '```text'
