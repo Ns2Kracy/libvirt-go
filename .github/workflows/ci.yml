@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality, unit, race, and generation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go mod download
+      - name: Lint GitHub Actions workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+      - run: make ci
+      - run: make coverage
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: coverage
+          path: coverage.out
+          if-no-files-found: ignore
+
+  synthetic-integration:
+    name: Synthetic libvirt (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Install libvirt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libvirt-clients \
+            libvirt-daemon-system
+      - name: Show libvirt version
+        run: virsh --version
+      - run: make test-integration
+
+  real-integration:
+    name: Real QEMU/libvirt fixtures
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Install QEMU and libvirt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            dnsmasq-base \
+            libvirt-clients \
+            libvirt-daemon-driver-qemu \
+            libvirt-daemon-system \
+            qemu-system-x86 \
+            qemu-utils
+      - name: Start isolated CI libvirt daemon
+        run: |
+          sudo systemctl stop \
+            libvirtd.service libvirtd.socket \
+            virtqemud.service virtqemud.socket || true
+          sudo libvirtd -d -l -f "$GITHUB_WORKSPACE/ci/libvirtd.conf"
+          for attempt in $(seq 1 30); do
+            if virsh -c qemu+tcp://127.0.0.1/system list --all; then
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
+      - name: Run mutating real fixtures
+        env:
+          LIBVIRT_REAL_INTEGRATION: "1"
+          LIBVIRT_REAL_ALLOW_MUTATION: "1"
+          LIBVIRT_REAL_START_GUEST: "1"
+          LIBVIRT_REAL_URI: qemu+tcp://127.0.0.1/system
+        run: make test-real
+      - name: Collect libvirt diagnostics
+        if: always()
+        run: |
+          virsh -c qemu+tcp://127.0.0.1/system list --all || true
+          sudo chmod a+r /tmp/libvirtd-ci.log || true
+      - name: Upload libvirt log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: libvirtd-log
+          path: /tmp/libvirtd-ci.log
+          if-no-files-found: ignore
+
+  vulnerability-scan:
+    name: Govulncheck
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1
+        with:
+          go-version-file: go.mod
+          go-package: ./...

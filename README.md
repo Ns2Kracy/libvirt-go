@@ -1,5 +1,8 @@
 # libvirt-go
 
+[![CI](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/ci.yml/badge.svg)](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/codeql.yml/badge.svg)](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/codeql.yml)
+
 A cgo-free Go binding for libvirt, loaded at runtime with
 [`purego`](https://github.com/ebitengine/purego).
 
@@ -7,10 +10,10 @@ This project is an independent implementation. It does not import or wrap
 `gitlab.com/libvirt/libvirt-go-module`.
 
 > [!WARNING]
-> This project is experimental. It has only been exercised on Linux with
-> libvirt's synthetic `test:///default` driver. It has not been validated in a
-> production libvirt/QEMU/KVM environment and is not currently recommended for
-> production workloads. macOS, FreeBSD, and NetBSD are untested and unsupported.
+> This project is experimental. CI covers Linux synthetic drivers and disposable
+> QEMU/libvirt fixtures, but it has not been validated in a production
+> libvirt/QEMU/KVM environment and is not currently recommended for production
+> workloads. macOS, FreeBSD, and NetBSD are untested and unsupported.
 
 ## Why
 
@@ -29,13 +32,15 @@ can be overridden with `LIBVIRT_ADMIN_LIBRARY`, `LIBVIRT_QEMU_LIBRARY`, and
 
 ## Repository layout
 
+- `.github/workflows/`: CI and CodeQL pipelines;
 - `api/`: vendored libvirt 12.6.0 API XML metadata;
+- `ci/`: isolated libvirt daemon configuration for CI;
 - `cmd/libvirt-api-gen/`: generator executable;
 - `internal/generator/`: XML parsing, templates, and Go source generation;
 - `integration/`: black-box synthetic and gated real-libvirt tests;
 - `integration/testdata/real/`: mutating real Linux XML fixtures;
 - `examples/`: buildable public API examples;
-- `docs/`: architecture and testing details.
+- `docs/`: architecture, CI, and testing details.
 
 Public package files remain at the repository root because Go package and method
 boundaries follow directories. See `docs/architecture.md` for the rationale.
@@ -195,9 +200,11 @@ CGO_ENABLED=0 go test -run RealIntegration -v ./integration
 
 Set `LIBVIRT_REAL_START_GUEST=1` to additionally start the no-disk fixture VM
 and wait for a lifecycle callback. Run this only on a disposable Linux host or
-VM; see `integration/testdata/real/README.md`. This development machine has no QEMU binary
-or libvirt daemon, so the real fixture suite has been compiled but not executed.
-No production-environment validation has been performed.
+VM; see `integration/testdata/real/README.md`. The GitHub Actions real-integration
+job provisions this environment on an ephemeral runner. This development
+machine has no usable Docker daemon, QEMU binary, or libvirt daemon, so the same
+job could not be executed locally. No production-environment validation has been
+performed.
 
 ## Next areas
 

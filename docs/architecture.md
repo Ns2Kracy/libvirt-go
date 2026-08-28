@@ -7,7 +7,9 @@ in its own directory.
 
 ```text
 .
+├── .github/workflows/         CI and CodeQL automation
 ├── api/                       vendored libvirt API XML metadata
+├── ci/                        isolated libvirt CI daemon config
 ├── cmd/libvirt-api-gen/       generator executable
 ├── docs/                      architecture and testing documentation
 ├── examples/list-domains/     buildable public-API example
@@ -30,6 +32,7 @@ import cycles.
 The root is therefore intentionally the single high-level `libvirt` package.
 Directory boundaries are used where they are meaningful:
 
+- CI automation and its isolated daemon configuration belong in `.github/` and `ci/`;
 - executable tooling belongs in `cmd/`;
 - non-public generator implementation and embedded source templates belong in `internal/`;
 - black-box and mutating tests belong in `integration/`;

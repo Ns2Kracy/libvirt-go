@@ -1,6 +1,7 @@
 # Testing
 
-This project is experimental, Linux-only, and not production validated.
+This project is experimental, Linux-only, and not production validated. See
+`ci.md` for the automated Ubuntu/libvirt matrix and security workflows.
 
 ## Unit and static validation
 
