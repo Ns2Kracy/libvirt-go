@@ -90,10 +90,7 @@ func loadNativeAPIFrom(path string) (*nativeAPI, error) {
 		return registerSymbol(handle, binding.name, binding.target)
 	})
 
-	if _, err := nativeCall(api, "virInitialize", func() (int32, bool) {
-		result := api.virInitialize()
-		return result, result < 0
-	}); err != nil {
+	if err := initializeNativeAPI(api); err != nil {
 		_ = purego.Dlclose(handle)
 		return nil, err
 	}
@@ -113,6 +110,18 @@ func loadNativeAPIFrom(path string) (*nativeAPI, error) {
 	// Registered function values remain valid only while the library is loaded,
 	// so the successful handle intentionally lives for the process lifetime.
 	return api, nil
+}
+
+func initializeNativeAPI(api *nativeAPI) error {
+	if err := api.requireSymbol("virInitialize"); err != nil {
+		return err
+	}
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+	if result := api.virInitialize(); result < 0 {
+		return api.lastError("virInitialize")
+	}
+	return nil
 }
 
 func registerSymbol(handle uintptr, name string, target any) error {
