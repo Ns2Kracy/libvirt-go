@@ -10,7 +10,7 @@ The test is intentionally disabled unless all of the following are set:
 LIBVIRT_REAL_INTEGRATION=1 \
 LIBVIRT_REAL_ALLOW_MUTATION=1 \
 LIBVIRT_REAL_URI=qemu:///session \
-CGO_ENABLED=0 go test -run RealIntegration -v ./...
+CGO_ENABLED=0 go test -run RealIntegration -v ./integration
 ```
 
 Use a disposable Linux host or VM. Do not point this test at a production

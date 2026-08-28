@@ -1,4 +1,5 @@
-package main
+// Tests for the internal libvirt API generator.
+package generator
 
 import (
 	"encoding/xml"
@@ -78,7 +79,7 @@ func use(api *nativeAPI, domain *Domain) {
 	if err := os.WriteFile(filepath.Join(dir, "binding_test.go"), []byte("package libvirt\nfunc ignored(){ api.virTestOnly() }\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	symbols, err := discoverNativeSymbols(dir, filepath.Join(dir, defaultOutput))
+	symbols, err := discoverNativeSymbols(dir, filepath.Join(dir, DefaultOutput))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -127,7 +128,7 @@ func TestSelectNativeSymbolsAll(t *testing.T) {
 		{Name: "virZed"},
 		{Name: "virAlpha"},
 	}}
-	symbols, err := selectNativeSymbols(document, "all", t.TempDir(), defaultOutput)
+	symbols, err := selectNativeSymbols(document, "all", t.TempDir(), DefaultOutput)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -135,7 +136,7 @@ func TestSelectNativeSymbolsAll(t *testing.T) {
 	if !reflect.DeepEqual(symbols, want) {
 		t.Fatalf("selectNativeSymbols(all) = %v, want %v", symbols, want)
 	}
-	if _, err := selectNativeSymbols(document, "invalid", t.TempDir(), defaultOutput); err == nil {
+	if _, err := selectNativeSymbols(document, "invalid", t.TempDir(), DefaultOutput); err == nil {
 		t.Fatal("selectNativeSymbols accepted an invalid mode")
 	}
 }
@@ -143,6 +144,7 @@ func TestSelectNativeSymbolsAll(t *testing.T) {
 func TestRenderGenerated(t *testing.T) {
 	input := `<api><symbols>
 <function name="virConnectOpen" version="0.0.3"><return type="virConnectPtr"/><arg name="name" type="const char *"/></function>
+<function name="virResetLastError" version="0.1.0"><return type="void"/></function>
 <enum name="VIR_CONNECT_LIST_DOMAINS_ACTIVE" type="virConnectListAllDomainsFlags" value="1" version="0.9.13"/>
 <enum name="VIR_DOMAIN_NOSTATE" type="virDomainState" value="0" version="0.0.1"/>
 <enum name="VIR_DOMAIN_XML_SECURE" type="virDomainXMLFlags" value="1" version="0.3.3"/>
@@ -151,7 +153,7 @@ func TestRenderGenerated(t *testing.T) {
 	if err := xml.Unmarshal([]byte(input), &document); err != nil {
 		t.Fatal(err)
 	}
-	generated, err := renderGenerated(&document, []string{"virConnectOpen"}, "abc123")
+	generated, err := renderGenerated(&document, []string{"virConnectOpen", "virResetLastError"}, "abc123")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -162,6 +164,8 @@ func TestRenderGenerated(t *testing.T) {
 	for _, expected := range []string{
 		"virConnectOpen func(*byte) unsafe.Pointer",
 		"func (raw *RawAPI) VirConnectOpen(name *byte) (unsafe.Pointer, error)",
+		"func (raw *RawAPI) VirResetLastError() error",
+		"raw.api.virResetLastError() return nil",
 		`{name: "virConnectOpen", since: "0.0.3", library: "main", target: &api.virConnectOpen}`,
 		`"virConnectOpen": "0.0.3"`,
 		"VIR_DOMAIN_NOSTATE = 0",

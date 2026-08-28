@@ -27,6 +27,18 @@ first API call to use an explicit path. Admin, QEMU, and LXC extension libraries
 can be overridden with `LIBVIRT_ADMIN_LIBRARY`, `LIBVIRT_QEMU_LIBRARY`, and
 `LIBVIRT_LXC_LIBRARY`.
 
+## Repository layout
+
+- `cmd/libvirt-api-gen/`: generator executable;
+- `internal/generator/`: XML parsing, templates, and Go source generation;
+- `integration/`: black-box synthetic and gated real-libvirt tests;
+- `integration/testdata/real/`: mutating real Linux XML fixtures;
+- `examples/`: buildable public API examples;
+- `docs/`: architecture and testing details.
+
+Public package files remain at the repository root because Go package and method
+boundaries follow directories. See `docs/architecture.md` for the rationale.
+
 ## Generated API metadata
 
 A shared library exposes symbol names, but it does not describe C parameter
@@ -163,26 +175,26 @@ unloading it would invalidate the registered foreign function values.
 
 ```sh
 CGO_ENABLED=0 go test ./...
-LIBVIRT_INTEGRATION=1 CGO_ENABLED=0 go test -run Integration ./...
+LIBVIRT_INTEGRATION=1 CGO_ENABLED=0 go test -run Integration ./integration
 ```
 
 The integration test uses libvirt's synthetic `test:///default` driver on Linux.
 It exercises resource ownership, typed parameters, callback registration, and
 main/admin/QEMU/LXC symbol loading.
 
-Real Linux fixtures live in `testdata/real` and are protected by explicit
+Real Linux fixtures live in `integration/testdata/real` and are protected by explicit
 mutation gates:
 
 ```sh
 LIBVIRT_REAL_INTEGRATION=1 \
 LIBVIRT_REAL_ALLOW_MUTATION=1 \
 LIBVIRT_REAL_URI=qemu:///session \
-CGO_ENABLED=0 go test -run RealIntegration -v ./...
+CGO_ENABLED=0 go test -run RealIntegration -v ./integration
 ```
 
 Set `LIBVIRT_REAL_START_GUEST=1` to additionally start the no-disk fixture VM
 and wait for a lifecycle callback. Run this only on a disposable Linux host or
-VM; see `testdata/real/README.md`. This development machine has no QEMU binary
+VM; see `integration/testdata/real/README.md`. This development machine has no QEMU binary
 or libvirt daemon, so the real fixture suite has been compiled but not executed.
 No production-environment validation has been performed.
 

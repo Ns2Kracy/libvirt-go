@@ -1,6 +1,8 @@
-package libvirt
+package integration_test
 
 import (
+	. "github.com/Ns2Kracy/libvirt-go"
+
 	"bytes"
 	"crypto/rand"
 	"encoding/hex"
