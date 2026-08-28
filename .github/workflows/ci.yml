@@ -67,7 +67,28 @@ jobs:
             libvirt-daemon-system
       - name: Show libvirt version
         run: virsh --version
-      - run: make test-integration
+      - name: Run synthetic integration
+        run: |
+          set +e
+          make test-integration 2>&1 | tee /tmp/synthetic-integration.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if ((status != 0)); then
+            {
+              echo "### Synthetic integration failure (${{ matrix.os }})"
+              echo '```text'
+              tail -n 120 /tmp/synthetic-integration.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$status"
+      - name: Upload synthetic integration log
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: synthetic-integration-${{ matrix.os }}
+          path: /tmp/synthetic-integration.log
+          if-no-files-found: ignore
 
   real-integration:
     name: Real QEMU/libvirt fixtures

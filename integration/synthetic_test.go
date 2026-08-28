@@ -172,6 +172,9 @@ func inspectNamedXMLResources[T namedXMLResource](t *testing.T, label string, re
 }
 
 func unsupportedByDriver(err error) bool {
+	if errors.Is(err, ErrSymbolUnavailable) {
+		return true
+	}
 	var libvirtErr *Error
 	return errors.As(err, &libvirtErr) && libvirtErr.Code == int32(VIR_ERR_NO_SUPPORT)
 }
