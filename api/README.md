@@ -19,3 +19,10 @@ functions declared by the configured common header.
 The four files correspond to the main, admin, LXC, and QEMU shared libraries.
 The binding generator hashes all four documents and records the combined digest
 in `libvirt_api.gen.go`.
+
+## License
+
+These XML files are generated from libvirt headers published under the GNU
+Lesser General Public License, version 2.1 or any later version. See `LICENSE`
+in this directory for the full upstream license text. The repository's root MIT
+license does not replace the license of these vendored metadata files.

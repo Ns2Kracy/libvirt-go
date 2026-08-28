@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/ci.yml/badge.svg)](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/codeql.yml/badge.svg)](https://github.com/Ns2Kracy/libvirt-go/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A cgo-free Go binding for libvirt, loaded at runtime with
 [`purego`](https://github.com/ebitengine/purego).
@@ -212,3 +213,10 @@ Before a stable release, the real fixture suite must be run in disposable
 libvirtd/virtqemud environments with QEMU/KVM, storage/stream transfers and
 callback delivery need stress coverage, and the binding needs race/fuzz tests,
 security review, and validation against multiple old and new libvirt versions.
+
+## License
+
+Project code and documentation are licensed under the MIT License; see
+`LICENSE`. Vendored libvirt API XML metadata under `api/` is derived from
+libvirt's LGPL-2.1-or-later headers and retains that license; see `api/LICENSE`
+and `api/README.md`.
