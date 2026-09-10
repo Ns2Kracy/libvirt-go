@@ -100,6 +100,38 @@ return values, thread-local errors, and idiomatic Go resource lifetimes are
 behavioral contracts rather than facts recoverable from an ELF/Mach-O symbol
 table.
 
+## Typed XML
+
+The root package intentionally keeps libvirt's XML boundary as `string`. For
+typed domain, network, storage, snapshot, secret, and other XML models, use the
+official, separately versioned `libvirt.org/go/libvirtxml` module:
+
+```sh
+go get libvirt.org/go/libvirtxml@latest
+```
+
+```go
+import libvirtxml "libvirt.org/go/libvirtxml"
+
+config := &libvirtxml.Domain{
+ Type:   "kvm",
+ Name:   "demo",
+ Memory: &libvirtxml.DomainMemory{Unit: "GiB", Value: 2},
+ VCPU:   &libvirtxml.DomainVCPU{Value: 2},
+}
+
+document, err := config.Marshal()
+if err != nil {
+ log.Fatal(err)
+}
+domain, err := conn.DefineDomainXML(document)
+```
+
+XML returned by `GetXMLDesc` can be passed to `Domain.Unmarshal`,
+`Network.Unmarshal`, or the corresponding model method. The dependency is
+optional and is not imported by this module. Retain raw XML when a lossless
+read-modify-write cycle must preserve fields unknown to the typed model.
+
 ## Current scope
 
 The generated low-level surface covers the main, admin, QEMU, and LXC API XML
