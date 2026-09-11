@@ -148,53 +148,18 @@ The public API owns native resources explicitly:
 - call callback handle `Close` methods to unregister callbacks;
 - do not copy handle values after first use.
 
-## Example
+## Examples
 
-```go
-package main
-
-import (
- "fmt"
- "log"
-
- libvirt "github.com/Ns2Kracy/libvirt-go"
-)
-
-func main() {
- raw, err := libvirt.GetVersion()
- if err != nil {
-  log.Fatal(err)
- }
- fmt.Println("libvirt", libvirt.DecodeVersion(raw))
-
- conn, err := libvirt.NewConnectReadOnly("test:///default")
- if err != nil {
-  log.Fatal(err)
- }
- defer conn.Close()
-
- domains, err := conn.ListAllDomains(0)
- if err != nil {
-  log.Fatal(err)
- }
- for _, domain := range domains {
-  name, nameErr := domain.GetName()
-  if freeErr := domain.Free(); freeErr != nil {
-   log.Printf("free domain: %v", freeErr)
-  }
-  if nameErr != nil {
-   log.Fatal(nameErr)
-  }
-  fmt.Println(name)
- }
-}
-```
-
-Run it without cgo:
+Buildable commands for common connection, domain, network, storage, security,
+host-resource, stream, typed-parameter, and event operations live in
+[`examples/`](examples/). Start with the read-only inventory example:
 
 ```sh
-CGO_ENABLED=0 go run ./path/to/your/program
+CGO_ENABLED=0 go run ./examples/inventory -uri test:///default
 ```
+
+Each example documents whether it is read-only or mutating and follows the
+resource ownership rules described above.
 
 ## Platform and ABI notes
 
