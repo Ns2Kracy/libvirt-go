@@ -21,6 +21,11 @@ CGO_ENABLED=0 go run ./examples/inventory -uri test:///default
 | [`domain-lifecycle`](domain-lifecycle) | Mixed | List, inspect, define, start, shut down, destroy, and undefine domains. |
 | [`domain-snapshots`](domain-snapshots) | Mixed | List, create, inspect, revert, and delete snapshots; manage checkpoints and child checkpoints. |
 | [`typed-parameters`](typed-parameters) | Mixed | Get or set domain memory, NUMA, scheduler, and block-I/O typed parameters. |
+| [`network-lifecycle`](network-lifecycle) | Mixed | Manage networks, autostart, and network ports. |
+| [`storage-lifecycle`](storage-lifecycle) | Mixed | Manage storage pools and volumes, including key/path lookup, resize, and wipe. |
+| [`volume-transfer`](volume-transfer) | Mutating | Upload or download volume bytes with blocking libvirt streams. |
+| [`secrets`](secrets) | Mixed | Define and inspect secrets; transfer values through permission-restricted files. |
+| [`network-filters`](network-filters) | Mixed | List, inspect, define, and undefine network filters. |
 
 ## Resource ownership
 
