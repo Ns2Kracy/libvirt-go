@@ -18,6 +18,9 @@ CGO_ENABLED=0 go run ./examples/inventory -uri test:///default
 | Example | Access | Operations |
 | --- | --- | --- |
 | [`inventory`](inventory) | Read-only | Open and inspect a connection; list domains, networks, and storage pools. |
+| [`domain-lifecycle`](domain-lifecycle) | Mixed | List, inspect, define, start, shut down, destroy, and undefine domains. |
+| [`domain-snapshots`](domain-snapshots) | Mixed | List, create, inspect, revert, and delete snapshots; manage checkpoints and child checkpoints. |
+| [`typed-parameters`](typed-parameters) | Mixed | Get or set domain memory, NUMA, scheduler, and block-I/O typed parameters. |
 
 ## Resource ownership
 
