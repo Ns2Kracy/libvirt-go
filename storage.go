@@ -1,6 +1,36 @@
 package libvirt
 
-import "unsafe"
+import (
+	"fmt"
+	"runtime"
+	"unsafe"
+)
+
+// StoragePoolState describes a storage pool lifecycle state.
+type StoragePoolState int32
+
+const (
+	StoragePoolInactive     StoragePoolState = VIR_STORAGE_POOL_INACTIVE
+	StoragePoolBuilding     StoragePoolState = VIR_STORAGE_POOL_BUILDING
+	StoragePoolRunning      StoragePoolState = VIR_STORAGE_POOL_RUNNING
+	StoragePoolDegraded     StoragePoolState = VIR_STORAGE_POOL_DEGRADED
+	StoragePoolInaccessible StoragePoolState = VIR_STORAGE_POOL_INACCESSIBLE
+)
+
+// StoragePoolInfo reports storage pool state and capacity in bytes.
+type StoragePoolInfo struct {
+	State      StoragePoolState
+	Capacity   uint64
+	Allocation uint64
+	Available  uint64
+}
+
+type cStoragePoolInfo struct {
+	state      int32
+	capacity   uint64
+	allocation uint64
+	available  uint64
+}
 
 // StoragePool is a reference-counted libvirt storage pool handle.
 type StoragePool struct {
@@ -48,6 +78,17 @@ func (c *Connect) LookupStoragePoolByName(name string) (*StoragePool, error) {
 func (c *Connect) LookupStoragePoolByUUIDString(uuid string) (*StoragePool, error) {
 	ptr, err := connectObjectFromString(c, "storage pool UUID", uuid, "virStoragePoolLookupByUUIDString", func(api *nativeAPI, conn unsafe.Pointer, uuid *byte) unsafe.Pointer {
 		return api.virStoragePoolLookupByUUIDString(conn, uuid)
+	})
+	if err != nil {
+		return nil, err
+	}
+	return newStoragePool(c.api, ptr), nil
+}
+
+// LookupStoragePoolByTargetPath returns the pool owning a target path.
+func (c *Connect) LookupStoragePoolByTargetPath(path string) (*StoragePool, error) {
+	ptr, err := connectObjectFromString(c, "storage pool target path", path, "virStoragePoolLookupByTargetPath", func(api *nativeAPI, conn unsafe.Pointer, path *byte) unsafe.Pointer {
+		return api.virStoragePoolLookupByTargetPath(conn, path)
 	})
 	if err != nil {
 		return nil, err
@@ -142,6 +183,24 @@ func (pool *StoragePool) SetAutostart(autostart bool) error {
 	return err
 }
 
+// GetInfo reports the pool state and capacity.
+func (pool *StoragePool) GetInfo() (StoragePoolInfo, error) {
+	info, err := objectCall(storagePoolObject(pool), "virStoragePoolGetInfo", func(api *nativeAPI, ptr unsafe.Pointer) (cStoragePoolInfo, bool) {
+		var result cStoragePoolInfo
+		status := api.virStoragePoolGetInfo(ptr, unsafe.Pointer(&result))
+		return result, status < 0
+	})
+	if err != nil {
+		return StoragePoolInfo{}, err
+	}
+	return StoragePoolInfo{
+		State:      StoragePoolState(info.state),
+		Capacity:   info.capacity,
+		Allocation: info.allocation,
+		Available:  info.available,
+	}, nil
+}
+
 // Create starts an inactive storage pool.
 func (pool *StoragePool) Create(flags uint32) error {
 	return objectStatus(storagePoolObject(pool), "virStoragePoolCreate", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
@@ -168,6 +227,15 @@ func (pool *StoragePool) Refresh(flags uint32) error {
 	return objectStatus(storagePoolObject(pool), "virStoragePoolRefresh", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
 		return api.virStoragePoolRefresh(ptr, flags)
 	})
+}
+
+// NumOfVolumes returns the number of volumes in the storage pool.
+func (pool *StoragePool) NumOfVolumes() (int, error) {
+	count, err := objectCall(storagePoolObject(pool), "virStoragePoolNumOfVolumes", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		result := api.virStoragePoolNumOfVolumes(ptr)
+		return result, result < 0
+	})
+	return int(count), err
 }
 
 // ListAllVolumes returns volumes in this pool. Each handle must be freed.
@@ -205,6 +273,38 @@ func (pool *StoragePool) CreateVolumeXML(xml string, flags uint32) (*StorageVol,
 		return nil, err
 	}
 	return newStorageVol(pool.object.api, ptr), nil
+}
+
+// CreateVolumeXMLFrom clones a source volume into this pool.
+func (pool *StoragePool) CreateVolumeXMLFrom(xml string, source *StorageVol, flags uint32) (*StorageVol, error) {
+	poolObject := storagePoolObject(pool)
+	sourceObject := storageVolObject(source)
+	if poolObject == nil || sourceObject == nil {
+		return nil, fmt.Errorf("%w: storage pool or source volume", ErrClosed)
+	}
+	buffer, xmlPtr, err := makeCString("storage volume XML", xml, false)
+	if err != nil {
+		return nil, err
+	}
+	poolObject.mu.RLock()
+	defer poolObject.mu.RUnlock()
+	sourceObject.mu.RLock()
+	defer sourceObject.mu.RUnlock()
+	if poolObject.ptr == nil || sourceObject.ptr == nil {
+		return nil, fmt.Errorf("%w: storage pool or source volume", ErrClosed)
+	}
+	if poolObject.api != sourceObject.api {
+		return nil, fmt.Errorf("libvirt: storage pool and source volume belong to different libraries")
+	}
+	ptr, err := nativeCall(poolObject.api, "virStorageVolCreateXMLFrom", func() (unsafe.Pointer, bool) {
+		result := poolObject.api.virStorageVolCreateXMLFrom(poolObject.ptr, xmlPtr, sourceObject.ptr, flags)
+		return result, result == nil
+	})
+	runtime.KeepAlive(buffer)
+	if err != nil {
+		return nil, err
+	}
+	return newStorageVol(poolObject.api, ptr), nil
 }
 
 // StorageVol is a reference-counted libvirt storage volume handle.
@@ -245,6 +345,19 @@ func (c *Connect) LookupStorageVolByPath(path string) (*StorageVol, error) {
 	return newStorageVol(c.api, ptr), nil
 }
 
+// StorageVolInfo reports a volume's kind, logical capacity, and allocation.
+type StorageVolInfo struct {
+	Type       int32
+	Capacity   uint64
+	Allocation uint64
+}
+
+type cStorageVolInfo struct {
+	type_      int32
+	capacity   uint64
+	allocation uint64
+}
+
 // Free releases this wrapper's storage-volume reference.
 func (volume *StorageVol) Free() error {
 	return objectFree(storageVolObject(volume), "virStorageVolFree", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
@@ -278,6 +391,33 @@ func (volume *StorageVol) GetXMLDesc(flags uint32) (string, error) {
 	return objectOwnedString(storageVolObject(volume), "virStorageVolGetXMLDesc", func(api *nativeAPI, ptr unsafe.Pointer) unsafe.Pointer {
 		return api.virStorageVolGetXMLDesc(ptr, flags)
 	})
+}
+
+// GetInfo reports volume capacity and allocation.
+func (volume *StorageVol) GetInfo() (StorageVolInfo, error) {
+	info, err := objectCall(storageVolObject(volume), "virStorageVolGetInfo", func(api *nativeAPI, ptr unsafe.Pointer) (cStorageVolInfo, bool) {
+		var result cStorageVolInfo
+		status := api.virStorageVolGetInfo(ptr, unsafe.Pointer(&result))
+		return result, status < 0
+	})
+	return storageVolInfo(info, err)
+}
+
+// GetInfoFlags reports volume capacity and allocation using the requested flags.
+func (volume *StorageVol) GetInfoFlags(flags uint32) (StorageVolInfo, error) {
+	info, err := objectCall(storageVolObject(volume), "virStorageVolGetInfoFlags", func(api *nativeAPI, ptr unsafe.Pointer) (cStorageVolInfo, bool) {
+		var result cStorageVolInfo
+		status := api.virStorageVolGetInfoFlags(ptr, unsafe.Pointer(&result), flags)
+		return result, status < 0
+	})
+	return storageVolInfo(info, err)
+}
+
+func storageVolInfo(info cStorageVolInfo, err error) (StorageVolInfo, error) {
+	if err != nil {
+		return StorageVolInfo{}, err
+	}
+	return StorageVolInfo{Type: info.type_, Capacity: info.capacity, Allocation: info.allocation}, nil
 }
 
 // Delete removes the storage volume.

@@ -80,6 +80,10 @@ func TestIntegrationTestDriver(t *testing.T) {
 	if version, versionErr := conn.GetVersion(); versionErr != nil || version == 0 {
 		t.Fatalf("GetVersion = (%d, %v)", version, versionErr)
 	}
+	capabilities, err := conn.GetCapabilities()
+	if err != nil || !strings.Contains(capabilities, "<capabilities") {
+		t.Fatalf("GetCapabilities returned valid XML = %t, error = %v", strings.Contains(capabilities, "<capabilities"), err)
+	}
 
 	domains, err := conn.ListAllDomains(0)
 	if err != nil {
@@ -116,6 +120,9 @@ func TestIntegrationTestDriver(t *testing.T) {
 	if err != nil || !strings.Contains(xml, "<domain") {
 		t.Fatalf("GetXMLDesc returned valid domain XML = %t, error = %v", strings.Contains(xml, "<domain"), err)
 	}
+	if _, err := domain.GetAutostart(); err != nil {
+		t.Fatalf("GetAutostart: %v", err)
+	}
 
 	exerciseNextAreaAPIs(t, conn, domain)
 
@@ -128,8 +135,8 @@ func TestIntegrationTestDriver(t *testing.T) {
 	}
 
 	_, err = conn.LookupDomainByName("__purego_binding_missing_domain__")
-	var libvirtErr *Error
-	if !errors.As(err, &libvirtErr) || libvirtErr.Message == "" {
+	libvirtErr, ok := errors.AsType[*Error](err)
+	if !ok || libvirtErr.Message == "" {
 		t.Fatalf("missing domain error = %#v, want populated *Error", err)
 	}
 }
@@ -175,8 +182,8 @@ func unsupportedByDriver(err error) bool {
 	if errors.Is(err, ErrSymbolUnavailable) {
 		return true
 	}
-	var libvirtErr *Error
-	return errors.As(err, &libvirtErr) && libvirtErr.Code == int32(VIR_ERR_NO_SUPPORT)
+	libvirtErr, ok := errors.AsType[*Error](err)
+	return ok && libvirtErr.Code == VIR_ERR_NO_SUPPORT
 }
 
 func allowUnsupported(t *testing.T, label string, err error) bool {
@@ -210,12 +217,21 @@ func exerciseNextAreaAPIs(t *testing.T, conn *Connect, domain *Domain) {
 	if allowUnsupported(t, "ListAllStoragePools", err) {
 		inspectNamedXMLResources(t, "storage pool", pools)
 		if len(pools) != 0 {
+			if _, infoErr := pools[0].GetInfo(); infoErr != nil {
+				t.Errorf("StoragePool.GetInfo: %v", infoErr)
+			}
+			if _, countErr := pools[0].NumOfVolumes(); countErr != nil {
+				t.Errorf("StoragePool.NumOfVolumes: %v", countErr)
+			}
 			volumes, volumeErr := pools[0].ListAllVolumes(0)
 			if allowUnsupported(t, "StoragePool.ListAllVolumes", volumeErr) {
 				cleanupResources(t, volumes)
 				if len(volumes) != 0 {
 					if name, nameErr := volumes[0].GetName(); nameErr != nil || name == "" {
 						t.Errorf("StorageVol.GetName = (%q, %v)", name, nameErr)
+					}
+					if _, infoErr := volumes[0].GetInfo(); infoErr != nil {
+						t.Errorf("StorageVol.GetInfo: %v", infoErr)
 					}
 				}
 			}
@@ -262,6 +278,12 @@ func exerciseNextAreaAPIs(t *testing.T, conn *Connect, domain *Domain) {
 		if allowUnsupported(t, "RegisterDomainLifecycleCallback", lifecycleErr) {
 			if err := lifecycle.Close(); err != nil {
 				t.Errorf("DomainEventCallback.Close: %v", err)
+			}
+		}
+		deviceLifecycle, deviceLifecycleErr := conn.RegisterNodeDeviceLifecycleCallback(nil, func(NodeDeviceLifecycleEvent) {})
+		if allowUnsupported(t, "RegisterNodeDeviceLifecycleCallback", deviceLifecycleErr) {
+			if err := deviceLifecycle.Close(); err != nil {
+				t.Errorf("NodeDeviceEventCallback.Close: %v", err)
 			}
 		}
 	}

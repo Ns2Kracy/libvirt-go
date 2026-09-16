@@ -38,10 +38,27 @@ func (e *SymbolUnavailableError) Unwrap() error {
 	return ErrSymbolUnavailable
 }
 
+// ErrorNumber identifies a libvirt error code and can be used with errors.Is.
+type ErrorNumber int32
+
+const (
+	ErrInvalidArg       ErrorNumber = VIR_ERR_INVALID_ARG
+	ErrInvalidDomain    ErrorNumber = VIR_ERR_INVALID_DOMAIN
+	ErrNoDomain         ErrorNumber = VIR_ERR_NO_DOMAIN
+	ErrNoDomainSnapshot ErrorNumber = VIR_ERR_NO_DOMAIN_SNAPSHOT
+	ErrNoStoragePool    ErrorNumber = VIR_ERR_NO_STORAGE_POOL
+	ErrNoStorageVol     ErrorNumber = VIR_ERR_NO_STORAGE_VOL
+	ErrOperationInvalid ErrorNumber = VIR_ERR_OPERATION_INVALID
+)
+
+func (n ErrorNumber) Error() string {
+	return fmt.Sprintf("libvirt: error code %d", n)
+}
+
 // Error is a copy of libvirt's thread-local error record.
 type Error struct {
 	Operation string
-	Code      int32
+	Code      ErrorNumber
 	Domain    int32
 	Level     int32
 	Message   string
@@ -55,4 +72,10 @@ func (e *Error) Error() string {
 		return fmt.Sprintf("libvirt: %s failed (code=%d domain=%d level=%d)", e.Operation, e.Code, e.Domain, e.Level)
 	}
 	return fmt.Sprintf("libvirt: %s: %s (code=%d domain=%d level=%d)", e.Operation, e.Message, e.Code, e.Domain, e.Level)
+}
+
+// Is matches a structured libvirt error against an ErrorNumber.
+func (e *Error) Is(target error) bool {
+	number, ok := target.(ErrorNumber)
+	return ok && e != nil && e.Code == number
 }

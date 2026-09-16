@@ -142,6 +142,86 @@ func (d *Domain) GetXMLDesc(flags DomainXMLFlags) (string, error) {
 	return copyCString(ptr), nil
 }
 
+// Reset immediately resets a running domain.
+func (d *Domain) Reset(flags uint32) error {
+	return d.callStatus("virDomainReset", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainReset(ptr, flags)
+	})
+}
+
+// Reboot requests a guest reboot.
+func (d *Domain) Reboot(flags uint32) error {
+	return d.callStatus("virDomainReboot", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainReboot(ptr, flags)
+	})
+}
+
+// Resume resumes a suspended domain.
+func (d *Domain) Resume() error {
+	return d.callStatus("virDomainResume", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainResume(ptr)
+	})
+}
+
+// Suspend pauses a running domain.
+func (d *Domain) Suspend() error {
+	return d.callStatus("virDomainSuspend", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainSuspend(ptr)
+	})
+}
+
+// DestroyFlags immediately stops a running domain with the requested behavior.
+func (d *Domain) DestroyFlags(flags uint32) error {
+	return d.callStatus("virDomainDestroyFlags", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainDestroyFlags(ptr, flags)
+	})
+}
+
+// AttachDeviceFlags attaches a device described by XML.
+func (d *Domain) AttachDeviceFlags(xml string, flags uint32) error {
+	return d.modifyDevice("virDomainAttachDeviceFlags", xml, flags, func(api *nativeAPI, ptr unsafe.Pointer, xml *byte, flags uint32) int32 {
+		return api.virDomainAttachDeviceFlags(ptr, xml, flags)
+	})
+}
+
+// DetachDeviceFlags detaches a device described by XML.
+func (d *Domain) DetachDeviceFlags(xml string, flags uint32) error {
+	return d.modifyDevice("virDomainDetachDeviceFlags", xml, flags, func(api *nativeAPI, ptr unsafe.Pointer, xml *byte, flags uint32) int32 {
+		return api.virDomainDetachDeviceFlags(ptr, xml, flags)
+	})
+}
+
+func (d *Domain) modifyDevice(operation, xml string, flags uint32, call func(*nativeAPI, unsafe.Pointer, *byte, uint32) int32) error {
+	buffer, xmlPtr, err := makeCString("device XML", xml, false)
+	if err != nil {
+		return err
+	}
+	_, err = domainCall(d, operation, func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		result := call(api, ptr, xmlPtr, flags)
+		return result, result < 0
+	})
+	runtime.KeepAlive(buffer)
+	return err
+}
+
+// SendKey sends keycodes to a domain using the selected keycode set.
+func (d *Domain) SendKey(codeSet, holdTime uint32, codes []uint32, flags uint32) error {
+	const maxKeys = 16
+	if len(codes) > maxKeys {
+		return fmt.Errorf("libvirt: send key accepts at most %d keycodes", maxKeys)
+	}
+	var codesPtr *uint32
+	if len(codes) != 0 {
+		codesPtr = &codes[0]
+	}
+	_, err := domainCall(d, "virDomainSendKey", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		result := api.virDomainSendKey(ptr, codeSet, holdTime, codesPtr, int32(len(codes)), flags)
+		return result, result < 0
+	})
+	runtime.KeepAlive(codes)
+	return err
+}
+
 // Create starts an inactive domain.
 func (d *Domain) Create() error {
 	return d.callStatus("virDomainCreate", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
@@ -161,6 +241,29 @@ func (d *Domain) Destroy() error {
 	return d.callStatus("virDomainDestroy", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
 		return api.virDomainDestroy(ptr)
 	})
+}
+
+// GetAutostart reports whether the domain starts with the host.
+func (d *Domain) GetAutostart() (bool, error) {
+	value, err := domainCall(d, "virDomainGetAutostart", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		var autostart int32
+		result := api.virDomainGetAutostart(ptr, &autostart)
+		return autostart, result < 0
+	})
+	return value != 0, err
+}
+
+// SetAutostart changes whether the domain starts with the host.
+func (d *Domain) SetAutostart(autostart bool) error {
+	value := int32(0)
+	if autostart {
+		value = 1
+	}
+	_, err := domainCall(d, "virDomainSetAutostart", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		result := api.virDomainSetAutostart(ptr, value)
+		return result, result < 0
+	})
+	return err
 }
 
 // Undefine removes a persistent domain definition.

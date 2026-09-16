@@ -415,16 +415,16 @@ func realOptionalError(err error) bool {
 	if err == nil || errors.Is(err, ErrSymbolUnavailable) || errors.Is(err, ErrClosed) {
 		return true
 	}
-	var libvirtErr *Error
-	if !errors.As(err, &libvirtErr) {
+	libvirtErr, ok := errors.AsType[*Error](err)
+	if !ok {
 		return false
 	}
 	switch libvirtErr.Code {
-	case int32(VIR_ERR_NO_SUPPORT), int32(VIR_ERR_OPERATION_UNSUPPORTED),
-		int32(VIR_ERR_CONFIG_UNSUPPORTED), int32(VIR_ERR_OPERATION_INVALID),
-		int32(VIR_ERR_NO_DOMAIN), int32(VIR_ERR_NO_NETWORK),
-		int32(VIR_ERR_NO_STORAGE_POOL), int32(VIR_ERR_NO_STORAGE_VOL),
-		int32(VIR_ERR_NO_SECRET), int32(VIR_ERR_NO_NWFILTER):
+	case VIR_ERR_NO_SUPPORT, VIR_ERR_OPERATION_UNSUPPORTED,
+		VIR_ERR_CONFIG_UNSUPPORTED, VIR_ERR_OPERATION_INVALID,
+		VIR_ERR_NO_DOMAIN, VIR_ERR_NO_NETWORK,
+		VIR_ERR_NO_STORAGE_POOL, VIR_ERR_NO_STORAGE_VOL,
+		VIR_ERR_NO_SECRET, VIR_ERR_NO_NWFILTER:
 		return true
 	default:
 		return false

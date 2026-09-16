@@ -188,6 +188,19 @@ func (c *Connect) ListAllDomains(flags ConnectListAllDomainsFlags) ([]*Domain, e
 	return domains, nil
 }
 
+// GetCapabilities returns the host capabilities XML.
+func (c *Connect) GetCapabilities() (string, error) {
+	ptr, err := connectCall(c, "virConnectGetCapabilities", func(api *nativeAPI, ptr unsafe.Pointer) (unsafe.Pointer, bool) {
+		result := api.virConnectGetCapabilities(ptr)
+		return result, result == nil
+	})
+	if err != nil {
+		return "", err
+	}
+	defer c.api.free(ptr)
+	return copyCString(ptr), nil
+}
+
 // LookupDomainByName returns a referenced domain handle. The caller must call Free.
 func (c *Connect) LookupDomainByName(name string) (*Domain, error) {
 	return c.domainFromString("domain name", name, "virDomainLookupByName", c.apiDomainLookupByName)
@@ -197,6 +210,17 @@ func (c *Connect) LookupDomainByName(name string) (*Domain, error) {
 // The caller must call Free.
 func (c *Connect) DefineDomainXML(xml string) (*Domain, error) {
 	return c.domainFromString("domain XML", xml, "virDomainDefineXML", c.apiDomainDefineXML)
+}
+
+// DefineDomainXMLFlags defines a persistent domain with validation or other flags.
+func (c *Connect) DefineDomainXMLFlags(xml string, flags uint32) (*Domain, error) {
+	ptr, err := connectObjectFromXML(c, xml, "virDomainDefineXMLFlags", flags, func(api *nativeAPI, conn unsafe.Pointer, xml *byte, flags uint32) unsafe.Pointer {
+		return api.virDomainDefineXMLFlags(conn, xml, flags)
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &Domain{api: c.api, ptr: ptr}, nil
 }
 
 func (c *Connect) domainFromString(field, value, operation string, call func(*nativeAPI, unsafe.Pointer, *byte) unsafe.Pointer) (*Domain, error) {

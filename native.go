@@ -117,7 +117,7 @@ func (api *nativeAPI) lastError(operation string) error {
 	record := (*cError)(ptr)
 	return &Error{
 		Operation: operation,
-		Code:      record.code,
+		Code:      ErrorNumber(record.code),
 		Domain:    record.domain,
 		Level:     record.level,
 		Message:   copyCString(record.message),
