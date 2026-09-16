@@ -135,8 +135,8 @@ func TestIntegrationTestDriver(t *testing.T) {
 	}
 
 	_, err = conn.LookupDomainByName("__purego_binding_missing_domain__")
-	libvirtErr, ok := errors.AsType[Error](err)
-	if !ok || libvirtErr.Message == "" {
+	var libvirtErr Error
+	if !errors.As(err, &libvirtErr) || libvirtErr.Message == "" {
 		t.Fatalf("missing domain error = %#v, want populated Error", err)
 	}
 }
@@ -184,8 +184,8 @@ func unsupportedByDriver(err error) bool {
 	if errors.Is(err, ErrSymbolUnavailable) {
 		return true
 	}
-	libvirtErr, ok := errors.AsType[Error](err)
-	return ok && libvirtErr.Code == VIR_ERR_NO_SUPPORT
+	var libvirtErr Error
+	return errors.As(err, &libvirtErr) && libvirtErr.Code == VIR_ERR_NO_SUPPORT
 }
 
 func allowUnsupported(t *testing.T, label string, err error) bool {

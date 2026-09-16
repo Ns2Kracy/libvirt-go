@@ -415,8 +415,8 @@ func realOptionalError(err error) bool {
 	if err == nil || errors.Is(err, ErrSymbolUnavailable) || errors.Is(err, ErrClosed) {
 		return true
 	}
-	libvirtErr, ok := errors.AsType[*Error](err)
-	if !ok {
+	var libvirtErr Error
+	if !errors.As(err, &libvirtErr) {
 		return false
 	}
 	switch libvirtErr.Code {

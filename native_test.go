@@ -52,8 +52,8 @@ func TestNativeCallCopiesError(t *testing.T) {
 		return -1, true
 	})
 	runtime.KeepAlive(message)
-	libvirtErr, ok := errors.AsType[Error](err)
-	if !ok {
+	var libvirtErr Error
+	if !errors.As(err, &libvirtErr) {
 		t.Fatalf("nativeCall() error = %T, want Error", err)
 	}
 	if libvirtErr.Operation != "virDomainLookupByName" || libvirtErr.Code != 42 || libvirtErr.Domain != 10 || libvirtErr.Level != 2 || libvirtErr.Message != "lookup failed" {
@@ -117,8 +117,8 @@ func TestMissingGeneratedSymbolIsCompatible(t *testing.T) {
 	if !errors.Is(err, ErrSymbolUnavailable) {
 		t.Fatalf("nativeCall error = %v, want ErrSymbolUnavailable", err)
 	}
-	unavailable, ok := errors.AsType[*SymbolUnavailableError](err)
-	if !ok {
+	var unavailable *SymbolUnavailableError
+	if !errors.As(err, &unavailable) {
 		t.Fatalf("nativeCall error = %T, want *SymbolUnavailableError", err)
 	}
 	if unavailable.Symbol != "virConnectListAllDomains" || unavailable.Since != "0.9.13" {
