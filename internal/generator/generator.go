@@ -357,6 +357,14 @@ func renderGenerated(document *apiDocument, symbols []string, sourceHash string)
 			return nil, fmt.Errorf("enum %s has unsupported value %q", enum.Name, enum.Value)
 		}
 	}
+	data.OfficialAliases = make([]generatedAliasData, len(data.Enums))
+	for i, enum := range data.Enums {
+		data.OfficialAliases[i] = generatedAliasData{
+			Name:    strings.TrimPrefix(enum.Name, "VIR_"),
+			GoType:  officialEnumGoType(enum.Type),
+			RawName: enum.Name,
+		}
+	}
 	for _, spec := range enumAliases {
 		selected := make([]apiEnum, 0)
 		for _, enum := range data.Enums {
@@ -550,6 +558,41 @@ func validEnumValue(value string) bool {
 		}
 	}
 	return true
+}
+
+func officialEnumGoType(xmlType string) string {
+	switch xmlType {
+	case "virErrorNumber":
+		return "ErrorNumber"
+	case "virErrorDomain":
+		return "ErrorDomain"
+	case "virErrorLevel":
+		return "ErrorLevel"
+	case "virConnectListAllDomainsFlags":
+		return "ConnectListAllDomainsFlags"
+	case "virDomainDestroyFlags":
+		return "DomainDestroyFlags"
+	case "virDomainDeviceModifyFlags":
+		return "DomainDeviceModifyFlags"
+	case "virDomainGetJobStatsFlags":
+		return "DomainGetJobStatsFlags"
+	case "virDomainJobOperation":
+		return "DomainJobOperationType"
+	case "virDomainJobType":
+		return "DomainJobType"
+	case "virDomainSnapshotCreateFlags":
+		return "DomainSnapshotCreateFlags"
+	case "virDomainSnapshotRevertFlags":
+		return "DomainSnapshotRevertFlags"
+	case "virDomainState":
+		return "DomainState"
+	case "virDomainUndefineFlagsValues":
+		return "DomainUndefineFlagsValues"
+	case "virDomainXMLFlags":
+		return "DomainXMLFlags"
+	default:
+		return ""
+	}
 }
 
 func goEnumAlias(cName string, spec enumAliasSpec) string {

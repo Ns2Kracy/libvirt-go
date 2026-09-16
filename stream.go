@@ -11,14 +11,14 @@ const streamWouldBlock = int32(-2)
 
 // Stream is a reference-counted libvirt data stream.
 type Stream struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func streamObject(stream *Stream) *nativeObject {
 	if stream == nil {
 		return nil
 	}
-	return &stream.object
+	return stream.object
 }
 
 func newStream(api *nativeAPI, ptr unsafe.Pointer) *Stream {
@@ -37,8 +37,8 @@ func (c *Connect) NewStream(flags uint32) (*Stream, error) {
 	return newStream(c.api, ptr), nil
 }
 
-// Ref adds a stream reference and returns an independently freeable wrapper.
-func (stream *Stream) Ref() (*Stream, error) {
+// AddReference adds a stream reference and returns an independently freeable wrapper.
+func (stream *Stream) AddReference() (*Stream, error) {
 	type reference struct {
 		api *nativeAPI
 		ptr unsafe.Pointer

@@ -41,15 +41,11 @@ func (e *SymbolUnavailableError) Unwrap() error {
 // ErrorNumber identifies a libvirt error code and can be used with errors.Is.
 type ErrorNumber int32
 
-const (
-	ErrInvalidArg       ErrorNumber = VIR_ERR_INVALID_ARG
-	ErrInvalidDomain    ErrorNumber = VIR_ERR_INVALID_DOMAIN
-	ErrNoDomain         ErrorNumber = VIR_ERR_NO_DOMAIN
-	ErrNoDomainSnapshot ErrorNumber = VIR_ERR_NO_DOMAIN_SNAPSHOT
-	ErrNoStoragePool    ErrorNumber = VIR_ERR_NO_STORAGE_POOL
-	ErrNoStorageVol     ErrorNumber = VIR_ERR_NO_STORAGE_VOL
-	ErrOperationInvalid ErrorNumber = VIR_ERR_OPERATION_INVALID
-)
+// ErrorDomain identifies the libvirt subsystem that reported an error.
+type ErrorDomain int32
+
+// ErrorLevel identifies an error's severity.
+type ErrorLevel int32
 
 func (n ErrorNumber) Error() string {
 	return fmt.Sprintf("libvirt: error code %d", n)
@@ -59,15 +55,12 @@ func (n ErrorNumber) Error() string {
 type Error struct {
 	Operation string
 	Code      ErrorNumber
-	Domain    int32
-	Level     int32
+	Domain    ErrorDomain
+	Level     ErrorLevel
 	Message   string
 }
 
-func (e *Error) Error() string {
-	if e == nil {
-		return "<nil>"
-	}
+func (e Error) Error() string {
 	if e.Message == "" {
 		return fmt.Sprintf("libvirt: %s failed (code=%d domain=%d level=%d)", e.Operation, e.Code, e.Domain, e.Level)
 	}
@@ -75,7 +68,7 @@ func (e *Error) Error() string {
 }
 
 // Is matches a structured libvirt error against an ErrorNumber.
-func (e *Error) Is(target error) bool {
+func (e Error) Is(target error) bool {
 	number, ok := target.(ErrorNumber)
-	return ok && e != nil && e.Code == number
+	return ok && e.Code == number
 }

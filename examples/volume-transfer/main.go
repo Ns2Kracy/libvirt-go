@@ -78,7 +78,7 @@ func run(opts options) (err error) {
 	}
 	defer func() { err = errors.Join(err, pool.Free()) }()
 
-	volume, err := pool.LookupVolumeByName(opts.volume)
+	volume, err := pool.LookupStorageVolByName(opts.volume)
 	if err != nil {
 		return fmt.Errorf("lookup volume %q: %w", opts.volume, err)
 	}

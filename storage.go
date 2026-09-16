@@ -34,14 +34,14 @@ type cStoragePoolInfo struct {
 
 // StoragePool is a reference-counted libvirt storage pool handle.
 type StoragePool struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func storagePoolObject(pool *StoragePool) *nativeObject {
 	if pool == nil {
 		return nil
 	}
-	return &pool.object
+	return pool.object
 }
 
 func newStoragePool(api *nativeAPI, ptr unsafe.Pointer) *StoragePool {
@@ -49,16 +49,16 @@ func newStoragePool(api *nativeAPI, ptr unsafe.Pointer) *StoragePool {
 }
 
 // ListAllStoragePools returns storage pools matching flags. Each handle must be freed.
-func (c *Connect) ListAllStoragePools(flags uint32) ([]*StoragePool, error) {
+func (c *Connect) ListAllStoragePools(flags uint32) ([]StoragePool, error) {
 	handles, err := connectListObjects(c, "virConnectListAllStoragePools", flags, func(api *nativeAPI, conn unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virConnectListAllStoragePools(conn, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	pools := make([]*StoragePool, len(handles))
+	pools := make([]StoragePool, len(handles))
 	for i, handle := range handles {
-		pools[i] = newStoragePool(c.api, handle)
+		pools[i] = *newStoragePool(c.api, handle)
 	}
 	return pools, nil
 }
@@ -96,8 +96,8 @@ func (c *Connect) LookupStoragePoolByTargetPath(path string) (*StoragePool, erro
 	return newStoragePool(c.api, ptr), nil
 }
 
-// DefineStoragePoolXML defines a persistent storage pool.
-func (c *Connect) DefineStoragePoolXML(xml string, flags uint32) (*StoragePool, error) {
+// StoragePoolDefineXML defines a persistent storage pool.
+func (c *Connect) StoragePoolDefineXML(xml string, flags uint32) (*StoragePool, error) {
 	ptr, err := connectObjectFromXML(c, xml, "virStoragePoolDefineXML", flags, func(api *nativeAPI, conn unsafe.Pointer, xml *byte, flags uint32) unsafe.Pointer {
 		return api.virStoragePoolDefineXML(conn, xml, flags)
 	})
@@ -107,8 +107,8 @@ func (c *Connect) DefineStoragePoolXML(xml string, flags uint32) (*StoragePool, 
 	return newStoragePool(c.api, ptr), nil
 }
 
-// CreateStoragePoolXML creates a transient storage pool.
-func (c *Connect) CreateStoragePoolXML(xml string, flags uint32) (*StoragePool, error) {
+// StoragePoolCreateXML creates a transient storage pool.
+func (c *Connect) StoragePoolCreateXML(xml string, flags uint32) (*StoragePool, error) {
 	ptr, err := connectObjectFromXML(c, xml, "virStoragePoolCreateXML", flags, func(api *nativeAPI, conn unsafe.Pointer, xml *byte, flags uint32) unsafe.Pointer {
 		return api.virStoragePoolCreateXML(conn, xml, flags)
 	})
@@ -229,8 +229,8 @@ func (pool *StoragePool) Refresh(flags uint32) error {
 	})
 }
 
-// NumOfVolumes returns the number of volumes in the storage pool.
-func (pool *StoragePool) NumOfVolumes() (int, error) {
+// NumOfStorageVolumes returns the number of volumes in the storage pool.
+func (pool *StoragePool) NumOfStorageVolumes() (int, error) {
 	count, err := objectCall(storagePoolObject(pool), "virStoragePoolNumOfVolumes", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
 		result := api.virStoragePoolNumOfVolumes(ptr)
 		return result, result < 0
@@ -238,23 +238,23 @@ func (pool *StoragePool) NumOfVolumes() (int, error) {
 	return int(count), err
 }
 
-// ListAllVolumes returns volumes in this pool. Each handle must be freed.
-func (pool *StoragePool) ListAllVolumes(flags uint32) ([]*StorageVol, error) {
+// ListAllStorageVolumes returns volumes in this pool. Each handle must be freed.
+func (pool *StoragePool) ListAllStorageVolumes(flags uint32) ([]StorageVol, error) {
 	handles, err := objectListObjects(storagePoolObject(pool), "virStoragePoolListAllVolumes", flags, func(api *nativeAPI, ptr unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virStoragePoolListAllVolumes(ptr, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	volumes := make([]*StorageVol, len(handles))
+	volumes := make([]StorageVol, len(handles))
 	for i, handle := range handles {
-		volumes[i] = newStorageVol(pool.object.api, handle)
+		volumes[i] = *newStorageVol(pool.object.api, handle)
 	}
 	return volumes, nil
 }
 
-// LookupVolumeByName returns a referenced volume in this pool.
-func (pool *StoragePool) LookupVolumeByName(name string) (*StorageVol, error) {
+// LookupStorageVolByName returns a referenced volume in this pool.
+func (pool *StoragePool) LookupStorageVolByName(name string) (*StorageVol, error) {
 	ptr, err := objectFromString(storagePoolObject(pool), "storage volume name", name, "virStorageVolLookupByName", func(api *nativeAPI, pool unsafe.Pointer, name *byte) unsafe.Pointer {
 		return api.virStorageVolLookupByName(pool, name)
 	})
@@ -264,8 +264,8 @@ func (pool *StoragePool) LookupVolumeByName(name string) (*StorageVol, error) {
 	return newStorageVol(pool.object.api, ptr), nil
 }
 
-// CreateVolumeXML creates a storage volume.
-func (pool *StoragePool) CreateVolumeXML(xml string, flags uint32) (*StorageVol, error) {
+// StorageVolCreateXML creates a storage volume.
+func (pool *StoragePool) StorageVolCreateXML(xml string, flags uint32) (*StorageVol, error) {
 	ptr, err := objectFromXML(storagePoolObject(pool), xml, "virStorageVolCreateXML", flags, func(api *nativeAPI, pool unsafe.Pointer, xml *byte, flags uint32) unsafe.Pointer {
 		return api.virStorageVolCreateXML(pool, xml, flags)
 	})
@@ -275,8 +275,8 @@ func (pool *StoragePool) CreateVolumeXML(xml string, flags uint32) (*StorageVol,
 	return newStorageVol(pool.object.api, ptr), nil
 }
 
-// CreateVolumeXMLFrom clones a source volume into this pool.
-func (pool *StoragePool) CreateVolumeXMLFrom(xml string, source *StorageVol, flags uint32) (*StorageVol, error) {
+// StorageVolCreateXMLFrom clones a source volume into this pool.
+func (pool *StoragePool) StorageVolCreateXMLFrom(xml string, source *StorageVol, flags uint32) (*StorageVol, error) {
 	poolObject := storagePoolObject(pool)
 	sourceObject := storageVolObject(source)
 	if poolObject == nil || sourceObject == nil {
@@ -309,14 +309,14 @@ func (pool *StoragePool) CreateVolumeXMLFrom(xml string, source *StorageVol, fla
 
 // StorageVol is a reference-counted libvirt storage volume handle.
 type StorageVol struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func storageVolObject(volume *StorageVol) *nativeObject {
 	if volume == nil {
 		return nil
 	}
-	return &volume.object
+	return volume.object
 }
 
 func newStorageVol(api *nativeAPI, ptr unsafe.Pointer) *StorageVol {

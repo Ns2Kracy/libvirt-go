@@ -107,19 +107,19 @@ func nativeCall[T any](api *nativeAPI, operation string, call func() (T, bool)) 
 
 func (api *nativeAPI) lastError(operation string) error {
 	if api.virGetLastError == nil {
-		return &Error{Operation: operation}
+		return Error{Operation: operation}
 	}
 	ptr := api.virGetLastError()
 	if ptr == nil {
-		return &Error{Operation: operation}
+		return Error{Operation: operation}
 	}
 
 	record := (*cError)(ptr)
-	return &Error{
+	return Error{
 		Operation: operation,
 		Code:      ErrorNumber(record.code),
-		Domain:    record.domain,
-		Level:     record.level,
+		Domain:    ErrorDomain(record.domain),
+		Level:     ErrorLevel(record.level),
 		Message:   copyCString(record.message),
 	}
 }

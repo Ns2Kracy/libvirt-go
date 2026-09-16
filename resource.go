@@ -14,8 +14,8 @@ type nativeObject struct {
 	kind string
 }
 
-func newNativeObject(api *nativeAPI, ptr unsafe.Pointer, kind string) nativeObject {
-	return nativeObject{api: api, ptr: ptr, kind: kind}
+func newNativeObject(api *nativeAPI, ptr unsafe.Pointer, kind string) *nativeObject {
+	return &nativeObject{api: api, ptr: ptr, kind: kind}
 }
 
 func connectCall[T any](conn *Connect, operation string, call func(*nativeAPI, unsafe.Pointer) (T, bool)) (T, error) {

@@ -7,14 +7,14 @@ import (
 
 // DomainSnapshot is a reference-counted domain snapshot handle.
 type DomainSnapshot struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func domainSnapshotObject(snapshot *DomainSnapshot) *nativeObject {
 	if snapshot == nil {
 		return nil
 	}
-	return &snapshot.object
+	return snapshot.object
 }
 
 func newDomainSnapshot(api *nativeAPI, ptr unsafe.Pointer) *DomainSnapshot {
@@ -22,28 +22,28 @@ func newDomainSnapshot(api *nativeAPI, ptr unsafe.Pointer) *DomainSnapshot {
 }
 
 // ListAllSnapshots returns snapshots matching flags. Each handle must be freed.
-func (domain *Domain) ListAllSnapshots(flags uint32) ([]*DomainSnapshot, error) {
+func (domain *Domain) ListAllSnapshots(flags uint32) ([]DomainSnapshot, error) {
 	handles, err := domainListObjects(domain, "virDomainListAllSnapshots", flags, func(api *nativeAPI, ptr unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virDomainListAllSnapshots(ptr, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	snapshots := make([]*DomainSnapshot, len(handles))
+	snapshots := make([]DomainSnapshot, len(handles))
 	for i, handle := range handles {
-		snapshots[i] = newDomainSnapshot(domain.api, handle)
+		snapshots[i] = *newDomainSnapshot(domain.api, handle)
 	}
 	return snapshots, nil
 }
 
 // CreateSnapshotXML creates a domain snapshot.
-func (domain *Domain) CreateSnapshotXML(xml string, flags uint32) (*DomainSnapshot, error) {
+func (domain *Domain) CreateSnapshotXML(xml string, flags DomainSnapshotCreateFlags) (*DomainSnapshot, error) {
 	buffer, xmlPtr, err := makeCString("snapshot XML", xml, false)
 	if err != nil {
 		return nil, err
 	}
 	ptr, err := domainCall(domain, "virDomainSnapshotCreateXML", func(api *nativeAPI, domainPtr unsafe.Pointer) (unsafe.Pointer, bool) {
-		result := api.virDomainSnapshotCreateXML(domainPtr, xmlPtr, flags)
+		result := api.virDomainSnapshotCreateXML(domainPtr, xmlPtr, uint32(flags))
 		return result, result == nil
 	})
 	runtime.KeepAlive(buffer)
@@ -53,8 +53,8 @@ func (domain *Domain) CreateSnapshotXML(xml string, flags uint32) (*DomainSnapsh
 	return newDomainSnapshot(domain.api, ptr), nil
 }
 
-// LookupSnapshotByName returns a referenced domain snapshot.
-func (domain *Domain) LookupSnapshotByName(name string, flags uint32) (*DomainSnapshot, error) {
+// SnapshotLookupByName returns a referenced domain snapshot.
+func (domain *Domain) SnapshotLookupByName(name string, flags uint32) (*DomainSnapshot, error) {
 	buffer, namePtr, err := makeCString("snapshot name", name, false)
 	if err != nil {
 		return nil, err
@@ -70,8 +70,8 @@ func (domain *Domain) LookupSnapshotByName(name string, flags uint32) (*DomainSn
 	return newDomainSnapshot(domain.api, ptr), nil
 }
 
-// CurrentSnapshot returns the current snapshot.
-func (domain *Domain) CurrentSnapshot(flags uint32) (*DomainSnapshot, error) {
+// SnapshotCurrent returns the current snapshot.
+func (domain *Domain) SnapshotCurrent(flags uint32) (*DomainSnapshot, error) {
 	ptr, err := domainCall(domain, "virDomainSnapshotCurrent", func(api *nativeAPI, domainPtr unsafe.Pointer) (unsafe.Pointer, bool) {
 		result := api.virDomainSnapshotCurrent(domainPtr, flags)
 		return result, result == nil
@@ -110,23 +110,23 @@ func (snapshot *DomainSnapshot) Delete(flags uint32) error {
 	})
 }
 
-// Revert reverts the domain to this snapshot.
-func (snapshot *DomainSnapshot) Revert(flags uint32) error {
+// RevertToSnapshot reverts the domain to this snapshot.
+func (snapshot *DomainSnapshot) RevertToSnapshot(flags DomainSnapshotRevertFlags) error {
 	return objectStatus(domainSnapshotObject(snapshot), "virDomainRevertToSnapshot", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
-		return api.virDomainRevertToSnapshot(ptr, flags)
+		return api.virDomainRevertToSnapshot(ptr, uint32(flags))
 	})
 }
 
 // DomainCheckpoint is a reference-counted domain checkpoint handle.
 type DomainCheckpoint struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func domainCheckpointObject(checkpoint *DomainCheckpoint) *nativeObject {
 	if checkpoint == nil {
 		return nil
 	}
-	return &checkpoint.object
+	return checkpoint.object
 }
 
 func newDomainCheckpoint(api *nativeAPI, ptr unsafe.Pointer) *DomainCheckpoint {
@@ -134,16 +134,16 @@ func newDomainCheckpoint(api *nativeAPI, ptr unsafe.Pointer) *DomainCheckpoint {
 }
 
 // ListAllCheckpoints returns checkpoints matching flags. Each handle must be freed.
-func (domain *Domain) ListAllCheckpoints(flags uint32) ([]*DomainCheckpoint, error) {
+func (domain *Domain) ListAllCheckpoints(flags uint32) ([]DomainCheckpoint, error) {
 	handles, err := domainListObjects(domain, "virDomainListAllCheckpoints", flags, func(api *nativeAPI, ptr unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virDomainListAllCheckpoints(ptr, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	checkpoints := make([]*DomainCheckpoint, len(handles))
+	checkpoints := make([]DomainCheckpoint, len(handles))
 	for i, handle := range handles {
-		checkpoints[i] = newDomainCheckpoint(domain.api, handle)
+		checkpoints[i] = *newDomainCheckpoint(domain.api, handle)
 	}
 	return checkpoints, nil
 }
@@ -165,8 +165,8 @@ func (domain *Domain) CreateCheckpointXML(xml string, flags uint32) (*DomainChec
 	return newDomainCheckpoint(domain.api, ptr), nil
 }
 
-// LookupCheckpointByName returns a referenced checkpoint.
-func (domain *Domain) LookupCheckpointByName(name string, flags uint32) (*DomainCheckpoint, error) {
+// CheckpointLookupByName returns a referenced checkpoint.
+func (domain *Domain) CheckpointLookupByName(name string, flags uint32) (*DomainCheckpoint, error) {
 	buffer, namePtr, err := makeCString("checkpoint name", name, false)
 	if err != nil {
 		return nil, err
@@ -204,16 +204,16 @@ func (checkpoint *DomainCheckpoint) GetXMLDesc(flags uint32) (string, error) {
 }
 
 // ListAllChildren returns child checkpoints. Each handle must be freed.
-func (checkpoint *DomainCheckpoint) ListAllChildren(flags uint32) ([]*DomainCheckpoint, error) {
+func (checkpoint *DomainCheckpoint) ListAllChildren(flags uint32) ([]DomainCheckpoint, error) {
 	handles, err := objectListObjects(domainCheckpointObject(checkpoint), "virDomainCheckpointListAllChildren", flags, func(api *nativeAPI, ptr unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virDomainCheckpointListAllChildren(ptr, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	children := make([]*DomainCheckpoint, len(handles))
+	children := make([]DomainCheckpoint, len(handles))
 	for i, handle := range handles {
-		children[i] = newDomainCheckpoint(checkpoint.object.api, handle)
+		children[i] = *newDomainCheckpoint(checkpoint.object.api, handle)
 	}
 	return children, nil
 }

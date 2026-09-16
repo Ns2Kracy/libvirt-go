@@ -7,14 +7,14 @@ import (
 
 // Secret is a reference-counted libvirt secret handle.
 type Secret struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func secretObject(secret *Secret) *nativeObject {
 	if secret == nil {
 		return nil
 	}
-	return &secret.object
+	return secret.object
 }
 
 func newSecret(api *nativeAPI, ptr unsafe.Pointer) *Secret {
@@ -22,16 +22,16 @@ func newSecret(api *nativeAPI, ptr unsafe.Pointer) *Secret {
 }
 
 // ListAllSecrets returns secrets matching flags. Each handle must be freed.
-func (c *Connect) ListAllSecrets(flags uint32) ([]*Secret, error) {
+func (c *Connect) ListAllSecrets(flags uint32) ([]Secret, error) {
 	handles, err := connectListObjects(c, "virConnectListAllSecrets", flags, func(api *nativeAPI, conn unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virConnectListAllSecrets(conn, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	secrets := make([]*Secret, len(handles))
+	secrets := make([]Secret, len(handles))
 	for i, handle := range handles {
-		secrets[i] = newSecret(c.api, handle)
+		secrets[i] = *newSecret(c.api, handle)
 	}
 	return secrets, nil
 }

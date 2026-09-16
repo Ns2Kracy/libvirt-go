@@ -7,14 +7,14 @@ import (
 
 // NodeDevice is a reference-counted host node-device handle.
 type NodeDevice struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func nodeDeviceObject(device *NodeDevice) *nativeObject {
 	if device == nil {
 		return nil
 	}
-	return &device.object
+	return device.object
 }
 
 func newNodeDevice(api *nativeAPI, ptr unsafe.Pointer) *NodeDevice {
@@ -22,16 +22,16 @@ func newNodeDevice(api *nativeAPI, ptr unsafe.Pointer) *NodeDevice {
 }
 
 // ListAllNodeDevices returns node devices matching flags. Each handle must be freed.
-func (c *Connect) ListAllNodeDevices(flags uint32) ([]*NodeDevice, error) {
+func (c *Connect) ListAllNodeDevices(flags uint32) ([]NodeDevice, error) {
 	handles, err := connectListObjects(c, "virConnectListAllNodeDevices", flags, func(api *nativeAPI, conn unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virConnectListAllNodeDevices(conn, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	devices := make([]*NodeDevice, len(handles))
+	devices := make([]NodeDevice, len(handles))
 	for i, handle := range handles {
-		devices[i] = newNodeDevice(c.api, handle)
+		devices[i] = *newNodeDevice(c.api, handle)
 	}
 	return devices, nil
 }

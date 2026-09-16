@@ -92,15 +92,15 @@ func TestIntegrationTestDriver(t *testing.T) {
 	if len(domains) == 0 {
 		t.Fatal("ListAllDomains returned no test domains")
 	}
-	for _, domain := range domains {
+	for i := range domains {
 		defer func(domain *Domain) {
 			if freeErr := domain.Free(); freeErr != nil && !errors.Is(freeErr, ErrClosed) {
 				t.Errorf("Free: %v", freeErr)
 			}
-		}(domain)
+		}(&domains[i])
 	}
 
-	domain := domains[0]
+	domain := &domains[0]
 	name, err := domain.GetName()
 	if err != nil || name == "" {
 		t.Fatalf("GetName = (%q, %v)", name, err)
@@ -135,44 +135,46 @@ func TestIntegrationTestDriver(t *testing.T) {
 	}
 
 	_, err = conn.LookupDomainByName("__purego_binding_missing_domain__")
-	libvirtErr, ok := errors.AsType[*Error](err)
+	libvirtErr, ok := errors.AsType[Error](err)
 	if !ok || libvirtErr.Message == "" {
-		t.Fatalf("missing domain error = %#v, want populated *Error", err)
+		t.Fatalf("missing domain error = %#v, want populated Error", err)
 	}
 }
 
-type freeableResource interface {
+type freeableResource[T any] interface {
+	*T
 	Free() error
 }
 
-type namedXMLResource interface {
-	freeableResource
+type namedXMLResource[T any] interface {
+	freeableResource[T]
 	GetName() (string, error)
 	GetXMLDesc(uint32) (string, error)
 }
 
-func cleanupResources[T freeableResource](t *testing.T, resources []T) {
+func cleanupResources[T any, P freeableResource[T]](t *testing.T, resources []T) {
 	t.Helper()
 	t.Cleanup(func() {
-		for _, resource := range resources {
-			if err := resource.Free(); err != nil && !errors.Is(err, ErrClosed) {
+		for i := range resources {
+			if err := P(&resources[i]).Free(); err != nil && !errors.Is(err, ErrClosed) {
 				t.Errorf("resource Free: %v", err)
 			}
 		}
 	})
 }
 
-func inspectNamedXMLResources[T namedXMLResource](t *testing.T, label string, resources []T) {
+func inspectNamedXMLResources[T any, P namedXMLResource[T]](t *testing.T, label string, resources []T) {
 	t.Helper()
-	cleanupResources(t, resources)
+	cleanupResources[T, P](t, resources)
 	if len(resources) == 0 {
 		return
 	}
-	name, err := resources[0].GetName()
+	resource := P(&resources[0])
+	name, err := resource.GetName()
 	if err != nil || name == "" {
 		t.Errorf("%s GetName = (%q, %v)", label, name, err)
 	}
-	xml, err := resources[0].GetXMLDesc(0)
+	xml, err := resource.GetXMLDesc(0)
 	if err != nil || xml == "" {
 		t.Errorf("%s GetXMLDesc returned %d bytes, error = %v", label, len(xml), err)
 	}
@@ -182,7 +184,7 @@ func unsupportedByDriver(err error) bool {
 	if errors.Is(err, ErrSymbolUnavailable) {
 		return true
 	}
-	libvirtErr, ok := errors.AsType[*Error](err)
+	libvirtErr, ok := errors.AsType[Error](err)
 	return ok && libvirtErr.Code == VIR_ERR_NO_SUPPORT
 }
 
@@ -220,18 +222,18 @@ func exerciseNextAreaAPIs(t *testing.T, conn *Connect, domain *Domain) {
 			if _, infoErr := pools[0].GetInfo(); infoErr != nil {
 				t.Errorf("StoragePool.GetInfo: %v", infoErr)
 			}
-			if _, countErr := pools[0].NumOfVolumes(); countErr != nil {
-				t.Errorf("StoragePool.NumOfVolumes: %v", countErr)
+			if _, countErr := pools[0].NumOfStorageVolumes(); countErr != nil {
+				t.Errorf("StoragePool.NumOfStorageVolumes: %v", countErr)
 			}
-			volumes, volumeErr := pools[0].ListAllVolumes(0)
-			if allowUnsupported(t, "StoragePool.ListAllVolumes", volumeErr) {
+			volumes, volumeErr := pools[0].ListAllStorageVolumes(0)
+			if allowUnsupported(t, "StoragePool.ListAllStorageVolumes", volumeErr) {
 				cleanupResources(t, volumes)
 				if len(volumes) != 0 {
 					if name, nameErr := volumes[0].GetName(); nameErr != nil || name == "" {
-						t.Errorf("StorageVol.GetName = (%q, %v)", name, nameErr)
+						t.Errorf("StorageVolume.GetName = (%q, %v)", name, nameErr)
 					}
 					if _, infoErr := volumes[0].GetInfo(); infoErr != nil {
-						t.Errorf("StorageVol.GetInfo: %v", infoErr)
+						t.Errorf("StorageVolume.GetInfo: %v", infoErr)
 					}
 				}
 			}
@@ -267,7 +269,7 @@ func exerciseNextAreaAPIs(t *testing.T, conn *Connect, domain *Domain) {
 		t.Log("test driver returned no memory typed parameters")
 	}
 
-	if err := RegisterDefaultEventImpl(); allowUnsupported(t, "RegisterDefaultEventImpl", err) {
+	if err := EventRegisterDefaultImpl(); allowUnsupported(t, "RegisterDefaultEventImplementation", err) {
 		closeCallback, callbackErr := conn.RegisterCloseCallback(func(int32) {})
 		if allowUnsupported(t, "RegisterCloseCallback", callbackErr) {
 			if err := closeCallback.Close(); err != nil {
@@ -280,10 +282,10 @@ func exerciseNextAreaAPIs(t *testing.T, conn *Connect, domain *Domain) {
 				t.Errorf("DomainEventCallback.Close: %v", err)
 			}
 		}
-		deviceLifecycle, deviceLifecycleErr := conn.RegisterNodeDeviceLifecycleCallback(nil, func(NodeDeviceLifecycleEvent) {})
-		if allowUnsupported(t, "RegisterNodeDeviceLifecycleCallback", deviceLifecycleErr) {
-			if err := deviceLifecycle.Close(); err != nil {
-				t.Errorf("NodeDeviceEventCallback.Close: %v", err)
+		callbackID, deviceLifecycleErr := conn.NodeDeviceEventLifecycleRegister(nil, func(*Connect, *NodeDevice, *NodeDeviceEventLifecycle) {})
+		if allowUnsupported(t, "NodeDeviceEventLifecycleRegister", deviceLifecycleErr) {
+			if err := conn.NodeDeviceEventDeregister(callbackID); err != nil {
+				t.Errorf("NodeDeviceEventDeregister: %v", err)
 			}
 		}
 	}

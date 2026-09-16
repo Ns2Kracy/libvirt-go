@@ -149,6 +149,7 @@ func TestRenderGenerated(t *testing.T) {
 <enum name="VIR_CONNECT_LIST_DOMAINS_ACTIVE" type="virConnectListAllDomainsFlags" value="1" version="0.9.13"/>
 <enum name="VIR_DOMAIN_NOSTATE" type="virDomainState" value="0" version="0.0.1"/>
 <enum name="VIR_DOMAIN_XML_SECURE" type="virDomainXMLFlags" value="1" version="0.3.3"/>
+<enum name="VIR_ERR_NO_DOMAIN" type="virErrorNumber" value="42" version="0.1.0"/>
 </symbols></api>`
 	var document apiDocument
 	if err := xml.Unmarshal([]byte(input), &document); err != nil {
@@ -171,6 +172,8 @@ func TestRenderGenerated(t *testing.T) {
 		`"virConnectOpen": "0.0.3"`,
 		"VIR_DOMAIN_NOSTATE = 0",
 		"DomainNoState DomainState = DomainState(VIR_DOMAIN_NOSTATE)",
+		"DOMAIN_NOSTATE DomainState = DomainState(VIR_DOMAIN_NOSTATE)",
+		"ERR_NO_DOMAIN ErrorNumber = ErrorNumber(VIR_ERR_NO_DOMAIN)",
 	} {
 		if !strings.Contains(text, expected) {
 			t.Errorf("generated source does not contain %q", expected)

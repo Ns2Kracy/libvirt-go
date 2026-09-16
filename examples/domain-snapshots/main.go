@@ -95,7 +95,7 @@ func runSnapshotAction(domain *libvirt.Domain, opts options) error {
 		}
 		return useSnapshot(snapshot, printSnapshot)
 	case "current":
-		snapshot, err := domain.CurrentSnapshot(flags)
+		snapshot, err := domain.SnapshotCurrent(flags)
 		if err != nil {
 			return fmt.Errorf("get current snapshot: %w", err)
 		}
@@ -104,7 +104,7 @@ func runSnapshotAction(domain *libvirt.Domain, opts options) error {
 		if opts.name == "" {
 			return errors.New("-name is required for this action")
 		}
-		snapshot, err := domain.LookupSnapshotByName(opts.name, flags)
+		snapshot, err := domain.SnapshotLookupByName(opts.name, flags)
 		if err != nil {
 			return fmt.Errorf("lookup snapshot %q: %w", opts.name, err)
 		}
@@ -113,7 +113,7 @@ func runSnapshotAction(domain *libvirt.Domain, opts options) error {
 			case "inspect":
 				return printSnapshot(snapshot)
 			case "revert":
-				if err := snapshot.Revert(flags); err != nil {
+				if err := snapshot.RevertToSnapshot(flags); err != nil {
 					return fmt.Errorf("revert snapshot %q: %w", opts.name, err)
 				}
 			case "delete":
@@ -148,7 +148,7 @@ func runCheckpointAction(domain *libvirt.Domain, opts options) error {
 		if opts.name == "" {
 			return errors.New("-name is required for this action")
 		}
-		checkpoint, err := domain.LookupCheckpointByName(opts.name, flags)
+		checkpoint, err := domain.CheckpointLookupByName(opts.name, flags)
 		if err != nil {
 			return fmt.Errorf("lookup checkpoint %q: %w", opts.name, err)
 		}

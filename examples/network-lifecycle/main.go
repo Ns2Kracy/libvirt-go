@@ -93,8 +93,8 @@ func listNetworks(conn *libvirt.Connect) (err error) {
 		}
 	}()
 
-	for _, network := range networks {
-		if err := printNetwork(network, false); err != nil {
+	for i := range networks {
+		if err := printNetwork(&networks[i], false); err != nil {
 			return err
 		}
 	}

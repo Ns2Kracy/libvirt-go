@@ -35,7 +35,7 @@ func TestDomainGetJobStatsDecodesCompletion(t *testing.T) {
 		},
 	}}
 	handle := byte(1)
-	domain := &Domain{api: api, ptr: unsafe.Pointer(&handle)}
+	domain := newDomain(api, unsafe.Pointer(&handle))
 
 	stats, err := domain.GetJobStats(0)
 	runtime.KeepAlive(rawParams)
@@ -43,10 +43,10 @@ func TestDomainGetJobStatsDecodesCompletion(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetJobStats: %v", err)
 	}
-	if stats.Type != DomainJobCompleted || stats.Operation == nil || *stats.Operation != DomainJobOperationBackup {
+	if stats.Type != DomainJobCompleted || !stats.OperationSet || stats.Operation != DomainJobOperationBackup {
 		t.Fatalf("GetJobStats operation = %#v", stats)
 	}
-	if stats.Success == nil || *stats.Success || stats.ErrorMessage != "disk full" {
+	if !stats.JobSuccessSet || stats.JobSuccess || !stats.ErrorMessageSet || stats.ErrorMessage != "disk full" {
 		t.Fatalf("GetJobStats completion = %#v", stats)
 	}
 	if !freed {

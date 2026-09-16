@@ -105,7 +105,7 @@ func TestRealIntegrationFixtures(t *testing.T) {
 		exerciseRealSecret(t, conn, suffix)
 	})
 	t.Run("nwfilter", func(t *testing.T) {
-		exerciseRealNWFilter(t, conn, suffix)
+		exerciseRealNetworkFilter(t, conn, suffix)
 	})
 	t.Run("host-inventory", func(t *testing.T) {
 		exerciseRealHostInventory(t, conn)
@@ -114,8 +114,8 @@ func TestRealIntegrationFixtures(t *testing.T) {
 
 func exerciseRealDomain(t *testing.T, conn *Connect, suffix string) {
 	data := realFixtureData{Name: "libvirt-go-domain-" + suffix, UUID: realFixtureUUID(t)}
-	domain, err := conn.DefineDomainXML(renderRealFixture(t, "testdata/real/domain.xml.tmpl", data))
-	requireRealFeature(t, "DefineDomainXML", err)
+	domain, err := conn.DomainDefineXML(renderRealFixture(t, "testdata/real/domain.xml.tmpl", data))
+	requireRealFeature(t, "DomainDefineXML", err)
 	t.Cleanup(func() { cleanupRealDomain(t, domain) })
 
 	assertRealNamedObject(t, data.Name, domain.GetName)
@@ -156,7 +156,7 @@ func exerciseRealDomain(t *testing.T, conn *Connect, suffix string) {
 }
 
 func exerciseRealGuestLifecycle(t *testing.T, conn *Connect, domain *Domain) {
-	requireRealFeature(t, "RegisterDefaultEventImpl", RegisterDefaultEventImpl())
+	requireRealFeature(t, "RegisterDefaultEventImplementation", EventRegisterDefaultImpl())
 	events := make(chan DomainLifecycleEvent, 8)
 	callback, err := conn.RegisterDomainLifecycleCallback(domain, func(event DomainLifecycleEvent) {
 		events <- event
@@ -170,7 +170,7 @@ func exerciseRealGuestLifecycle(t *testing.T, conn *Connect, domain *Domain) {
 	requireRealFeature(t, "Domain.Create", domain.Create())
 
 	eventLoop := make(chan error, 1)
-	go func() { eventLoop <- RunDefaultEventImpl() }()
+	go func() { eventLoop <- EventRunDefaultImpl() }()
 	select {
 	case event := <-events:
 		if event.DomainName == "" {
@@ -178,7 +178,7 @@ func exerciseRealGuestLifecycle(t *testing.T, conn *Connect, domain *Domain) {
 		}
 	case err := <-eventLoop:
 		if err != nil {
-			t.Fatalf("RunDefaultEventImpl: %v", err)
+			t.Fatalf("RunDefaultEventImplementation: %v", err)
 		}
 		select {
 		case <-events:
@@ -210,16 +210,16 @@ func exerciseRealNetwork(t *testing.T, conn *Connect, suffix string) {
 func exerciseRealStorage(t *testing.T, conn *Connect, suffix string) {
 	poolPath := t.TempDir()
 	data := realFixtureData{Name: "libvirt-go-pool-" + suffix, UUID: realFixtureUUID(t), Path: poolPath}
-	pool, err := conn.DefineStoragePoolXML(renderRealFixture(t, "testdata/real/storage-pool.xml.tmpl", data), 0)
-	requireRealFeature(t, "DefineStoragePoolXML", err)
+	pool, err := conn.StoragePoolDefineXML(renderRealFixture(t, "testdata/real/storage-pool.xml.tmpl", data), 0)
+	requireRealFeature(t, "StoragePoolDefineXML", err)
 	t.Cleanup(func() { cleanupRealStoragePool(t, pool) })
 	requireRealFeature(t, "StoragePool.Create", pool.Create(0))
 	assertRealNamedObject(t, data.Name, pool.GetName)
 	assertRealUUID(t, data.UUID, pool.GetUUIDString)
 
 	volumeData := realFixtureData{Name: "libvirt-go-volume-" + suffix}
-	volume, err := pool.CreateVolumeXML(renderRealFixture(t, "testdata/real/storage-volume.xml.tmpl", volumeData), 0)
-	requireRealFeature(t, "CreateVolumeXML", err)
+	volume, err := pool.StorageVolCreateXML(renderRealFixture(t, "testdata/real/storage-volume.xml.tmpl", volumeData), 0)
+	requireRealFeature(t, "StorageVolCreateXML", err)
 	t.Cleanup(func() {
 		if err := volume.Delete(0); err != nil && !realOptionalError(err) {
 			t.Errorf("volume delete: %v", err)
@@ -230,7 +230,7 @@ func exerciseRealStorage(t *testing.T, conn *Connect, suffix string) {
 	})
 	assertRealNamedObject(t, volumeData.Name, volume.GetName)
 	if path, err := volume.GetPath(); err != nil || !strings.HasPrefix(path, poolPath) {
-		t.Fatalf("StorageVol.GetPath = (%q, %v), want path under %q", path, err, poolPath)
+		t.Fatalf("StorageVolume.GetPath = (%q, %v), want path under %q", path, err, poolPath)
 	}
 }
 
@@ -255,16 +255,16 @@ func exerciseRealSecret(t *testing.T, conn *Connect, suffix string) {
 	assertRealUUID(t, data.UUID, secret.GetUUIDString)
 }
 
-func exerciseRealNWFilter(t *testing.T, conn *Connect, suffix string) {
+func exerciseRealNetworkFilter(t *testing.T, conn *Connect, suffix string) {
 	data := realFixtureData{Name: "libvirt-go-filter-" + suffix, UUID: realFixtureUUID(t)}
-	filter, err := conn.DefineNWFilterXML(renderRealFixture(t, "testdata/real/nwfilter.xml.tmpl", data))
-	requireRealFeature(t, "DefineNWFilterXML", err)
+	filter, err := conn.NWFilterDefineXML(renderRealFixture(t, "testdata/real/nwfilter.xml.tmpl", data))
+	requireRealFeature(t, "NWFilterDefineXML", err)
 	t.Cleanup(func() {
 		if err := filter.Undefine(); err != nil && !realOptionalError(err) {
-			t.Errorf("NWFilter undefine: %v", err)
+			t.Errorf("NetworkFilter undefine: %v", err)
 		}
 		if err := filter.Free(); err != nil && !errors.Is(err, ErrClosed) {
-			t.Errorf("NWFilter free: %v", err)
+			t.Errorf("NetworkFilter free: %v", err)
 		}
 	})
 	assertRealNamedObject(t, data.Name, filter.GetName)

@@ -9,12 +9,15 @@ import (
 
 const uuidStringBufferLength = 37
 
-// Domain is a reference-counted libvirt domain handle. Domain must not be
-// copied after first use.
+// Domain is a reference-counted libvirt domain handle.
 type Domain struct {
-	mu  sync.RWMutex
+	mu  *sync.RWMutex
 	api *nativeAPI
 	ptr unsafe.Pointer
+}
+
+func newDomain(api *nativeAPI, ptr unsafe.Pointer) *Domain {
+	return &Domain{mu: new(sync.RWMutex), api: api, ptr: ptr}
 }
 
 // Free releases this wrapper's domain reference.
@@ -205,20 +208,30 @@ func (d *Domain) modifyDevice(operation, xml string, flags uint32, call func(*na
 }
 
 // SendKey sends keycodes to a domain using the selected keycode set.
-func (d *Domain) SendKey(codeSet, holdTime uint32, codes []uint32, flags uint32) error {
+func (d *Domain) SendKey(codeSet, holdTime uint, codes []uint, flags uint32) error {
 	const maxKeys = 16
 	if len(codes) > maxKeys {
 		return fmt.Errorf("libvirt: send key accepts at most %d keycodes", maxKeys)
 	}
+	if uint64(codeSet) > uint64(^uint32(0)) || uint64(holdTime) > uint64(^uint32(0)) {
+		return fmt.Errorf("libvirt: send key arguments exceed uint32")
+	}
+	var nativeCodes [maxKeys]uint32
+	for i, code := range codes {
+		if uint64(code) > uint64(^uint32(0)) {
+			return fmt.Errorf("libvirt: keycode %d exceeds uint32", code)
+		}
+		nativeCodes[i] = uint32(code)
+	}
 	var codesPtr *uint32
 	if len(codes) != 0 {
-		codesPtr = &codes[0]
+		codesPtr = &nativeCodes[0]
 	}
 	_, err := domainCall(d, "virDomainSendKey", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
-		result := api.virDomainSendKey(ptr, codeSet, holdTime, codesPtr, int32(len(codes)), flags)
+		result := api.virDomainSendKey(ptr, uint32(codeSet), uint32(holdTime), codesPtr, int32(len(codes)), flags)
 		return result, result < 0
 	})
-	runtime.KeepAlive(codes)
+	runtime.KeepAlive(nativeCodes)
 	return err
 }
 

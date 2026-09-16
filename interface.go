@@ -4,14 +4,14 @@ import "unsafe"
 
 // Interface is a reference-counted host network-interface handle.
 type Interface struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func interfaceObject(iface *Interface) *nativeObject {
 	if iface == nil {
 		return nil
 	}
-	return &iface.object
+	return iface.object
 }
 
 func newInterface(api *nativeAPI, ptr unsafe.Pointer) *Interface {
@@ -19,16 +19,16 @@ func newInterface(api *nativeAPI, ptr unsafe.Pointer) *Interface {
 }
 
 // ListAllInterfaces returns host interfaces matching flags. Each handle must be freed.
-func (c *Connect) ListAllInterfaces(flags uint32) ([]*Interface, error) {
+func (c *Connect) ListAllInterfaces(flags uint32) ([]Interface, error) {
 	handles, err := connectListObjects(c, "virConnectListAllInterfaces", flags, func(api *nativeAPI, conn unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virConnectListAllInterfaces(conn, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	interfaces := make([]*Interface, len(handles))
+	interfaces := make([]Interface, len(handles))
 	for i, handle := range handles {
-		interfaces[i] = newInterface(c.api, handle)
+		interfaces[i] = *newInterface(c.api, handle)
 	}
 	return interfaces, nil
 }

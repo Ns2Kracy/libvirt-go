@@ -8,11 +8,14 @@ import (
 )
 
 // Connect is a reference-counted connection to a libvirt hypervisor driver.
-// Connect must not be copied after first use.
 type Connect struct {
-	mu  sync.RWMutex
+	mu  *sync.RWMutex
 	api *nativeAPI
 	ptr unsafe.Pointer
+}
+
+func newConnectHandle(api *nativeAPI, ptr unsafe.Pointer) *Connect {
+	return &Connect{mu: new(sync.RWMutex), api: api, ptr: ptr}
 }
 
 // NewConnect opens a read-write libvirt connection. An empty URI asks libvirt
@@ -51,7 +54,7 @@ func newConnect(uri string, readOnly bool) (*Connect, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Connect{api: api, ptr: ptr}, nil
+	return newConnectHandle(api, ptr), nil
 }
 
 // Close releases this wrapper's connection reference. The returned value is
@@ -151,7 +154,7 @@ func (c *Connect) IsAlive() (bool, error) {
 
 // ListAllDomains returns domains matching flags. Every returned Domain owns a
 // reference that the caller must release with Free.
-func (c *Connect) ListAllDomains(flags ConnectListAllDomainsFlags) ([]*Domain, error) {
+func (c *Connect) ListAllDomains(flags ConnectListAllDomainsFlags) ([]Domain, error) {
 	if c == nil {
 		return nil, fmt.Errorf("%w: connection", ErrClosed)
 	}
@@ -173,17 +176,17 @@ func (c *Connect) ListAllDomains(flags ConnectListAllDomainsFlags) ([]*Domain, e
 		defer c.api.free(list)
 	}
 	if count == 0 {
-		return []*Domain{}, nil
+		return []Domain{}, nil
 	}
 	if list == nil {
 		return nil, fmt.Errorf("libvirt: virConnectListAllDomains returned %d domains with a nil array", count)
 	}
 
 	handles := unsafe.Slice((*unsafe.Pointer)(list), int(count))
-	domains := make([]*Domain, len(handles))
+	domains := make([]Domain, len(handles))
 	for i, handle := range handles {
 		// Each generated array entry is an opaque virDomainPtr reference.
-		domains[i] = &Domain{api: c.api, ptr: handle}
+		domains[i] = *newDomain(c.api, handle)
 	}
 	return domains, nil
 }
@@ -206,21 +209,21 @@ func (c *Connect) LookupDomainByName(name string) (*Domain, error) {
 	return c.domainFromString("domain name", name, "virDomainLookupByName", c.apiDomainLookupByName)
 }
 
-// DefineDomainXML defines a persistent domain and returns a referenced handle.
+// DomainDefineXML defines a persistent domain and returns a referenced handle.
 // The caller must call Free.
-func (c *Connect) DefineDomainXML(xml string) (*Domain, error) {
+func (c *Connect) DomainDefineXML(xml string) (*Domain, error) {
 	return c.domainFromString("domain XML", xml, "virDomainDefineXML", c.apiDomainDefineXML)
 }
 
-// DefineDomainXMLFlags defines a persistent domain with validation or other flags.
-func (c *Connect) DefineDomainXMLFlags(xml string, flags uint32) (*Domain, error) {
+// DomainDefineXMLFlags defines a persistent domain with validation or other flags.
+func (c *Connect) DomainDefineXMLFlags(xml string, flags uint32) (*Domain, error) {
 	ptr, err := connectObjectFromXML(c, xml, "virDomainDefineXMLFlags", flags, func(api *nativeAPI, conn unsafe.Pointer, xml *byte, flags uint32) unsafe.Pointer {
 		return api.virDomainDefineXMLFlags(conn, xml, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &Domain{api: c.api, ptr: ptr}, nil
+	return newDomain(c.api, ptr), nil
 }
 
 func (c *Connect) domainFromString(field, value, operation string, call func(*nativeAPI, unsafe.Pointer, *byte) unsafe.Pointer) (*Domain, error) {
@@ -245,7 +248,7 @@ func (c *Connect) domainFromString(field, value, operation string, call func(*na
 	if err != nil {
 		return nil, err
 	}
-	return &Domain{api: c.api, ptr: ptr}, nil
+	return newDomain(c.api, ptr), nil
 }
 
 func (c *Connect) apiDomainLookupByName(api *nativeAPI, ptr unsafe.Pointer, value *byte) unsafe.Pointer {

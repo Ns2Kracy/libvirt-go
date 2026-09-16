@@ -97,8 +97,8 @@ func listPools(conn *libvirt.Connect) (err error) {
 			err = errors.Join(err, pool.Free())
 		}
 	}()
-	for _, pool := range pools {
-		if err := printPool(pool, false); err != nil {
+	for i := range pools {
+		if err := printPool(&pools[i], false); err != nil {
 			return err
 		}
 	}
@@ -113,9 +113,9 @@ func createPool(conn *libvirt.Connect, opts options) (err error) {
 
 	var pool *libvirt.StoragePool
 	if opts.action == "define-pool" {
-		pool, err = conn.DefineStoragePoolXML(document, uint32(opts.flags))
+		pool, err = conn.StoragePoolDefineXML(document, uint32(opts.flags))
 	} else {
-		pool, err = conn.CreateStoragePoolXML(document, uint32(opts.flags))
+		pool, err = conn.StoragePoolCreateXML(document, uint32(opts.flags))
 	}
 	if err != nil {
 		return fmt.Errorf("%s: %w", opts.action, err)
@@ -155,7 +155,7 @@ func actOnPool(conn *libvirt.Connect, opts options) (err error) {
 		if readErr != nil {
 			return readErr
 		}
-		volume, createErr := pool.CreateVolumeXML(document, flags)
+		volume, createErr := pool.StorageVolCreateXML(document, flags)
 		if createErr != nil {
 			return fmt.Errorf("create volume: %w", createErr)
 		}
@@ -215,7 +215,7 @@ func lookupVolume(conn *libvirt.Connect, opts options) (*libvirt.StorageVol, *li
 	if err != nil {
 		return nil, nil, fmt.Errorf("lookup storage pool %q: %w", opts.pool, err)
 	}
-	volume, err := pool.LookupVolumeByName(opts.volume)
+	volume, err := pool.LookupStorageVolByName(opts.volume)
 	if err != nil {
 		_ = pool.Free()
 		return nil, nil, fmt.Errorf("lookup volume %q: %w", opts.volume, err)
@@ -224,7 +224,7 @@ func lookupVolume(conn *libvirt.Connect, opts options) (*libvirt.StorageVol, *li
 }
 
 func listVolumes(pool *libvirt.StoragePool, flags uint32) (err error) {
-	volumes, err := pool.ListAllVolumes(flags)
+	volumes, err := pool.ListAllStorageVolumes(flags)
 	if err != nil {
 		return fmt.Errorf("list storage volumes: %w", err)
 	}
@@ -233,8 +233,8 @@ func listVolumes(pool *libvirt.StoragePool, flags uint32) (err error) {
 			err = errors.Join(err, volume.Free())
 		}
 	}()
-	for _, volume := range volumes {
-		if err := printVolume(volume); err != nil {
+	for i := range volumes {
+		if err := printVolume(&volumes[i]); err != nil {
 			return err
 		}
 	}

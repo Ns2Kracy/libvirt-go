@@ -4,14 +4,14 @@ import "unsafe"
 
 // Network is a reference-counted libvirt virtual network handle.
 type Network struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func networkObject(network *Network) *nativeObject {
 	if network == nil {
 		return nil
 	}
-	return &network.object
+	return network.object
 }
 
 func newNetwork(api *nativeAPI, ptr unsafe.Pointer) *Network {
@@ -19,16 +19,16 @@ func newNetwork(api *nativeAPI, ptr unsafe.Pointer) *Network {
 }
 
 // ListAllNetworks returns virtual networks matching flags. Each handle must be freed.
-func (c *Connect) ListAllNetworks(flags uint32) ([]*Network, error) {
+func (c *Connect) ListAllNetworks(flags uint32) ([]Network, error) {
 	handles, err := connectListObjects(c, "virConnectListAllNetworks", flags, func(api *nativeAPI, conn unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virConnectListAllNetworks(conn, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	networks := make([]*Network, len(handles))
+	networks := make([]Network, len(handles))
 	for i, handle := range handles {
-		networks[i] = newNetwork(c.api, handle)
+		networks[i] = *newNetwork(c.api, handle)
 	}
 	return networks, nil
 }
@@ -175,16 +175,16 @@ func (network *Network) Undefine() error {
 }
 
 // ListAllPorts returns ports associated with this network. Each handle must be freed.
-func (network *Network) ListAllPorts(flags uint32) ([]*NetworkPort, error) {
+func (network *Network) ListAllPorts(flags uint32) ([]NetworkPort, error) {
 	handles, err := objectListObjects(networkObject(network), "virNetworkListAllPorts", flags, func(api *nativeAPI, ptr unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virNetworkListAllPorts(ptr, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	ports := make([]*NetworkPort, len(handles))
+	ports := make([]NetworkPort, len(handles))
 	for i, handle := range handles {
-		ports[i] = newNetworkPort(network.object.api, handle)
+		ports[i] = *newNetworkPort(network.object.api, handle)
 	}
 	return ports, nil
 }
@@ -213,14 +213,14 @@ func (network *Network) CreatePortXML(xml string, flags uint32) (*NetworkPort, e
 
 // NetworkPort is a reference-counted virtual network port handle.
 type NetworkPort struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func networkPortObject(port *NetworkPort) *nativeObject {
 	if port == nil {
 		return nil
 	}
-	return &port.object
+	return port.object
 }
 
 func newNetworkPort(api *nativeAPI, ptr unsafe.Pointer) *NetworkPort {

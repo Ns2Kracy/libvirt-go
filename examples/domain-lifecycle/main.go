@@ -81,8 +81,8 @@ func listDomains(conn *libvirt.Connect) (err error) {
 		}
 	}()
 
-	for _, domain := range domains {
-		if err := printDomain(domain, false); err != nil {
+	for i := range domains {
+		if err := printDomain(&domains[i], false); err != nil {
 			return err
 		}
 	}
@@ -97,7 +97,7 @@ func defineDomain(conn *libvirt.Connect, path string) (err error) {
 	if err != nil {
 		return fmt.Errorf("read domain XML: %w", err)
 	}
-	domain, err := conn.DefineDomainXML(string(document))
+	domain, err := conn.DomainDefineXML(string(document))
 	if err != nil {
 		return fmt.Errorf("define domain: %w", err)
 	}

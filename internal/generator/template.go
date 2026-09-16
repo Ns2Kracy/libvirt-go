@@ -8,10 +8,11 @@ import (
 )
 
 type generatedFileData struct {
-	SourceHash  string
-	Functions   []generatedFunctionData
-	Enums       []apiEnum
-	AliasGroups []generatedAliasGroupData
+	SourceHash      string
+	Functions       []generatedFunctionData
+	Enums           []apiEnum
+	OfficialAliases []generatedAliasData
+	AliasGroups     []generatedAliasGroupData
 }
 
 type generatedFunctionData struct {

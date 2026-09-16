@@ -94,7 +94,7 @@ func defineFilter(conn *libvirt.Connect, path string) (err error) {
 	if err != nil {
 		return fmt.Errorf("read network filter XML: %w", err)
 	}
-	filter, err := conn.DefineNWFilterXML(string(document))
+	filter, err := conn.NWFilterDefineXML(string(document))
 	if err != nil {
 		return fmt.Errorf("define network filter: %w", err)
 	}

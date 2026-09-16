@@ -16,6 +16,12 @@ This project is an independent implementation. It does not import or wrap
 > libvirt/QEMU/KVM environment and is not currently recommended for production
 > workloads. macOS, FreeBSD, and NetBSD are untested and unsupported.
 
+The implemented high-level surface follows `libvirt-go-module` names, value
+types, constants, error semantics, and method signatures so supported callers
+can switch imports without adapters. It is not yet a complete replacement for
+every high-level `libvirt-go-module` method; the generated `RawAPI` exposes the
+full vendored symbol catalog.
+
 ## Why
 
 - Build with `CGO_ENABLED=0`.
@@ -67,8 +73,9 @@ make only their corresponding symbols unavailable.
 The generator emits every function declared by all four API XML files (568
 functions and 1,093 enums for the vendored libvirt 12.6.0 metadata), including
 purego signatures, introduction versions, source-library routing, the symbol
-registration table, and public `RawAPI.Vir*` methods. It also emits idiomatic
-enum aliases used by the high-level API.
+registration table, and public `RawAPI.Vir*` methods. It also emits the official
+Go constant names (without libvirt's C-only `VIR_` prefix) and typed aliases used
+by the high-level API.
 The generated `libvirt_api.gen.go` is committed, so package consumers still
 need only the runtime shared library.
 

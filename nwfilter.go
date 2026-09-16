@@ -4,14 +4,14 @@ import "unsafe"
 
 // NWFilter is a reference-counted libvirt network-filter handle.
 type NWFilter struct {
-	object nativeObject
+	object *nativeObject
 }
 
 func nwFilterObject(filter *NWFilter) *nativeObject {
 	if filter == nil {
 		return nil
 	}
-	return &filter.object
+	return filter.object
 }
 
 func newNWFilter(api *nativeAPI, ptr unsafe.Pointer) *NWFilter {
@@ -19,16 +19,16 @@ func newNWFilter(api *nativeAPI, ptr unsafe.Pointer) *NWFilter {
 }
 
 // ListAllNWFilters returns network filters matching flags. Each handle must be freed.
-func (c *Connect) ListAllNWFilters(flags uint32) ([]*NWFilter, error) {
+func (c *Connect) ListAllNWFilters(flags uint32) ([]NWFilter, error) {
 	handles, err := connectListObjects(c, "virConnectListAllNWFilters", flags, func(api *nativeAPI, conn unsafe.Pointer, list *unsafe.Pointer, flags uint32) int32 {
 		return api.virConnectListAllNWFilters(conn, list, flags)
 	})
 	if err != nil {
 		return nil, err
 	}
-	filters := make([]*NWFilter, len(handles))
+	filters := make([]NWFilter, len(handles))
 	for i, handle := range handles {
-		filters[i] = newNWFilter(c.api, handle)
+		filters[i] = *newNWFilter(c.api, handle)
 	}
 	return filters, nil
 }
@@ -55,8 +55,8 @@ func (c *Connect) LookupNWFilterByUUIDString(uuid string) (*NWFilter, error) {
 	return newNWFilter(c.api, ptr), nil
 }
 
-// DefineNWFilterXML defines a network filter.
-func (c *Connect) DefineNWFilterXML(xml string) (*NWFilter, error) {
+// NWFilterDefineXML defines a network filter.
+func (c *Connect) NWFilterDefineXML(xml string) (*NWFilter, error) {
 	ptr, err := connectObjectFromXML(c, xml, "virNWFilterDefineXML", 0, func(api *nativeAPI, conn unsafe.Pointer, xml *byte, _ uint32) unsafe.Pointer {
 		return api.virNWFilterDefineXML(conn, xml)
 	})

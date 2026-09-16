@@ -52,14 +52,14 @@ func TestNativeCallCopiesError(t *testing.T) {
 		return -1, true
 	})
 	runtime.KeepAlive(message)
-	libvirtErr, ok := errors.AsType[*Error](err)
+	libvirtErr, ok := errors.AsType[Error](err)
 	if !ok {
-		t.Fatalf("nativeCall() error = %T, want *Error", err)
+		t.Fatalf("nativeCall() error = %T, want Error", err)
 	}
 	if libvirtErr.Operation != "virDomainLookupByName" || libvirtErr.Code != 42 || libvirtErr.Domain != 10 || libvirtErr.Level != 2 || libvirtErr.Message != "lookup failed" {
 		t.Fatalf("nativeCall() copied error = %#v", libvirtErr)
 	}
-	if !errors.Is(err, ErrNoDomain) {
+	if !errors.Is(err, ERR_NO_DOMAIN) {
 		t.Fatalf("nativeCall() error = %v, want ErrNoDomain", err)
 	}
 }
@@ -80,7 +80,7 @@ func TestConnectCloseConsumesReferenceOnce(t *testing.T) {
 			},
 		},
 	}
-	conn := &Connect{api: api, ptr: handle}
+	conn := newConnectHandle(api, handle)
 
 	remaining, err := conn.Close()
 	if err != nil {

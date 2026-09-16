@@ -37,6 +37,10 @@ func (raw *RawAPI) {{.Method}}({{.Declarations}}){{if .HasResult}} ({{.Result}},
 const (
 {{range .Enums}}	{{.Name}} = {{.Value}}
 {{end}})
+// Official constants drop libvirt's C-only VIR_ prefix, matching libvirt-go-module.
+const (
+{{range .OfficialAliases}}	{{.Name}}{{if .GoType}} {{.GoType}} = {{.GoType}}({{.RawName}}){{else}} = {{.RawName}}{{end}}
+{{end}})
 {{range .AliasGroups}}
 const (
 {{range .Values}}	{{.Name}} {{.GoType}} = {{.GoType}}({{.RawName}})
