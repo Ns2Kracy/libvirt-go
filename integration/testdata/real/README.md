@@ -14,13 +14,14 @@ CGO_ENABLED=0 go test -run RealIntegration -v ./integration
 ```
 
 Use a disposable Linux host or VM. Do not point this test at a production
-hypervisor. The test defines a domain, isolated network, directory storage pool,
-small volume, ephemeral test secret, and empty network filter when their
-drivers are available. It lists host interfaces and node devices read-only.
+hypervisor. The test defines a domain backed by a temporary qcow2 volume, an
+isolated network, an additional directory storage pool and volume, an ephemeral
+test secret, and an empty network filter when their drivers are available. It
+lists host interfaces and node devices read-only.
 
-Set `LIBVIRT_REAL_START_GUEST=1` to start the no-disk fixture guest and exercise
-a real QEMU lifecycle event. Without that extra flag, the domain is defined and
-inspected but never started.
+Set `LIBVIRT_REAL_START_GUEST=1` to start the blank-disk fixture guest and
+exercise a real QEMU lifecycle event. Without that extra flag, the domain is
+defined and inspected but never started.
 
 Cleanup is best effort. If the process is killed, resources prefixed with
-`libvirt-go-` and the temporary pool directory may need manual removal.
+`libvirt-go-` and the temporary pool directories may need manual removal.

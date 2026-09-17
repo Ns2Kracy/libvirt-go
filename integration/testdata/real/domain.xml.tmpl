@@ -17,6 +17,11 @@
   <on_reboot>restart</on_reboot>
   <on_crash>destroy</on_crash>
   <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='{{.Path}}'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
     <memballoon model='none'/>
   </devices>
 </domain>

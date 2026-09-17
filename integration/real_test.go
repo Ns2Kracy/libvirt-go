@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -17,6 +16,7 @@ import (
 	"testing"
 	"text/template"
 	"time"
+	"uuid"
 )
 
 type realFixtureData struct {
@@ -99,7 +99,7 @@ func TestRealIntegrationFixtures(t *testing.T) {
 		exerciseRealNetwork(t, conn, suffix)
 	})
 	t.Run("storage", func(t *testing.T) {
-		exerciseRealStorage(t, conn, suffix)
+		createRealStorageVolume(t, conn, suffix)
 	})
 	t.Run("secret", func(t *testing.T) {
 		exerciseRealSecret(t, conn, suffix)
@@ -113,7 +113,8 @@ func TestRealIntegrationFixtures(t *testing.T) {
 }
 
 func exerciseRealDomain(t *testing.T, conn *Connect, suffix string) {
-	data := realFixtureData{Name: "libvirt-go-domain-" + suffix, UUID: realFixtureUUID(t)}
+	diskPath := createRealStorageVolume(t, conn, suffix+"-domain")
+	data := realFixtureData{Name: "libvirt-go-domain-" + suffix, UUID: realFixtureUUID(t), Path: diskPath}
 	domain, err := conn.DomainDefineXML(renderRealFixture(t, "testdata/real/domain.xml.tmpl", data))
 	requireRealFeature(t, "DomainDefineXML", err)
 	t.Cleanup(func() { cleanupRealDomain(t, domain) })
@@ -207,7 +208,8 @@ func exerciseRealNetwork(t *testing.T, conn *Connect, suffix string) {
 	}
 }
 
-func exerciseRealStorage(t *testing.T, conn *Connect, suffix string) {
+func createRealStorageVolume(t *testing.T, conn *Connect, suffix string) string {
+	t.Helper()
 	poolPath := t.TempDir()
 	data := realFixtureData{Name: "libvirt-go-pool-" + suffix, UUID: realFixtureUUID(t), Path: poolPath}
 	pool, err := conn.StoragePoolDefineXML(renderRealFixture(t, "testdata/real/storage-pool.xml.tmpl", data), 0)
@@ -229,9 +231,11 @@ func exerciseRealStorage(t *testing.T, conn *Connect, suffix string) {
 		}
 	})
 	assertRealNamedObject(t, volumeData.Name, volume.GetName)
-	if path, err := volume.GetPath(); err != nil || !strings.HasPrefix(path, poolPath) {
+	path, err := volume.GetPath()
+	if err != nil || !strings.HasPrefix(path, poolPath) {
 		t.Fatalf("StorageVolume.GetPath = (%q, %v), want path under %q", path, err, poolPath)
 	}
+	return path
 }
 
 func exerciseRealSecret(t *testing.T, conn *Connect, suffix string) {
@@ -361,14 +365,7 @@ func realFixtureSuffix(t *testing.T) string {
 
 func realFixtureUUID(t *testing.T) string {
 	t.Helper()
-	var value [16]byte
-	if _, err := rand.Read(value[:]); err != nil {
-		t.Fatal(err)
-	}
-	value[6] = (value[6] & 0x0f) | 0x40
-	value[8] = (value[8] & 0x3f) | 0x80
-	return fmt.Sprintf("%x-%x-%x-%x-%x",
-		value[0:4], value[4:6], value[6:8], value[8:10], value[10:16])
+	return uuid.New().String()
 }
 
 func assertRealNamedObject(t *testing.T, want string, get func() (string, error)) {
@@ -415,8 +412,8 @@ func realOptionalError(err error) bool {
 	if err == nil || errors.Is(err, ErrSymbolUnavailable) || errors.Is(err, ErrClosed) {
 		return true
 	}
-	var libvirtErr Error
-	if !errors.As(err, &libvirtErr) {
+	libvirtErr, ok := errors.AsType[Error](err)
+	if !ok {
 		return false
 	}
 	switch libvirtErr.Code {
