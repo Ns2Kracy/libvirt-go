@@ -210,7 +210,18 @@ func exerciseRealNetwork(t *testing.T, conn *Connect, suffix string) {
 
 func createRealStorageVolume(t *testing.T, conn *Connect, suffix string) string {
 	t.Helper()
-	poolPath := t.TempDir()
+	poolPath, err := os.MkdirTemp("", "libvirt-go-pool-*")
+	if err != nil {
+		t.Fatalf("create storage pool directory: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := os.RemoveAll(poolPath); err != nil {
+			t.Errorf("storage pool directory cleanup: %v", err)
+		}
+	})
+	if err := os.Chmod(poolPath, 0o711); err != nil {
+		t.Fatalf("make storage pool directory traversable: %v", err)
+	}
 	data := realFixtureData{Name: "libvirt-go-pool-" + suffix, UUID: realFixtureUUID(t), Path: poolPath}
 	pool, err := conn.StoragePoolDefineXML(renderRealFixture(t, "testdata/real/storage-pool.xml.tmpl", data), 0)
 	requireRealFeature(t, "StoragePoolDefineXML", err)
