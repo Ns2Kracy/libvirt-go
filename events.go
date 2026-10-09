@@ -15,6 +15,14 @@ type DomainLifecycleEvent struct {
 	Detail     int32
 }
 
+// DomainJobCompletedEvent owns a Go copy of the terminal job statistics.
+// Err reports malformed native parameters; borrowed C storage is never exposed.
+type DomainJobCompletedEvent struct {
+	DomainName string
+	Stats      *DomainJobInfo
+	Err        error
+}
+
 // NodeDeviceEventLifecycleType identifies a node-device lifecycle transition.
 type NodeDeviceEventLifecycleType int32
 
@@ -32,6 +40,7 @@ type callbackRecord struct {
 	close         func(int32)
 	lifecycle     func(DomainLifecycleEvent)
 	nodeLifecycle NodeDeviceEventLifecycleCallback
+	jobCompleted  func(DomainJobCompletedEvent)
 }
 
 var callbackRecords sync.Map
@@ -74,6 +83,34 @@ var domainLifecycleCallbackPointer = purego.NewCallback(func(_ unsafe.Pointer, d
 	go invokeCallback(func() {
 		callback(DomainLifecycleEvent{DomainName: name, Event: event, Detail: detail})
 	})
+	return 0
+})
+
+var domainJobCompletedCallbackPointer = purego.NewCallback(func(_ unsafe.Pointer, domain unsafe.Pointer, memory unsafe.Pointer, count int32, opaque unsafe.Pointer) int32 {
+	value, ok := callbackRecords.Load(opaque)
+	if !ok {
+		return 0
+	}
+	record := value.(*callbackRecord)
+	if record.jobCompleted == nil {
+		return 0
+	}
+	event := DomainJobCompletedEvent{}
+	if domain != nil && record.api.virDomainGetName != nil {
+		event.DomainName = copyCString(record.api.virDomainGetName(domain))
+	}
+	// Libvirt frees these parameters as soon as the native callback returns.
+	if count > 0 && memory == nil {
+		event.Err = fmt.Errorf("libvirt: job completion has %d parameters with nil storage", count)
+	} else {
+		parameters, err := decodeTypedParameters(memory, count)
+		event.Err = err
+		if err == nil {
+			event.Stats, event.Err = domainJobInfoFromParameters(DomainJobCompleted, parameters)
+		}
+	}
+	callback := record.jobCompleted
+	go invokeCallback(func() { callback(event) })
 	return 0
 })
 
@@ -228,6 +265,21 @@ func (c *Connect) RegisterDomainLifecycleCallback(domain *Domain, callback func(
 	if callback == nil {
 		return nil, fmt.Errorf("libvirt: domain lifecycle callback is nil")
 	}
+	return c.registerDomainCallback(domain, int32(VIR_DOMAIN_EVENT_ID_LIFECYCLE), domainLifecycleCallbackPointer, &callbackRecord{lifecycle: callback})
+}
+
+// RegisterDomainJobCompletedCallback receives completed migration/backup job
+// statistics. A nil domain subscribes to all domains on the connection.
+// This binding uses one native thunk per event type, so a connection/domain
+// pair has one subscription; independent observers can use another connection.
+func (c *Connect) RegisterDomainJobCompletedCallback(domain *Domain, callback func(DomainJobCompletedEvent)) (*DomainEventCallback, error) {
+	if callback == nil {
+		return nil, fmt.Errorf("libvirt: domain job callback is nil")
+	}
+	return c.registerDomainCallback(domain, int32(VIR_DOMAIN_EVENT_ID_JOB_COMPLETED), domainJobCompletedCallbackPointer, &callbackRecord{jobCompleted: callback})
+}
+
+func (c *Connect) registerDomainCallback(domain *Domain, eventID int32, callbackPointer uintptr, record *callbackRecord) (*DomainEventCallback, error) {
 	if c == nil {
 		return nil, fmt.Errorf("%w: connection", ErrClosed)
 	}
@@ -248,11 +300,11 @@ func (c *Connect) RegisterDomainLifecycleCallback(domain *Domain, callback func(
 	var opaque unsafe.Pointer
 	callbackID, err := nativeCall(c.api, "virConnectDomainEventRegisterAny", func() (int32, bool) {
 		var allocErr error
-		opaque, allocErr = allocateCallbackRecord(c.api, &callbackRecord{lifecycle: callback})
+		opaque, allocErr = allocateCallbackRecord(c.api, record)
 		if allocErr != nil {
 			return -1, true
 		}
-		result := c.api.virConnectDomainEventRegisterAny(c.ptr, domainPtr, int32(VIR_DOMAIN_EVENT_ID_LIFECYCLE), domainLifecycleCallbackPointer, opaque, callbackFreePointer)
+		result := c.api.virConnectDomainEventRegisterAny(c.ptr, domainPtr, eventID, callbackPointer, opaque, callbackFreePointer)
 		if result < 0 {
 			discardCallbackRecord(c.api, opaque)
 		}
