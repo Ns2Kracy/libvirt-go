@@ -89,6 +89,16 @@ func (snapshot *DomainSnapshot) Free() error {
 	})
 }
 
+// NumChildren counts direct child snapshots, or descendants when requested
+// by flags. It avoids enumerating and decoding unrelated snapshot XML.
+func (snapshot *DomainSnapshot) NumChildren(flags uint32) (int, error) {
+	count, err := objectCall(domainSnapshotObject(snapshot), "virDomainSnapshotNumChildren", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		result := api.virDomainSnapshotNumChildren(ptr, flags)
+		return result, result < 0
+	})
+	return int(count), err
+}
+
 // GetName returns the snapshot name.
 func (snapshot *DomainSnapshot) GetName() (string, error) {
 	return objectBorrowedString(domainSnapshotObject(snapshot), "virDomainSnapshotGetName", func(api *nativeAPI, ptr unsafe.Pointer) unsafe.Pointer {

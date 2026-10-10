@@ -168,6 +168,19 @@ func (d *Domain) BackupBegin(backupXML, checkpointXML string, flags uint32) erro
 	return err
 }
 
+// BackupGetXMLDesc returns the active backup configuration, including its
+// resolved output targets. The native allocation is copied and freed here.
+func (d *Domain) BackupGetXMLDesc(flags uint32) (string, error) {
+	return domainCall(d, "virDomainBackupGetXMLDesc", func(api *nativeAPI, ptr unsafe.Pointer) (string, bool) {
+		value := api.virDomainBackupGetXMLDesc(ptr, flags)
+		if value == nil {
+			return "", true
+		}
+		defer api.free(value)
+		return copyCString(value), false
+	})
+}
+
 // AbortJob aborts the currently running domain job.
 func (d *Domain) AbortJob() error {
 	return d.callStatus("virDomainAbortJob", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
@@ -197,7 +210,12 @@ func (d *Domain) GetJobStats(flags DomainGetJobStatsFlags) (*DomainJobInfo, erro
 	if decodeErr != nil {
 		return nil, decodeErr
 	}
-	stats := &DomainJobInfo{Type: DomainJobType(jobType), Parameters: parameters}
+	return domainJobInfoFromParameters(DomainJobType(jobType), parameters)
+}
+
+// Event payloads and polled statistics share the same typed-parameter contract.
+func domainJobInfoFromParameters(jobType DomainJobType, parameters []TypedParameter) (*DomainJobInfo, error) {
+	stats := &DomainJobInfo{Type: jobType, Parameters: parameters}
 	for _, parameter := range parameters {
 		if err := decodeDomainJobParameter(stats, parameter); err != nil {
 			return nil, err
