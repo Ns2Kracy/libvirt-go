@@ -8398,7 +8398,7 @@ const (
 	DOMAIN_METADATA_LAST                                                                    = VIR_DOMAIN_METADATA_LAST
 	DOMAIN_METADATA_TITLE                                                                   = VIR_DOMAIN_METADATA_TITLE
 	DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY                                                       = VIR_DOMAIN_MIGRATE_MAX_SPEED_POSTCOPY
-	DOMAIN_NONE                                                                             = VIR_DOMAIN_NONE
+	DOMAIN_NONE                                                  DomainCreateFlags          = DomainCreateFlags(VIR_DOMAIN_NONE)
 	DOMAIN_NOSTATE                                               DomainState                = DomainState(VIR_DOMAIN_NOSTATE)
 	DOMAIN_NOSTATE_LAST                                                                     = VIR_DOMAIN_NOSTATE_LAST
 	DOMAIN_NOSTATE_UNKNOWN                                                                  = VIR_DOMAIN_NOSTATE_UNKNOWN
@@ -8590,12 +8590,12 @@ const (
 	DOMAIN_SNAPSHOT_REVERT_RESET_NVRAM                           DomainSnapshotRevertFlags  = DomainSnapshotRevertFlags(VIR_DOMAIN_SNAPSHOT_REVERT_RESET_NVRAM)
 	DOMAIN_SNAPSHOT_REVERT_RUNNING                               DomainSnapshotRevertFlags  = DomainSnapshotRevertFlags(VIR_DOMAIN_SNAPSHOT_REVERT_RUNNING)
 	DOMAIN_SNAPSHOT_XML_SECURE                                                              = VIR_DOMAIN_SNAPSHOT_XML_SECURE
-	DOMAIN_START_AUTODESTROY                                                                = VIR_DOMAIN_START_AUTODESTROY
-	DOMAIN_START_BYPASS_CACHE                                                               = VIR_DOMAIN_START_BYPASS_CACHE
-	DOMAIN_START_FORCE_BOOT                                                                 = VIR_DOMAIN_START_FORCE_BOOT
-	DOMAIN_START_PAUSED                                                                     = VIR_DOMAIN_START_PAUSED
-	DOMAIN_START_RESET_NVRAM                                                                = VIR_DOMAIN_START_RESET_NVRAM
-	DOMAIN_START_VALIDATE                                                                   = VIR_DOMAIN_START_VALIDATE
+	DOMAIN_START_AUTODESTROY                                     DomainCreateFlags          = DomainCreateFlags(VIR_DOMAIN_START_AUTODESTROY)
+	DOMAIN_START_BYPASS_CACHE                                    DomainCreateFlags          = DomainCreateFlags(VIR_DOMAIN_START_BYPASS_CACHE)
+	DOMAIN_START_FORCE_BOOT                                      DomainCreateFlags          = DomainCreateFlags(VIR_DOMAIN_START_FORCE_BOOT)
+	DOMAIN_START_PAUSED                                          DomainCreateFlags          = DomainCreateFlags(VIR_DOMAIN_START_PAUSED)
+	DOMAIN_START_RESET_NVRAM                                     DomainCreateFlags          = DomainCreateFlags(VIR_DOMAIN_START_RESET_NVRAM)
+	DOMAIN_START_VALIDATE                                        DomainCreateFlags          = DomainCreateFlags(VIR_DOMAIN_START_VALIDATE)
 	DOMAIN_STATS_BALLOON                                                                    = VIR_DOMAIN_STATS_BALLOON
 	DOMAIN_STATS_BLOCK                                                                      = VIR_DOMAIN_STATS_BLOCK
 	DOMAIN_STATS_CPU_TOTAL                                                                  = VIR_DOMAIN_STATS_CPU_TOTAL

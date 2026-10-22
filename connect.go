@@ -209,6 +209,14 @@ func (c *Connect) LookupDomainByName(name string) (*Domain, error) {
 	return c.domainFromString("domain name", name, "virDomainLookupByName", c.apiDomainLookupByName)
 }
 
+// LookupDomainByUUIDString returns a referenced domain handle with its current
+// runtime identity. The caller must call Free.
+func (c *Connect) LookupDomainByUUIDString(uuid string) (*Domain, error) {
+	return c.domainFromString("domain UUID", uuid, "virDomainLookupByUUIDString", func(api *nativeAPI, ptr unsafe.Pointer, value *byte) unsafe.Pointer {
+		return api.virDomainLookupByUUIDString(ptr, value)
+	})
+}
+
 // DomainDefineXML defines a persistent domain and returns a referenced handle.
 // The caller must call Free.
 func (c *Connect) DomainDefineXML(xml string) (*Domain, error) {

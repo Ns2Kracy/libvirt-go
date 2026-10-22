@@ -148,6 +148,12 @@ network filters, snapshots, checkpoints, streams, typed domain parameters, the
 default event loop, connection-close callbacks, and domain lifecycle callbacks.
 Other specialized operations remain available through `RawAPI`.
 
+Domain lifecycle helpers include `CreateWithFlags` (including paused and
+auto-destroy startup), `GetID`, and `LookupDomainByUUIDString`. Domain handles
+cache runtime IDs; re-lookup by UUID before using an ID to identify the current
+runtime instance. These high-level methods retain the normal handle locking,
+symbol availability checks, and structured native errors.
+
 The public API owns native resources explicitly:
 
 - call `(*Connect).Close` for every successful open;

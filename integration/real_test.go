@@ -121,6 +121,12 @@ func exerciseRealDomain(t *testing.T, conn *Connect, suffix string) {
 
 	assertRealNamedObject(t, data.Name, domain.GetName)
 	assertRealUUID(t, data.UUID, domain.GetUUIDString)
+	lookedUp, err := conn.LookupDomainByUUIDString(data.UUID)
+	requireRealFeature(t, "LookupDomainByUUIDString", err)
+	assertRealNamedObject(t, data.Name, lookedUp.GetName)
+	if err := lookedUp.Free(); err != nil {
+		t.Fatalf("UUID lookup reference cleanup: %v", err)
+	}
 	if value, err := domain.GetXMLDesc(0); err != nil || !strings.Contains(value, data.Name) {
 		t.Fatalf("Domain.GetXMLDesc contains fixture name = %t, error = %v", strings.Contains(value, data.Name), err)
 	}
@@ -168,7 +174,27 @@ func exerciseRealGuestLifecycle(t *testing.T, conn *Connect, domain *Domain) {
 			t.Errorf("lifecycle callback cleanup: %v", err)
 		}
 	})
-	requireRealFeature(t, "Domain.Create", domain.Create())
+	requireRealFeature(t, "Domain.CreateWithFlags", domain.CreateWithFlags(DOMAIN_START_PAUSED))
+	state, _, err := domain.GetState()
+	if err != nil || state != DOMAIN_PAUSED {
+		t.Fatalf("paused startup state = (%v, %v)", state, err)
+	}
+	id, err := domain.GetID()
+	if err != nil {
+		t.Fatalf("GetID after paused startup: %v", err)
+	}
+	uuid, err := domain.GetUUIDString()
+	if err != nil {
+		t.Fatalf("GetUUIDString: %v", err)
+	}
+	lookedUp, err := conn.LookupDomainByUUIDString(uuid)
+	requireRealFeature(t, "LookupDomainByUUIDString", err)
+	actualID, lookupErr := lookedUp.GetID()
+	freeErr := lookedUp.Free()
+	if lookupErr != nil || freeErr != nil || actualID != id {
+		t.Fatalf("fresh runtime ID = (%v, %v, %v), want %v", actualID, lookupErr, freeErr, id)
+	}
+	requireRealFeature(t, "Domain.Resume", domain.Resume())
 
 	eventLoop := make(chan error, 1)
 	go func() { eventLoop <- EventRunDefaultImpl() }()

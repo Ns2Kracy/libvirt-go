@@ -242,6 +242,14 @@ func (d *Domain) Create() error {
 	})
 }
 
+// CreateWithFlags starts an inactive domain with native startup flags, including
+// DOMAIN_START_PAUSED and DOMAIN_START_AUTODESTROY.
+func (d *Domain) CreateWithFlags(flags DomainCreateFlags) error {
+	return d.callStatus("virDomainCreateWithFlags", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
+		return api.virDomainCreateWithFlags(ptr, flags)
+	})
+}
+
 // Shutdown requests a graceful guest shutdown.
 func (d *Domain) Shutdown() error {
 	return d.callStatus("virDomainShutdown", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
@@ -254,6 +262,16 @@ func (d *Domain) Destroy() error {
 	return d.callStatus("virDomainDestroy", func(api *nativeAPI, ptr unsafe.Pointer) int32 {
 		return api.virDomainDestroy(ptr)
 	})
+}
+
+// GetID returns the cached hypervisor runtime ID. Re-lookup the domain to inspect
+// a replacement runtime. The unsigned -1 sentinel is returned with an error.
+func (d *Domain) GetID() (uint, error) {
+	id, err := domainCall(d, "virDomainGetID", func(api *nativeAPI, ptr unsafe.Pointer) (uint32, bool) {
+		value := api.virDomainGetID(ptr)
+		return value, value == ^uint32(0)
+	})
+	return uint(id), err
 }
 
 // GetAutostart reports whether the domain starts with the host.

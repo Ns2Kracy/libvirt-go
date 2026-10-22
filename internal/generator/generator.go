@@ -570,6 +570,8 @@ func officialEnumGoType(xmlType string) string {
 		return "ErrorLevel"
 	case "virConnectListAllDomainsFlags":
 		return "ConnectListAllDomainsFlags"
+	case "virDomainCreateFlags":
+		return "DomainCreateFlags"
 	case "virDomainDestroyFlags":
 		return "DomainDestroyFlags"
 	case "virDomainDeviceModifyFlags":

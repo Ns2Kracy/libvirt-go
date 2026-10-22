@@ -20,6 +20,9 @@ type DomainDeviceModifyFlags = uint32
 // DomainSnapshotRevertFlags controls domain state after snapshot reversion.
 type DomainSnapshotRevertFlags = uint32
 
+// DomainCreateFlags controls how an inactive domain is started.
+type DomainCreateFlags = uint32
+
 // DomainDestroyFlags controls domain destruction behavior.
 type DomainDestroyFlags = uint32
 
