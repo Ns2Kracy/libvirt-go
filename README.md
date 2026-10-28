@@ -155,9 +155,14 @@ runtime instance. These high-level methods retain the normal handle locking,
 symbol availability checks, and structured native errors.
 
 `(*Domain).GetStats` collects `DOMAIN_STATS_*` groups with
-`virDomainListGetStats`. It returns copied `TypedParameter` values, retaining
-libvirt field names and units, and releases all native records before returning.
-Unsupported fields are omitted unless the enforce-stats flag is requested.
+`virDomainListGetStats` and returns an owned `*DomainStats`, not generic
+`TypedParameter` values. State, total CPU, balloon, vCPU counts, block and
+interface counters retain libvirt's units. Each counter has a `Set` flag so
+missing or negative sentinel values are not confused with zero. Device slices
+carry native indices and are sorted without filling sparse gaps. Individual
+vCPU counters and other unmodeled fields are ignored; use `RawAPI` for other
+statistics. Native parameters are decoded directly into these structures and
+all native records are released before returning.
 
 The public API owns native resources explicitly:
 
