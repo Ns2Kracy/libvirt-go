@@ -154,6 +154,11 @@ cache runtime IDs; re-lookup by UUID before using an ID to identify the current
 runtime instance. These high-level methods retain the normal handle locking,
 symbol availability checks, and structured native errors.
 
+`(*Domain).GetStats` collects `DOMAIN_STATS_*` groups with
+`virDomainListGetStats`. It returns copied `TypedParameter` values, retaining
+libvirt field names and units, and releases all native records before returning.
+Unsupported fields are omitted unless the enforce-stats flag is requested.
+
 The public API owns native resources explicitly:
 
 - call `(*Connect).Close` for every successful open;

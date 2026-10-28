@@ -113,6 +113,23 @@ func TestIntegrationTestDriver(t *testing.T) {
 	if err != nil || state < DomainNoState || state > DomainPMSuspended {
 		t.Fatalf("GetState = (%d, %v)", state, err)
 	}
+	domainStats, err := domain.GetStats(DOMAIN_STATS_STATE|DOMAIN_STATS_CPU_TOTAL, 0)
+	if err != nil {
+		t.Fatalf("GetStats: %v", err)
+	}
+	foundState := false
+	for _, parameter := range domainStats {
+		if parameter.Field == "state.state" {
+			value, ok := parameter.Value.(int32)
+			if !ok || DomainState(value) != state {
+				t.Fatalf("GetStats state = %v, want %v", parameter.Value, state)
+			}
+			foundState = true
+		}
+	}
+	if !foundState {
+		t.Fatal("GetStats omitted the supported domain state")
+	}
 	if _, err := domain.IsActive(); err != nil {
 		t.Fatalf("IsActive: %v", err)
 	}
