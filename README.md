@@ -168,6 +168,11 @@ vCPU counters and other unmodeled fields are ignored; use `RawAPI` for other
 statistics. Native parameters are decoded directly into these structures and
 all native records are released before returning.
 
+Typed-parameter setters use libvirt's native Add/Free helpers when available.
+Libraries predating 1.0.2 or missing individual helpers retain the compatible
+ABI marshaller. Input types, overflow checks, and string ownership are the same
+on both paths.
+
 The public API owns native resources explicitly:
 
 - call `(*Connect).Close` for every successful open;

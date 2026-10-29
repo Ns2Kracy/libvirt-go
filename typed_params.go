@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"runtime"
 	"strings"
 	"unsafe"
 )
@@ -84,56 +85,138 @@ func encodeTypedParameters(api *nativeAPI, params []TypedParameter) (unsafe.Poin
 	if len(params) > math.MaxInt32 {
 		return nil, 0, nil, fmt.Errorf("libvirt: too many typed parameters: %d", len(params))
 	}
+	normalized := make([]TypedParameter, len(params))
+	for i, param := range params {
+		value, err := normalizeTypedParameter(param)
+		if err != nil {
+			return nil, 0, nil, err
+		}
+		normalized[i] = value
+	}
+	var memory unsafe.Pointer
+	var count, capacity int32
+	// These helpers were introduced together in 1.0.2. Retain the original ABI
+	// marshaller when an older or partially backported library lacks any of them.
+	native := api.virTypedParamsFree != nil && api.virTypedParamsAddInt != nil &&
+		api.virTypedParamsAddUInt != nil && api.virTypedParamsAddLLong != nil &&
+		api.virTypedParamsAddULLong != nil && api.virTypedParamsAddDouble != nil &&
+		api.virTypedParamsAddBoolean != nil && api.virTypedParamsAddString != nil
+	cleanup := func() {
+		if native {
+			api.virTypedParamsFree(memory, count)
+		} else {
+			freeTypedParameterStrings(api, memory, count)
+			api.free(memory)
+		}
+	}
 	if len(params) == 0 {
 		return nil, 0, func() {}, nil
 	}
-	memory := api.calloc(uintptr(len(params)), unsafe.Sizeof(cTypedParameter{}))
-	if memory == nil {
-		return nil, 0, nil, fmt.Errorf("libvirt: allocate typed parameters")
-	}
-	cleanup := func() {
-		freeTypedParameterStrings(api, memory, int32(len(params)))
-		api.free(memory)
-	}
-	encoded := unsafe.Slice((*cTypedParameter)(memory), len(params))
-	for i, param := range params {
-		if param.Field == "" || len(param.Field) >= typedParameterFieldLength || strings.IndexByte(param.Field, 0) >= 0 {
-			cleanup()
-			return nil, 0, nil, fmt.Errorf("libvirt: invalid typed parameter field %q", param.Field)
+	if !native {
+		memory = api.calloc(uintptr(len(params)), unsafe.Sizeof(cTypedParameter{}))
+		if memory == nil {
+			return nil, 0, nil, fmt.Errorf("libvirt: allocate typed parameters")
 		}
-		copy(encoded[i].field[:], param.Field)
-		value := unsafe.Pointer(&encoded[i].value)
-		typeTag, err := encodeTypedParameterValue(api, value, param)
-		if err != nil {
-			cleanup()
-			return nil, 0, nil, err
-		}
-		encoded[i].type_ = int32(typeTag)
+		count = int32(len(params))
 	}
-	return memory, int32(len(params)), cleanup, nil
+	for i, param := range normalized {
+		if native {
+			name := append([]byte(param.Field), 0)
+			var add func() int32
+			var operation string
+			var text []byte
+			switch value := param.Value.(type) {
+			case int32:
+				operation = "virTypedParamsAddInt"
+				add = func() int32 { return api.virTypedParamsAddInt(&memory, &count, &capacity, &name[0], value) }
+			case uint32:
+				operation = "virTypedParamsAddUInt"
+				add = func() int32 { return api.virTypedParamsAddUInt(&memory, &count, &capacity, &name[0], value) }
+			case int64:
+				operation = "virTypedParamsAddLLong"
+				add = func() int32 { return api.virTypedParamsAddLLong(&memory, &count, &capacity, &name[0], value) }
+			case uint64:
+				operation = "virTypedParamsAddULLong"
+				add = func() int32 { return api.virTypedParamsAddULLong(&memory, &count, &capacity, &name[0], value) }
+			case float64:
+				operation = "virTypedParamsAddDouble"
+				add = func() int32 { return api.virTypedParamsAddDouble(&memory, &count, &capacity, &name[0], value) }
+			case bool:
+				var boolean int32
+				if value {
+					boolean = 1
+				}
+				operation = "virTypedParamsAddBoolean"
+				add = func() int32 { return api.virTypedParamsAddBoolean(&memory, &count, &capacity, &name[0], boolean) }
+			case string:
+				text = append([]byte(value), 0)
+				operation = "virTypedParamsAddString"
+				add = func() int32 { return api.virTypedParamsAddString(&memory, &count, &capacity, &name[0], &text[0]) }
+			}
+			_, err := nativeCall(api, operation, func() (int32, bool) { value := add(); return value, value < 0 })
+			runtime.KeepAlive(name)
+			runtime.KeepAlive(text)
+			if err != nil {
+				cleanup()
+				return nil, 0, nil, err
+			}
+			continue
+		}
+		encoded := &unsafe.Slice((*cTypedParameter)(memory), len(params))[i]
+		copy(encoded.field[:], param.Field)
+		encoded.type_ = int32(param.Type)
+		destination := unsafe.Pointer(&encoded.value)
+		switch value := param.Value.(type) {
+		case int32:
+			*(*int32)(destination) = value
+		case uint32:
+			*(*uint32)(destination) = value
+		case int64:
+			*(*int64)(destination) = value
+		case uint64:
+			*(*uint64)(destination) = value
+		case float64:
+			*(*float64)(destination) = value
+		case bool:
+			if value {
+				*(*byte)(destination) = 1
+			}
+		case string:
+			allocated := api.malloc(uintptr(len(value) + 1))
+			if allocated == nil {
+				cleanup()
+				return nil, 0, nil, fmt.Errorf("libvirt: allocate typed parameter %q", param.Field)
+			}
+			copy(unsafe.Slice((*byte)(allocated), len(value)+1), append([]byte(value), 0))
+			*(*unsafe.Pointer)(destination) = allocated
+		}
+	}
+	return memory, count, cleanup, nil
 }
 
-func encodeTypedParameterValue(api *nativeAPI, destination unsafe.Pointer, param TypedParameter) (TypedParameterType, error) {
-	typeTag := param.Type
-	if typeTag == 0 {
+func normalizeTypedParameter(param TypedParameter) (TypedParameter, error) {
+	if param.Field == "" || len(param.Field) >= typedParameterFieldLength || strings.IndexByte(param.Field, 0) >= 0 {
+		return TypedParameter{}, fmt.Errorf("libvirt: invalid typed parameter field %q", param.Field)
+	}
+	if param.Type == 0 {
 		switch param.Value.(type) {
 		case int, int32:
-			typeTag = TypedParameterInt
+			param.Type = TypedParameterInt
 		case uint, uint32:
-			typeTag = TypedParameterUInt
+			param.Type = TypedParameterUInt
 		case int64:
-			typeTag = TypedParameterLongLong
+			param.Type = TypedParameterLongLong
 		case uint64:
-			typeTag = TypedParameterULongLong
+			param.Type = TypedParameterULongLong
 		case float64:
-			typeTag = TypedParameterDouble
+			param.Type = TypedParameterDouble
 		case bool:
-			typeTag = TypedParameterBoolean
+			param.Type = TypedParameterBoolean
 		case string:
-			typeTag = TypedParameterString
+			param.Type = TypedParameterString
 		}
 	}
-	switch typeTag {
+	switch param.Type {
 	case TypedParameterInt:
 		var value int64
 		switch typed := param.Value.(type) {
@@ -142,12 +225,12 @@ func encodeTypedParameterValue(api *nativeAPI, destination unsafe.Pointer, param
 		case int32:
 			value = int64(typed)
 		default:
-			return 0, typedParameterValueError(param, "int or int32")
+			return TypedParameter{}, typedParameterValueError(param, "int or int32")
 		}
 		if value < math.MinInt32 || value > math.MaxInt32 {
-			return 0, fmt.Errorf("libvirt: typed parameter %q overflows int32", param.Field)
+			return TypedParameter{}, fmt.Errorf("libvirt: typed parameter %q overflows int32", param.Field)
 		}
-		*(*int32)(destination) = int32(value)
+		param.Value = int32(value)
 	case TypedParameterUInt:
 		var value uint64
 		switch typed := param.Value.(type) {
@@ -156,55 +239,37 @@ func encodeTypedParameterValue(api *nativeAPI, destination unsafe.Pointer, param
 		case uint32:
 			value = uint64(typed)
 		default:
-			return 0, typedParameterValueError(param, "uint or uint32")
+			return TypedParameter{}, typedParameterValueError(param, "uint or uint32")
 		}
 		if value > math.MaxUint32 {
-			return 0, fmt.Errorf("libvirt: typed parameter %q overflows uint32", param.Field)
+			return TypedParameter{}, fmt.Errorf("libvirt: typed parameter %q overflows uint32", param.Field)
 		}
-		*(*uint32)(destination) = uint32(value)
+		param.Value = uint32(value)
 	case TypedParameterLongLong:
-		value, ok := param.Value.(int64)
-		if !ok {
-			return 0, typedParameterValueError(param, "int64")
+		if _, ok := param.Value.(int64); !ok {
+			return TypedParameter{}, typedParameterValueError(param, "int64")
 		}
-		*(*int64)(destination) = value
 	case TypedParameterULongLong:
-		value, ok := param.Value.(uint64)
-		if !ok {
-			return 0, typedParameterValueError(param, "uint64")
+		if _, ok := param.Value.(uint64); !ok {
+			return TypedParameter{}, typedParameterValueError(param, "uint64")
 		}
-		*(*uint64)(destination) = value
 	case TypedParameterDouble:
-		value, ok := param.Value.(float64)
-		if !ok {
-			return 0, typedParameterValueError(param, "float64")
+		if _, ok := param.Value.(float64); !ok {
+			return TypedParameter{}, typedParameterValueError(param, "float64")
 		}
-		*(*float64)(destination) = value
 	case TypedParameterBoolean:
-		value, ok := param.Value.(bool)
-		if !ok {
-			return 0, typedParameterValueError(param, "bool")
-		}
-		if value {
-			*(*byte)(destination) = 1
+		if _, ok := param.Value.(bool); !ok {
+			return TypedParameter{}, typedParameterValueError(param, "bool")
 		}
 	case TypedParameterString:
 		value, ok := param.Value.(string)
 		if !ok || strings.IndexByte(value, 0) >= 0 {
-			return 0, typedParameterValueError(param, "NUL-free string")
+			return TypedParameter{}, typedParameterValueError(param, "NUL-free string")
 		}
-		allocated := api.malloc(uintptr(len(value) + 1))
-		if allocated == nil {
-			return 0, fmt.Errorf("libvirt: allocate typed parameter %q", param.Field)
-		}
-		buffer := unsafe.Slice((*byte)(allocated), len(value)+1)
-		copy(buffer, value)
-		buffer[len(value)] = 0
-		*(*unsafe.Pointer)(destination) = allocated
 	default:
-		return 0, fmt.Errorf("libvirt: unsupported typed parameter type %d", typeTag)
+		return TypedParameter{}, fmt.Errorf("libvirt: unsupported typed parameter type %d", param.Type)
 	}
-	return typeTag, nil
+	return param, nil
 }
 
 func typedParameterValueError(param TypedParameter, expected string) error {
@@ -215,6 +280,11 @@ func freeTypedParameterStrings(api *nativeAPI, memory unsafe.Pointer, count int3
 	if memory == nil || count <= 0 {
 		return
 	}
+	if api.virTypedParamsClear != nil {
+		api.virTypedParamsClear(memory, count)
+		return
+	}
+	// Compatibility for libraries older than libvirt 1.0.2.
 	params := unsafe.Slice((*cTypedParameter)(memory), int(count))
 	for i := range params {
 		if TypedParameterType(params[i].type_) == TypedParameterString {

@@ -195,6 +195,17 @@ func exerciseRealGuestLifecycle(t *testing.T, conn *Connect, domain *Domain) {
 		t.Fatalf("fresh runtime ID = (%v, %v, %v), want %v", actualID, lookupErr, freeErr, id)
 	}
 	requireRealFeature(t, "Domain.Resume", domain.Resume())
+	parameters, err := domain.GetSchedulerParameters(0)
+	requireRealFeature(t, "Domain.GetSchedulerParameters", err)
+	if len(parameters) == 0 {
+		t.Fatal("running QEMU domain returned no scheduler parameters")
+	}
+	requireRealFeature(t, "Domain.SetSchedulerParameters", domain.SetSchedulerParameters(parameters, 0))
+	stats, err := domain.GetStats(DOMAIN_STATS_STATE|DOMAIN_STATS_CPU_TOTAL|DOMAIN_STATS_BALLOON|DOMAIN_STATS_VCPU|DOMAIN_STATS_BLOCK, 0)
+	requireRealFeature(t, "Domain.GetStats", err)
+	if stats.State == nil || !stats.State.StateSet || stats.State.State != DOMAIN_RUNNING || stats.Cpu == nil || !stats.Cpu.TimeSet {
+		t.Fatalf("running QEMU domain statistics missing: %#v", stats)
+	}
 
 	eventLoop := make(chan error, 1)
 	go func() { eventLoop <- EventRunDefaultImpl() }()
