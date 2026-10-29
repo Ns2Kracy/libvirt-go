@@ -13,7 +13,19 @@ go test -race ./...
 
 These checks do not require a running libvirt daemon. They validate the
 generator, ABI layouts covered by unit tests, resource ownership helpers, and
-XML fixture well-formedness.
+XML fixture well-formedness. With a C compiler and libvirt headers available,
+`TestNativeLayoutsMatchLibvirtHeaders` additionally compares generated sizes and
+field offsets against the public C ABI. It uses `pkg-config`, or an explicit
+`LIBVIRT_HEADER_DIR` pointing at the directory containing `libvirt/`.
+
+```sh
+LIBVIRT_HEADER_DIR=/path/to/include CGO_ENABLED=0 go test -run TestNativeLayoutsMatchLibvirtHeaders -v .
+LIBVIRT_INTEGRATION=1 CGO_ENABLED=0 go test -run TestIntegrationTypedParameterOwnershipAndCompatibility -v .
+```
+
+The typed-parameter round trip uses the real native allocator and helper
+functions. It also exercises partial-helper and pre-1.0.2 compatibility paths
+without changing the process-wide loaded API.
 
 ## Synthetic libvirt integration
 
@@ -40,6 +52,9 @@ lifecycle callback. The suite creates uniquely named resources and performs
 best-effort cleanup. See `../integration/testdata/real/README.md` for the exact
 fixtures and safety notes.
 
-The real suite has not been executed in this development environment because no
-QEMU binary or libvirt daemon is installed. macOS, FreeBSD, and NetBSD are not
-tested or supported.
+The domain fixture (including startup, scheduler read/write and statistics)
+has been executed on Linux with libvirt/QEMU 10.2.0. See
+[the API audit validation record](api-audit-validation.md). The broader real
+fixture matrix still requires its provisioned environment. macOS was used for
+generator, native-fixture and C-header ABI checks; it is not a supported QEMU
+service target.

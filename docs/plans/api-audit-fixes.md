@@ -14,8 +14,8 @@
 4. Generate the concrete native layouts used by the binding from XML, including the typed-parameter union. Verify field offsets and sizes against the C ABI and cross-build supported production architectures.
 5. Use native typed-parameter add/free helpers and retain Go input validation. Verify mixed numeric/string parameters, failure cleanup and native round trips.
 6. Add `Domain.HasManagedSaveImage` and use it in the service, preserving the service's UUID lookup semantics. Validate stopped/saved workflows through existing tests.
-7. Remove inferred TPM state locations. Resolve state from explicit libvirt domain XML, adapt cold-backup fixtures and recovery documentation, and reject ambiguous legacy paths before producing a purported complete backup.
+7. Prefer explicit TPM state directories from libvirt domain XML. Preserve the legacy default-directory behavior for pre-10.10 libraries (including the requested 10.2 test host), reject relative/file/encrypted sources, and update recovery documentation.
 
 ## Validation
 
-Run targeted checks per commit, then `CGO_ENABLED=0 go test ./...`, vet, regeneration consistency, and Linux cross-builds for the binding. Run service tests using a temporary Go workspace that selects the local binding, plus compile the provisioned-host E2E suite. Run real native libvirt integration when the runtime is available; record unavailable environment-dependent checks explicitly. Keep the two repositories clean and record their separate commit IDs.
+Run targeted checks per commit, then `CGO_ENABLED=0 go test ./...`, vet, regeneration consistency, and Linux cross-builds for the binding. Pin service builds to the Git binding submodule with a module replacement so normal builds select the repaired source, and compile the provisioned-host E2E suite. Run real native libvirt integration when the runtime is available; record unavailable environment-dependent checks explicitly. Keep the two repositories clean and record their separate commit IDs.
