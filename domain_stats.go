@@ -1,7 +1,6 @@
 package libvirt
 
 import (
-	"bytes"
 	"cmp"
 	"fmt"
 	"runtime"
@@ -154,33 +153,26 @@ func decodeDomainStats(memory unsafe.Pointer, count int32) (*DomainStats, error)
 	blocks, networks := map[int]int{}, map[int]int{}
 	parameters := unsafe.Slice((*cTypedParameter)(memory), int(count))
 	for i := range parameters {
-		parameter := &parameters[i]
-		end := bytes.IndexByte(parameter.field[:], 0)
-		if end < 0 {
-			end = len(parameter.field)
+		parameter, err := decodeTypedParameter(&parameters[i])
+		if err != nil {
+			return nil, err
 		}
-		field := string(parameter.field[:end])
+		field := parameter.Field
 		var number uint64
 		var available bool
-		value := unsafe.Pointer(&parameter.value)
-		switch TypedParameterType(parameter.type_) {
-		case TypedParameterULongLong:
-			number, available = parameter.value.bits, true
-		case TypedParameterUInt:
-			number, available = uint64(*(*uint32)(value)), true
-		case TypedParameterLongLong:
-			n := *(*int64)(value)
-			if n >= 0 {
-				number, available = uint64(n), true
+		switch value := parameter.Value.(type) {
+		case uint64:
+			number, available = value, true
+		case uint32:
+			number, available = uint64(value), true
+		case int64:
+			if value >= 0 {
+				number, available = uint64(value), true
 			}
-		case TypedParameterInt:
-			n := *(*int32)(value)
-			if n >= 0 {
-				number, available = uint64(n), true
+		case int32:
+			if value >= 0 {
+				number, available = uint64(value), true
 			}
-		case TypedParameterString, TypedParameterDouble, TypedParameterBoolean:
-		default:
-			return nil, fmt.Errorf("libvirt: unknown typed parameter type %d for %q", parameter.type_, string(parameter.field[:end]))
 		}
 
 		group, key, _ := strings.Cut(field, ".")
@@ -258,8 +250,8 @@ func decodeDomainStats(memory unsafe.Pointer, count int32) (*DomainStats, error)
 				block := &result.Block[position]
 				switch "." + counter {
 				case DOMAIN_STATS_BLOCK_SUFFIX_NAME:
-					if TypedParameterType(parameter.type_) == TypedParameterString {
-						block.Name, block.NameSet = copyCString(uintptrPointer(value)), true
+					if name, ok := parameter.Value.(string); ok {
+						block.Name, block.NameSet = name, true
 					}
 				case DOMAIN_STATS_BLOCK_SUFFIX_RD_BYTES:
 					present, destination = &block.RdBytesSet, &block.RdBytes
@@ -290,8 +282,8 @@ func decodeDomainStats(memory unsafe.Pointer, count int32) (*DomainStats, error)
 				network := &result.Net[position]
 				switch "." + counter {
 				case DOMAIN_STATS_NET_SUFFIX_NAME:
-					if TypedParameterType(parameter.type_) == TypedParameterString {
-						network.Name, network.NameSet = copyCString(uintptrPointer(value)), true
+					if name, ok := parameter.Value.(string); ok {
+						network.Name, network.NameSet = name, true
 					}
 				case DOMAIN_STATS_NET_SUFFIX_RX_BYTES:
 					present, destination = &network.RxBytesSet, &network.RxBytes

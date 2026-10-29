@@ -45,38 +45,43 @@ func decodeTypedParameters(memory unsafe.Pointer, count int32) ([]TypedParameter
 	if count < 0 {
 		return nil, fmt.Errorf("libvirt: negative typed parameter count %d", count)
 	}
-	if count == 0 {
-		return []TypedParameter{}, nil
-	}
 	params := unsafe.Slice((*cTypedParameter)(memory), int(count))
 	result := make([]TypedParameter, len(params))
 	for i := range params {
-		param := &params[i]
-		end := bytes.IndexByte(param.field[:], 0)
-		if end < 0 {
-			end = len(param.field)
+		param, err := decodeTypedParameter(&params[i])
+		if err != nil {
+			return nil, err
 		}
-		result[i].Field = string(param.field[:end])
-		result[i].Type = TypedParameterType(param.type_)
-		value := unsafe.Pointer(&param.value)
-		switch result[i].Type {
-		case TypedParameterInt:
-			result[i].Value = *(*int32)(value)
-		case TypedParameterUInt:
-			result[i].Value = *(*uint32)(value)
-		case TypedParameterLongLong:
-			result[i].Value = *(*int64)(value)
-		case TypedParameterULongLong:
-			result[i].Value = *(*uint64)(value)
-		case TypedParameterDouble:
-			result[i].Value = *(*float64)(value)
-		case TypedParameterBoolean:
-			result[i].Value = *(*byte)(value) != 0
-		case TypedParameterString:
-			result[i].Value = copyCString(uintptrPointer(value))
-		default:
-			return nil, fmt.Errorf("libvirt: unknown typed parameter type %d for %q", param.type_, result[i].Field)
-		}
+		result[i] = param
+	}
+	return result, nil
+}
+
+// decodeTypedParameter copies a native parameter, including strings, into Go-owned storage.
+func decodeTypedParameter(param *cTypedParameter) (TypedParameter, error) {
+	end := bytes.IndexByte(param.field[:], 0)
+	if end < 0 {
+		end = len(param.field)
+	}
+	result := TypedParameter{Field: string(param.field[:end]), Type: TypedParameterType(param.type_)}
+	value := unsafe.Pointer(&param.value)
+	switch result.Type {
+	case TypedParameterInt:
+		result.Value = *(*int32)(value)
+	case TypedParameterUInt:
+		result.Value = *(*uint32)(value)
+	case TypedParameterLongLong:
+		result.Value = *(*int64)(value)
+	case TypedParameterULongLong:
+		result.Value = *(*uint64)(value)
+	case TypedParameterDouble:
+		result.Value = *(*float64)(value)
+	case TypedParameterBoolean:
+		result.Value = *(*byte)(value) != 0
+	case TypedParameterString:
+		result.Value = copyCString(uintptrPointer(value))
+	default:
+		return TypedParameter{}, fmt.Errorf("libvirt: unknown typed parameter type %d for %q", param.type_, result.Field)
 	}
 	return result, nil
 }
