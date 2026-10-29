@@ -98,7 +98,7 @@ func loadNativeAPIFrom(path string) (*nativeAPI, error) {
 	api.extensionHandles = loadExtensionLibraries()
 	bindLibvirtSymbols(api, func(binding nativeSymbolBinding) error {
 		if binding.library == "main" {
-			return nil
+			return api.requireSymbol(binding.name)
 		}
 		libraryHandle := api.extensionHandles[binding.library]
 		if libraryHandle == 0 {
