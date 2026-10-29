@@ -101,14 +101,7 @@ func encodeTypedParameters(api *nativeAPI, params []TypedParameter) (unsafe.Poin
 		api.virTypedParamsAddUInt != nil && api.virTypedParamsAddLLong != nil &&
 		api.virTypedParamsAddULLong != nil && api.virTypedParamsAddDouble != nil &&
 		api.virTypedParamsAddBoolean != nil && api.virTypedParamsAddString != nil
-	cleanup := func() {
-		if native {
-			api.virTypedParamsFree(memory, count)
-		} else {
-			freeTypedParameterStrings(api, memory, count)
-			api.free(memory)
-		}
-	}
+	cleanup := func() { freeTypedParameters(api, memory, count) }
 	if len(params) == 0 {
 		return nil, 0, func() {}, nil
 	}
@@ -276,6 +269,19 @@ func typedParameterValueError(param TypedParameter, expected string) error {
 	return fmt.Errorf("libvirt: typed parameter %q expects %s, got %T", param.Field, expected, param.Value)
 }
 
+// freeTypedParameters releases arrays from libvirt or the compatible ABI marshaller.
+func freeTypedParameters(api *nativeAPI, memory unsafe.Pointer, count int32) {
+	if memory == nil {
+		return
+	}
+	if api.virTypedParamsFree != nil {
+		api.virTypedParamsFree(memory, count)
+		return
+	}
+	freeTypedParameterStrings(api, memory, count)
+	api.free(memory)
+}
+
 func freeTypedParameterStrings(api *nativeAPI, memory unsafe.Pointer, count int32) {
 	if memory == nil || count <= 0 {
 		return
@@ -315,10 +321,7 @@ func getDomainTypedParameters(domain *Domain, operation string, count int32, fla
 		return nil, fmt.Errorf("libvirt: allocate %d typed parameters", count)
 	}
 	allocatedCount := count
-	defer func() {
-		freeTypedParameterStrings(api, memory, allocatedCount)
-		api.free(memory)
-	}()
+	defer freeTypedParameters(api, memory, allocatedCount)
 	_, err := domainCall(domain, operation, func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
 		result := get(api, ptr, memory, &count, flags)
 		return result, result < 0

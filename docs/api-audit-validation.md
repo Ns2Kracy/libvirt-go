@@ -18,6 +18,7 @@ The binding and service fixes were checked locally and on the requested host
 - Native typed-parameter Add/Free/Clear helpers are preferred. The existing ABI
   path remains usable when helpers from libvirt 1.0.2 are absent or only partly
   available. Both paths preserve duplicate fields, strings and numeric limits.
+  Job statistics and tuning arrays share the same compatible release function.
 - The service selects the binding's pinned Git submodule through `go.mod`.
   Run `git submodule update --init libvirt-go` before building a fresh checkout.
 - Explicit unencrypted TPM directory sources from domain XML are honored.

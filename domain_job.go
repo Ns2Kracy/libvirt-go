@@ -204,9 +204,7 @@ func (d *Domain) GetJobStats(flags DomainGetJobStatsFlags) (*DomainJobInfo, erro
 		return nil, fmt.Errorf("libvirt: virDomainGetJobStats returned %d parameters with nil storage", count)
 	}
 	parameters, decodeErr := decodeTypedParameters(memory, count)
-	if memory != nil {
-		d.api.virTypedParamsFree(memory, count)
-	}
+	freeTypedParameters(d.api, memory, count)
 	if decodeErr != nil {
 		return nil, decodeErr
 	}
