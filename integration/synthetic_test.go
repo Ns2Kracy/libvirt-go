@@ -272,6 +272,9 @@ func exerciseNextAreaAPIs(t *testing.T, conn *Connect, domain *Domain) {
 	if allowUnsupported(t, "Domain.ListAllCheckpoints", err) {
 		inspectNamedXMLResources(t, "domain checkpoint", checkpoints)
 	}
+	if params, paramsErr := domain.GetSchedulerParameters(0); allowUnsupported(t, "Domain.GetSchedulerParameters", paramsErr) && len(params) == 0 {
+		t.Log("test driver returned no scheduler typed parameters")
+	}
 	if params, paramsErr := domain.GetMemoryParameters(0); allowUnsupported(t, "Domain.GetMemoryParameters", paramsErr) && len(params) == 0 {
 		t.Log("test driver returned no memory typed parameters")
 	}

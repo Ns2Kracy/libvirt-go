@@ -231,14 +231,15 @@ func freeTypedParameterStrings(api *nativeAPI, memory unsafe.Pointer, count int3
 	}
 }
 
-func getDomainTypedParameters(domain *Domain, operation string, flags uint32, get func(*nativeAPI, unsafe.Pointer, unsafe.Pointer, *int32, uint32) int32) ([]TypedParameter, error) {
-	var count int32
-	_, err := domainCall(domain, operation, func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
-		result := get(api, ptr, nil, &count, flags)
-		return result, result < 0
-	})
-	if err != nil || count == 0 {
-		return []TypedParameter{}, err
+func getDomainTypedParameters(domain *Domain, operation string, count int32, flags uint32, get func(*nativeAPI, unsafe.Pointer, unsafe.Pointer, *int32, uint32) int32) ([]TypedParameter, error) {
+	if count == 0 {
+		_, err := domainCall(domain, operation, func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+			result := get(api, ptr, nil, &count, flags)
+			return result, result < 0
+		})
+		if err != nil || count == 0 {
+			return []TypedParameter{}, err
+		}
 	}
 	if count < 0 {
 		return nil, fmt.Errorf("libvirt: negative typed parameter count %d", count)
@@ -253,7 +254,7 @@ func getDomainTypedParameters(domain *Domain, operation string, flags uint32, ge
 		freeTypedParameterStrings(api, memory, allocatedCount)
 		api.free(memory)
 	}()
-	_, err = domainCall(domain, operation, func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+	_, err := domainCall(domain, operation, func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
 		result := get(api, ptr, memory, &count, flags)
 		return result, result < 0
 	})
@@ -284,7 +285,7 @@ func setDomainTypedParameters(domain *Domain, operation string, params []TypedPa
 
 // GetMemoryParameters returns domain memory tuning parameters.
 func (domain *Domain) GetMemoryParameters(flags uint32) ([]TypedParameter, error) {
-	return getDomainTypedParameters(domain, "virDomainGetMemoryParameters", flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
+	return getDomainTypedParameters(domain, "virDomainGetMemoryParameters", 0, flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
 		return api.virDomainGetMemoryParameters(ptr, params, count, flags)
 	})
 }
@@ -298,7 +299,7 @@ func (domain *Domain) SetMemoryParameters(params []TypedParameter, flags uint32)
 
 // GetNumaParameters returns domain NUMA tuning parameters.
 func (domain *Domain) GetNumaParameters(flags uint32) ([]TypedParameter, error) {
-	return getDomainTypedParameters(domain, "virDomainGetNumaParameters", flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
+	return getDomainTypedParameters(domain, "virDomainGetNumaParameters", 0, flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
 		return api.virDomainGetNumaParameters(ptr, params, count, flags)
 	})
 }
@@ -312,7 +313,22 @@ func (domain *Domain) SetNumaParameters(params []TypedParameter, flags uint32) e
 
 // GetSchedulerParameters returns domain scheduler parameters.
 func (domain *Domain) GetSchedulerParameters(flags uint32) ([]TypedParameter, error) {
-	return getDomainTypedParameters(domain, "virDomainGetSchedulerParametersFlags", flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
+	count, err := domainCall(domain, "virDomainGetSchedulerType", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		var count int32
+		name := api.virDomainGetSchedulerType(ptr, &count)
+		if name == nil {
+			return 0, true
+		}
+		api.free(name)
+		return count, false
+	})
+	if err != nil {
+		return nil, err
+	}
+	if count == 0 {
+		return []TypedParameter{}, nil
+	}
+	return getDomainTypedParameters(domain, "virDomainGetSchedulerParametersFlags", count, flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
 		return api.virDomainGetSchedulerParametersFlags(ptr, params, count, flags)
 	})
 }
@@ -326,7 +342,7 @@ func (domain *Domain) SetSchedulerParameters(params []TypedParameter, flags uint
 
 // GetBlockIOParameters returns domain block-I/O tuning parameters.
 func (domain *Domain) GetBlockIOParameters(flags uint32) ([]TypedParameter, error) {
-	return getDomainTypedParameters(domain, "virDomainGetBlkioParameters", flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
+	return getDomainTypedParameters(domain, "virDomainGetBlkioParameters", 0, flags, func(api *nativeAPI, ptr unsafe.Pointer, params unsafe.Pointer, count *int32, flags uint32) int32 {
 		return api.virDomainGetBlkioParameters(ptr, params, count, flags)
 	})
 }

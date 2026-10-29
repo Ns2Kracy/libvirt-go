@@ -8,9 +8,10 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
+	"unsafe"
 )
 
-func TestLoadedLibraryPreservesMissingMainSymbols(t *testing.T) {
+func TestLoadedLibraryContracts(t *testing.T) {
 	compiler, err := exec.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler required for the shared-library fixture")
@@ -40,6 +41,15 @@ func TestLoadedLibraryPreservesMissingMainSymbols(t *testing.T) {
 	}
 	if _, err := raw.VirConnectOpen(nil); !errors.Is(err, ErrSymbolUnavailable) {
 		t.Fatalf("missing main-library call = %v, want ErrSymbolUnavailable", err)
+	}
+	handle := byte(1)
+	domain := newDomain(api, unsafe.Pointer(&handle))
+	params, err := domain.GetSchedulerParameters(0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(params) != 1 || params[0].Field != "cpu_shares" || params[0].Value != uint64(1024) {
+		t.Fatalf("scheduler parameters = %#v, want cpu_shares=1024", params)
 	}
 }
 
