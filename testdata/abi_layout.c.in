@@ -1,0 +1,15 @@
+#include <stddef.h>
+#include <stdio.h>
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+
+#define SIZE(type) printf(#type " %zu\n", sizeof(type))
+#define FIELD(type, field) printf(#type "." #field " %zu\n", offsetof(type, field))
+int main(void) {
+ SIZE(virTypedParameter); FIELD(virTypedParameter, field); FIELD(virTypedParameter, type); FIELD(virTypedParameter, value);
+ SIZE(virDomainStatsRecord); FIELD(virDomainStatsRecord, dom); FIELD(virDomainStatsRecord, params); FIELD(virDomainStatsRecord, nparams);
+ SIZE(virStoragePoolInfo); FIELD(virStoragePoolInfo, state); FIELD(virStoragePoolInfo, capacity); FIELD(virStoragePoolInfo, allocation); FIELD(virStoragePoolInfo, available);
+ SIZE(virStorageVolInfo); FIELD(virStorageVolInfo, type); FIELD(virStorageVolInfo, capacity); FIELD(virStorageVolInfo, allocation);
+ SIZE(virError); FIELD(virError, code); FIELD(virError, domain); FIELD(virError, message); FIELD(virError, level); FIELD(virError, conn); FIELD(virError, dom); FIELD(virError, str1); FIELD(virError, str2); FIELD(virError, str3); FIELD(virError, int1); FIELD(virError, int2); FIELD(virError, net);
+ return 0;
+}

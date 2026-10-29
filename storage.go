@@ -25,13 +25,6 @@ type StoragePoolInfo struct {
 	Available  uint64
 }
 
-type cStoragePoolInfo struct {
-	state      int32
-	capacity   uint64
-	allocation uint64
-	available  uint64
-}
-
 // StoragePool is a reference-counted libvirt storage pool handle.
 type StoragePool struct {
 	object *nativeObject
@@ -350,12 +343,6 @@ type StorageVolInfo struct {
 	Type       int32
 	Capacity   uint64
 	Allocation uint64
-}
-
-type cStorageVolInfo struct {
-	type_      int32
-	capacity   uint64
-	allocation uint64
 }
 
 // Free releases this wrapper's storage-volume reference.

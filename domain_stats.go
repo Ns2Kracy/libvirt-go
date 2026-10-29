@@ -104,13 +104,6 @@ type DomainStatsNet struct {
 	TxDrop     uint64
 }
 
-// cDomainStatsRecord matches the public virDomainStatsRecord C ABI.
-type cDomainStatsRecord struct {
-	domain unsafe.Pointer
-	params unsafe.Pointer
-	count  int32
-}
-
 // GetStats collects DOMAIN_STATS_* groups using virDomainListGetStats and
 // decodes the modeled fields directly into owned Go structures. Unmodeled
 // fields, including individual vCPU counters, are ignored. Negative sentinel

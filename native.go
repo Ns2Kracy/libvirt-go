@@ -124,14 +124,6 @@ func (api *nativeAPI) lastError(operation string) error {
 	}
 }
 
-// cError is the stable prefix of struct _virError from virterror.h.
-type cError struct {
-	code    int32
-	domain  int32
-	message unsafe.Pointer
-	level   int32
-}
-
 func makeCString(field, value string, optional bool) ([]byte, *byte, error) {
 	if strings.IndexByte(value, 0) >= 0 {
 		return nil, nil, fmt.Errorf("libvirt: %s: %w", field, ErrEmbeddedNUL)

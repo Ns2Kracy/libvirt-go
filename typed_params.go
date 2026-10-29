@@ -31,16 +31,6 @@ type TypedParameter struct {
 	Value any
 }
 
-type cTypedParameterValue struct {
-	bits uint64
-}
-
-type cTypedParameter struct {
-	field [typedParameterFieldLength]byte
-	type_ int32
-	value cTypedParameterValue
-}
-
 func decodeTypedParameters(memory unsafe.Pointer, count int32) ([]TypedParameter, error) {
 	if count < 0 {
 		return nil, fmt.Errorf("libvirt: negative typed parameter count %d", count)

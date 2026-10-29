@@ -7,6 +7,56 @@ import "unsafe"
 
 const generatedLibvirtAPIHash = "e97296404c4ce242da6d974ff4da7bf9b9f75e18cc2660efe626181728e0ea76"
 
+// cDomainStatsRecord follows the upstream C ABI layout.
+type cDomainStatsRecord struct {
+	domain unsafe.Pointer
+	params unsafe.Pointer
+	count  int32
+}
+
+// cError follows the upstream C ABI layout.
+type cError struct {
+	code    int32
+	domain  int32
+	message unsafe.Pointer
+	level   int32
+	conn    unsafe.Pointer
+	dom     unsafe.Pointer
+	str1    unsafe.Pointer
+	str2    unsafe.Pointer
+	str3    unsafe.Pointer
+	int1    int32
+	int2    int32
+	net     unsafe.Pointer
+}
+
+// cStoragePoolInfo follows the upstream C ABI layout.
+type cStoragePoolInfo struct {
+	state      int32
+	capacity   uint64
+	allocation uint64
+	available  uint64
+}
+
+// cStorageVolInfo follows the upstream C ABI layout.
+type cStorageVolInfo struct {
+	type_      int32
+	capacity   uint64
+	allocation uint64
+}
+
+// cTypedParameter follows the upstream C ABI layout.
+type cTypedParameter struct {
+	field [VIR_TYPED_PARAM_FIELD_LENGTH]byte
+	type_ int32
+	value cTypedParameterValue
+}
+
+// cTypedParameterValue follows the upstream C ABI layout.
+type cTypedParameterValue struct {
+	bits uint64
+}
+
 type generatedNativeAPI struct {
 	virAdmClientClose                          func(unsafe.Pointer, uint32) int32
 	virAdmClientFree                           func(unsafe.Pointer) int32

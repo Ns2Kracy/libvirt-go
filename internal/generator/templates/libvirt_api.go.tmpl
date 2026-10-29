@@ -7,6 +7,13 @@ import "unsafe"
 
 const generatedLibvirtAPIHash = {{quote .SourceHash}}
 
+{{range .Layouts}}// {{.Name}} follows the upstream C ABI layout.
+type {{.Name}} struct {
+{{range .Fields}}	{{.Name}} {{.Type}}
+{{end}}}
+
+{{end}}
+
 type generatedNativeAPI struct {
 {{range .Functions}}	{{.Name}} {{.Signature}}
 {{end}}}

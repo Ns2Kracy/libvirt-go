@@ -10,11 +10,17 @@ import (
 type generatedFileData struct {
 	SourceHash      string
 	Functions       []generatedFunctionData
+	Layouts         []generatedLayout
 	Macros          []apiEnum
 	MacroAliases    []generatedAliasData
 	Enums           []apiEnum
 	OfficialAliases []generatedAliasData
 	AliasGroups     []generatedAliasGroupData
+}
+
+type generatedLayout struct {
+	Name   string
+	Fields []generatedArgumentData
 }
 
 type generatedFunctionData struct {

@@ -14,6 +14,7 @@ import (
 	"go/token"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -27,6 +28,7 @@ type apiDocument struct {
 	FunctionTypes []apiFunctionType `xml:"symbols>functype"`
 	Enums         []apiEnum         `xml:"symbols>enum"`
 	Macros        []apiMacro        `xml:"symbols>macro"`
+	Structs       []apiStruct       `xml:"symbols>struct"`
 }
 
 type apiFunctionType struct {
@@ -188,6 +190,7 @@ func loadAPIDocuments(mainPath string) (apiDocument, string, error) {
 		combined.FunctionTypes = append(combined.FunctionTypes, document.FunctionTypes...)
 		combined.Enums = append(combined.Enums, document.Enums...)
 		combined.Macros = append(combined.Macros, document.Macros...)
+		combined.Structs = append(combined.Structs, document.Structs...)
 		digest.Write([]byte(source.library))
 		digest.Write([]byte{0})
 		digest.Write(contents)
@@ -357,6 +360,11 @@ func renderGenerated(document *apiDocument, symbols []string, sourceHash string)
 		return nil, err
 	}
 	data.Macros = macros
+	layouts, err := nativeLayouts(document)
+	if err != nil {
+		return nil, err
+	}
+	data.Layouts = layouts
 	data.Enums = append([]apiEnum(nil), document.Enums...)
 	sort.Slice(data.Enums, func(i, j int) bool { return data.Enums[i].Name < data.Enums[j].Name })
 	for _, enum := range data.Enums {
@@ -639,4 +647,149 @@ func goEnumWord(word string) string {
 		return ""
 	}
 	return strings.ToUpper(lower[:1]) + lower[1:]
+}
+
+type apiMacro struct {
+	Name   string  `xml:"name,attr"`
+	String *string `xml:"string,attr"`
+	Raw    string  `xml:"raw,attr"`
+	Params *string `xml:"params,attr"`
+}
+
+var cIntegerSuffix = regexp.MustCompile(`(?i)\b(0x[0-9a-f]+|[0-9]+)(ull|llu|ll|ul|lu|u|l)\b`)
+
+func constantMacros(macros []apiMacro) ([]apiEnum, error) {
+	result := make([]apiEnum, 0, len(macros))
+	seen := make(map[string]string)
+	for _, macro := range macros {
+		// Function macros and C struct-tag aliases are not value constants.
+		if macro.Params != nil || strings.HasPrefix(macro.Name, "_") {
+			continue
+		}
+		value := ""
+		if macro.String != nil {
+			value = strconv.Quote(*macro.String)
+		} else {
+			raw, _, _ := strings.Cut(macro.Raw, "/*")
+			value = cIntegerSuffix.ReplaceAllString(strings.TrimSpace(raw), "$1")
+			expr, err := parser.ParseExpr(value)
+			if err != nil {
+				return nil, fmt.Errorf("macro %s: %w", macro.Name, err)
+			}
+			valid := true
+			ast.Inspect(expr, func(node ast.Node) bool {
+				switch n := node.(type) {
+				case nil, *ast.ParenExpr, *ast.Ident:
+				case *ast.BasicLit:
+					valid = valid && n.Kind == token.INT
+				case *ast.BinaryExpr:
+					valid = valid && strings.Contains(" + - * / % << >> & | ^ ", " "+n.Op.String()+" ")
+				case *ast.UnaryExpr:
+					valid = valid && (n.Op == token.ADD || n.Op == token.SUB || n.Op == token.XOR)
+				default:
+					valid = false
+				}
+				return valid
+			})
+			if !valid {
+				return nil, fmt.Errorf("macro %s has unsupported constant expression %q", macro.Name, macro.Raw)
+			}
+		}
+		if previous, ok := seen[macro.Name]; ok {
+			if previous != value {
+				return nil, fmt.Errorf("conflicting macro %s", macro.Name)
+			}
+			continue
+		}
+		seen[macro.Name] = value
+		result = append(result, apiEnum{Name: macro.Name, Value: value})
+	}
+	sort.Slice(result, func(i, j int) bool { return result[i].Name < result[j].Name })
+	return result, nil
+}
+
+type apiStruct struct {
+	Name   string     `xml:"name,attr"`
+	Fields []apiField `xml:"field"`
+}
+
+type apiField struct {
+	Name  string     `xml:"name,attr"`
+	Type  string     `xml:"type,attr"`
+	Union []apiField `xml:"union>field"`
+}
+
+// Generate only concrete native structures consumed by the high-level binding.
+// Opaque handles remain unsafe.Pointer; no application models are inferred.
+func nativeLayouts(document *apiDocument) ([]generatedLayout, error) {
+	names := map[string]string{
+		"virError":             "cError",
+		"virTypedParameter":    "cTypedParameter",
+		"virDomainStatsRecord": "cDomainStatsRecord",
+		"virStoragePoolInfo":   "cStoragePoolInfo",
+		"virStorageVolInfo":    "cStorageVolInfo",
+	}
+	enums := make(map[string]bool)
+	for _, enum := range document.Enums {
+		enums[enum.Type] = true
+	}
+	result := []generatedLayout{}
+	for _, structure := range document.Structs {
+		name, needed := names[structure.Name]
+		if !needed {
+			continue
+		}
+		layout := generatedLayout{Name: name}
+		for _, field := range structure.Fields {
+			var fieldType string
+			switch {
+			case field.Type == "union":
+				// The libvirt typed-parameter union contains only scalar members and
+				// a pointer. Its uint64 member supplies the required size/alignment.
+				hasUint64 := false
+				for _, member := range field.Union {
+					switch member.Type {
+					case "unsigned long long int", "unsigned long long":
+						hasUint64 = true
+					case "int", "unsigned int", "long long int", "long long", "double", "char", "char *":
+					default:
+						return nil, fmt.Errorf("unsupported union member %s.%s: %s", structure.Name, member.Name, member.Type)
+					}
+				}
+				if !hasUint64 {
+					return nil, fmt.Errorf("union %s.%s has no uint64 storage member", structure.Name, field.Name)
+				}
+				fieldType = name + strings.ToUpper(field.Name[:1]) + field.Name[1:]
+				result = append(result, generatedLayout{Name: fieldType, Fields: []generatedArgumentData{{Name: "bits", Type: "uint64"}}})
+			case strings.HasPrefix(field.Type, "char "+field.Name+"[") && strings.HasSuffix(field.Type, "]"):
+				length := strings.TrimSuffix(strings.TrimPrefix(field.Type, "char "+field.Name+"["), "]")
+				fieldType = "[" + length + "]byte"
+			case enums[field.Type]:
+				fieldType = "int32"
+			default:
+				var err error
+				fieldType, err = goABIType(field.Type, true, nil)
+				if err != nil {
+					return nil, fmt.Errorf("layout %s.%s: %w", structure.Name, field.Name, err)
+				}
+			}
+			fieldName := goArgumentName(field.Name)
+			if structure.Name == "virDomainStatsRecord" {
+				// Preserve the binding's existing internal field names.
+				if fieldName == "dom" {
+					fieldName = "domain"
+				}
+				if fieldName == "nparams" {
+					fieldName = "count"
+				}
+			}
+			layout.Fields = append(layout.Fields, generatedArgumentData{Name: fieldName, Type: fieldType})
+		}
+		if len(layout.Fields) == 0 {
+			return nil, fmt.Errorf("native layout %s has no public fields", structure.Name)
+		}
+		result = append(result, layout)
+	}
+	sort.Slice(result, func(i, j int) bool { return result[i].Name < result[j].Name })
+	return result, nil
 }

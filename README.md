@@ -77,7 +77,9 @@ registration table, and public `RawAPI.Vir*` methods. It also emits the official
 Go constant names (without libvirt's C-only `VIR_` prefix) and typed aliases used
 by the high-level API. Object-like macros (including strings, numeric
 limits, and aliases) are generated from the same XML; C function macros and
-struct-tag aliases are excluded.
+struct-tag aliases are excluded. The internal C layouts used by the high-level
+API, including the typed-parameter union, also come from XML. Go ownership and
+semantic field mappings remain handwritten.
 The generated `libvirt_api.gen.go` is committed, so package consumers still
 need only the runtime shared library.
 
