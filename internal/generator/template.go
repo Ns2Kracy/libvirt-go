@@ -10,6 +10,8 @@ import (
 type generatedFileData struct {
 	SourceHash      string
 	Functions       []generatedFunctionData
+	Macros          []apiEnum
+	MacroAliases    []generatedAliasData
 	Enums           []apiEnum
 	OfficialAliases []generatedAliasData
 	AliasGroups     []generatedAliasGroupData

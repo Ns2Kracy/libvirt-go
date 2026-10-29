@@ -194,49 +194,49 @@ func decodeDomainStats(memory unsafe.Pointer, count int32) (*DomainStats, error)
 			if result.State == nil {
 				result.State = &DomainStatsState{}
 			}
-			switch key {
-			case "state":
+			switch field {
+			case DOMAIN_STATS_STATE_STATE:
 				result.State.StateSet, result.State.State = true, DomainState(number)
-			case "reason":
+			case DOMAIN_STATS_STATE_REASON:
 				result.State.ReasonSet, result.State.Reason = true, int32(number)
 			}
 		case "cpu":
 			if result.Cpu == nil {
 				result.Cpu = &DomainStatsCPU{}
 			}
-			switch key {
-			case "time":
+			switch field {
+			case DOMAIN_STATS_CPU_TIME:
 				present, destination = &result.Cpu.TimeSet, &result.Cpu.Time
-			case "user":
+			case DOMAIN_STATS_CPU_USER:
 				present, destination = &result.Cpu.UserSet, &result.Cpu.User
-			case "system":
+			case DOMAIN_STATS_CPU_SYSTEM:
 				present, destination = &result.Cpu.SystemSet, &result.Cpu.System
 			}
 		case "vcpu":
-			switch key {
-			case "current":
+			switch field {
+			case DOMAIN_STATS_VCPU_CURRENT:
 				present, destination = &result.VcpuCurrentSet, &result.VcpuCurrent
-			case "maximum":
+			case DOMAIN_STATS_VCPU_MAXIMUM:
 				present, destination = &result.VcpuMaximumSet, &result.VcpuMaximum
 			}
 		case "balloon":
 			if result.Balloon == nil {
 				result.Balloon = &DomainStatsBalloon{}
 			}
-			switch key {
-			case "current":
+			switch field {
+			case DOMAIN_STATS_BALLOON_CURRENT:
 				present, destination = &result.Balloon.CurrentSet, &result.Balloon.Current
-			case "maximum":
+			case DOMAIN_STATS_BALLOON_MAXIMUM:
 				present, destination = &result.Balloon.MaximumSet, &result.Balloon.Maximum
-			case "available":
+			case DOMAIN_STATS_BALLOON_AVAILABLE:
 				present, destination = &result.Balloon.AvailableSet, &result.Balloon.Available
-			case "unused":
+			case DOMAIN_STATS_BALLOON_UNUSED:
 				present, destination = &result.Balloon.UnusedSet, &result.Balloon.Unused
-			case "usable":
+			case DOMAIN_STATS_BALLOON_USABLE:
 				present, destination = &result.Balloon.UsableSet, &result.Balloon.Usable
-			case "rss":
+			case DOMAIN_STATS_BALLOON_RSS:
 				present, destination = &result.Balloon.RssSet, &result.Balloon.Rss
-			case "last-update":
+			case DOMAIN_STATS_BALLOON_LAST_UPDATE:
 				present, destination = &result.Balloon.LastUpdateSet, &result.Balloon.LastUpdate
 			}
 		case "block", "net":
@@ -256,28 +256,28 @@ func decodeDomainStats(memory unsafe.Pointer, count int32) (*DomainStats, error)
 					result.Block = append(result.Block, DomainStatsBlock{Index: index})
 				}
 				block := &result.Block[position]
-				switch counter {
-				case "name":
+				switch "." + counter {
+				case DOMAIN_STATS_BLOCK_SUFFIX_NAME:
 					if TypedParameterType(parameter.type_) == TypedParameterString {
 						block.Name, block.NameSet = copyCString(uintptrPointer(value)), true
 					}
-				case "rd.bytes":
+				case DOMAIN_STATS_BLOCK_SUFFIX_RD_BYTES:
 					present, destination = &block.RdBytesSet, &block.RdBytes
-				case "wr.bytes":
+				case DOMAIN_STATS_BLOCK_SUFFIX_WR_BYTES:
 					present, destination = &block.WrBytesSet, &block.WrBytes
-				case "rd.reqs":
+				case DOMAIN_STATS_BLOCK_SUFFIX_RD_REQS:
 					present, destination = &block.RdReqsSet, &block.RdReqs
-				case "wr.reqs":
+				case DOMAIN_STATS_BLOCK_SUFFIX_WR_REQS:
 					present, destination = &block.WrReqsSet, &block.WrReqs
-				case "rd.times":
+				case DOMAIN_STATS_BLOCK_SUFFIX_RD_TIMES:
 					present, destination = &block.RdTimesSet, &block.RdTimes
-				case "wr.times":
+				case DOMAIN_STATS_BLOCK_SUFFIX_WR_TIMES:
 					present, destination = &block.WrTimesSet, &block.WrTimes
-				case "allocation":
+				case DOMAIN_STATS_BLOCK_SUFFIX_ALLOCATION:
 					present, destination = &block.AllocationSet, &block.Allocation
-				case "capacity":
+				case DOMAIN_STATS_BLOCK_SUFFIX_CAPACITY:
 					present, destination = &block.CapacitySet, &block.Capacity
-				case "physical":
+				case DOMAIN_STATS_BLOCK_SUFFIX_PHYSICAL:
 					present, destination = &block.PhysicalSet, &block.Physical
 				}
 			} else {
@@ -288,26 +288,26 @@ func decodeDomainStats(memory unsafe.Pointer, count int32) (*DomainStats, error)
 					result.Net = append(result.Net, DomainStatsNet{Index: index})
 				}
 				network := &result.Net[position]
-				switch counter {
-				case "name":
+				switch "." + counter {
+				case DOMAIN_STATS_NET_SUFFIX_NAME:
 					if TypedParameterType(parameter.type_) == TypedParameterString {
 						network.Name, network.NameSet = copyCString(uintptrPointer(value)), true
 					}
-				case "rx.bytes":
+				case DOMAIN_STATS_NET_SUFFIX_RX_BYTES:
 					present, destination = &network.RxBytesSet, &network.RxBytes
-				case "tx.bytes":
+				case DOMAIN_STATS_NET_SUFFIX_TX_BYTES:
 					present, destination = &network.TxBytesSet, &network.TxBytes
-				case "rx.pkts":
+				case DOMAIN_STATS_NET_SUFFIX_RX_PKTS:
 					present, destination = &network.RxPktsSet, &network.RxPkts
-				case "tx.pkts":
+				case DOMAIN_STATS_NET_SUFFIX_TX_PKTS:
 					present, destination = &network.TxPktsSet, &network.TxPkts
-				case "rx.errs":
+				case DOMAIN_STATS_NET_SUFFIX_RX_ERRS:
 					present, destination = &network.RxErrsSet, &network.RxErrs
-				case "tx.errs":
+				case DOMAIN_STATS_NET_SUFFIX_TX_ERRS:
 					present, destination = &network.TxErrsSet, &network.TxErrs
-				case "rx.drop":
+				case DOMAIN_STATS_NET_SUFFIX_RX_DROP:
 					present, destination = &network.RxDropSet, &network.RxDrop
-				case "tx.drop":
+				case DOMAIN_STATS_NET_SUFFIX_TX_DROP:
 					present, destination = &network.TxDropSet, &network.TxDrop
 				}
 			}

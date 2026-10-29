@@ -75,7 +75,9 @@ functions and 1,093 enums for the vendored libvirt 12.6.0 metadata), including
 purego signatures, introduction versions, source-library routing, the symbol
 registration table, and public `RawAPI.Vir*` methods. It also emits the official
 Go constant names (without libvirt's C-only `VIR_` prefix) and typed aliases used
-by the high-level API.
+by the high-level API. Object-like macros (including strings, numeric
+limits, and aliases) are generated from the same XML; C function macros and
+struct-tag aliases are excluded.
 The generated `libvirt_api.gen.go` is committed, so package consumers still
 need only the runtime shared library.
 

@@ -26,6 +26,7 @@ type apiDocument struct {
 	Functions     []apiFunction     `xml:"symbols>function"`
 	FunctionTypes []apiFunctionType `xml:"symbols>functype"`
 	Enums         []apiEnum         `xml:"symbols>enum"`
+	Macros        []apiMacro        `xml:"symbols>macro"`
 }
 
 type apiFunctionType struct {
@@ -186,6 +187,7 @@ func loadAPIDocuments(mainPath string) (apiDocument, string, error) {
 		combined.Functions = append(combined.Functions, document.Functions...)
 		combined.FunctionTypes = append(combined.FunctionTypes, document.FunctionTypes...)
 		combined.Enums = append(combined.Enums, document.Enums...)
+		combined.Macros = append(combined.Macros, document.Macros...)
 		digest.Write([]byte(source.library))
 		digest.Write([]byte{0})
 		digest.Write(contents)
@@ -350,6 +352,11 @@ func renderGenerated(document *apiDocument, symbols []string, sourceHash string)
 		})
 	}
 
+	macros, err := constantMacros(document.Macros)
+	if err != nil {
+		return nil, err
+	}
+	data.Macros = macros
 	data.Enums = append([]apiEnum(nil), document.Enums...)
 	sort.Slice(data.Enums, func(i, j int) bool { return data.Enums[i].Name < data.Enums[j].Name })
 	for _, enum := range data.Enums {
@@ -363,6 +370,11 @@ func renderGenerated(document *apiDocument, symbols []string, sourceHash string)
 			Name:    strings.TrimPrefix(enum.Name, "VIR_"),
 			GoType:  officialEnumGoType(enum.Type),
 			RawName: enum.Name,
+		}
+	}
+	for _, macro := range data.Macros {
+		if strings.HasPrefix(macro.Name, "VIR_") {
+			data.MacroAliases = append(data.MacroAliases, generatedAliasData{Name: strings.TrimPrefix(macro.Name, "VIR_"), RawName: macro.Name})
 		}
 	}
 	for _, spec := range enumAliases {

@@ -7,7 +7,7 @@ import (
 	"unsafe"
 )
 
-const uuidStringBufferLength = 37
+const uuidStringBufferLength = UUID_STRING_BUFLEN
 
 // Domain is a reference-counted libvirt domain handle.
 type Domain struct {
@@ -209,7 +209,7 @@ func (d *Domain) modifyDevice(operation, xml string, flags uint32, call func(*na
 
 // SendKey sends keycodes to a domain using the selected keycode set.
 func (d *Domain) SendKey(codeSet, holdTime uint, codes []uint, flags uint32) error {
-	const maxKeys = 16
+	const maxKeys = DOMAIN_SEND_KEY_MAX_KEYS
 	if len(codes) > maxKeys {
 		return fmt.Errorf("libvirt: send key accepts at most %d keycodes", maxKeys)
 	}

@@ -7,41 +7,41 @@ import (
 )
 
 const (
-	domainJobTimeElapsedField            = "time_elapsed"
-	domainJobTimeElapsedNetField         = "time_elapsed_net"
-	domainJobTimeRemainingField          = "time_remaining"
-	domainJobDowntimeField               = "downtime"
-	domainJobDowntimeNetField            = "downtime_net"
-	domainJobSetupTimeField              = "setup_time"
-	domainJobDataTotalField              = "data_total"
-	domainJobDataProcessedField          = "data_processed"
-	domainJobDataRemainingField          = "data_remaining"
-	domainJobMemoryTotalField            = "memory_total"
-	domainJobMemoryProcessedField        = "memory_processed"
-	domainJobMemoryRemainingField        = "memory_remaining"
-	domainJobMemoryConstantField         = "memory_constant"
-	domainJobMemoryNormalField           = "memory_normal"
-	domainJobMemoryNormalBytesField      = "memory_normal_bytes"
-	domainJobMemoryBPSField              = "memory_bps"
-	domainJobMemoryDirtyRateField        = "memory_dirty_rate"
-	domainJobMemoryPageSizeField         = "memory_page_size"
-	domainJobMemoryIterationField        = "memory_iteration"
-	domainJobDiskTotalField              = "disk_total"
-	domainJobDiskProcessedField          = "disk_processed"
-	domainJobDiskRemainingField          = "disk_remaining"
-	domainJobDiskBPSField                = "disk_bps"
-	domainJobCompressionCacheField       = "compression_cache"
-	domainJobCompressionBytesField       = "compression_bytes"
-	domainJobCompressionPagesField       = "compression_pages"
-	domainJobCompressionCacheMissesField = "compression_cache_misses"
-	domainJobCompressionOverflowField    = "compression_overflow"
-	domainJobAutoConvergeThrottleField   = "auto_converge_throttle"
-	domainJobOperationField              = "operation"
-	domainJobMemoryPostcopyRequestsField = "memory_postcopy_requests"
-	domainJobSuccessField                = "success"
-	domainJobDiskTemporaryUsedField      = "disk_temp_used"
-	domainJobDiskTemporaryTotalField     = "disk_temp_total"
-	domainJobErrorField                  = "errmsg"
+	domainJobTimeElapsedField            = DOMAIN_JOB_TIME_ELAPSED
+	domainJobTimeElapsedNetField         = DOMAIN_JOB_TIME_ELAPSED_NET
+	domainJobTimeRemainingField          = DOMAIN_JOB_TIME_REMAINING
+	domainJobDowntimeField               = DOMAIN_JOB_DOWNTIME
+	domainJobDowntimeNetField            = DOMAIN_JOB_DOWNTIME_NET
+	domainJobSetupTimeField              = DOMAIN_JOB_SETUP_TIME
+	domainJobDataTotalField              = DOMAIN_JOB_DATA_TOTAL
+	domainJobDataProcessedField          = DOMAIN_JOB_DATA_PROCESSED
+	domainJobDataRemainingField          = DOMAIN_JOB_DATA_REMAINING
+	domainJobMemoryTotalField            = DOMAIN_JOB_MEMORY_TOTAL
+	domainJobMemoryProcessedField        = DOMAIN_JOB_MEMORY_PROCESSED
+	domainJobMemoryRemainingField        = DOMAIN_JOB_MEMORY_REMAINING
+	domainJobMemoryConstantField         = DOMAIN_JOB_MEMORY_CONSTANT
+	domainJobMemoryNormalField           = DOMAIN_JOB_MEMORY_NORMAL
+	domainJobMemoryNormalBytesField      = DOMAIN_JOB_MEMORY_NORMAL_BYTES
+	domainJobMemoryBPSField              = DOMAIN_JOB_MEMORY_BPS
+	domainJobMemoryDirtyRateField        = DOMAIN_JOB_MEMORY_DIRTY_RATE
+	domainJobMemoryPageSizeField         = DOMAIN_JOB_MEMORY_PAGE_SIZE
+	domainJobMemoryIterationField        = DOMAIN_JOB_MEMORY_ITERATION
+	domainJobDiskTotalField              = DOMAIN_JOB_DISK_TOTAL
+	domainJobDiskProcessedField          = DOMAIN_JOB_DISK_PROCESSED
+	domainJobDiskRemainingField          = DOMAIN_JOB_DISK_REMAINING
+	domainJobDiskBPSField                = DOMAIN_JOB_DISK_BPS
+	domainJobCompressionCacheField       = DOMAIN_JOB_COMPRESSION_CACHE
+	domainJobCompressionBytesField       = DOMAIN_JOB_COMPRESSION_BYTES
+	domainJobCompressionPagesField       = DOMAIN_JOB_COMPRESSION_PAGES
+	domainJobCompressionCacheMissesField = DOMAIN_JOB_COMPRESSION_CACHE_MISSES
+	domainJobCompressionOverflowField    = DOMAIN_JOB_COMPRESSION_OVERFLOW
+	domainJobAutoConvergeThrottleField   = DOMAIN_JOB_AUTO_CONVERGE_THROTTLE
+	domainJobOperationField              = DOMAIN_JOB_OPERATION
+	domainJobMemoryPostcopyRequestsField = DOMAIN_JOB_MEMORY_POSTCOPY_REQS
+	domainJobSuccessField                = DOMAIN_JOB_SUCCESS
+	domainJobDiskTemporaryUsedField      = DOMAIN_JOB_DISK_TEMP_USED
+	domainJobDiskTemporaryTotalField     = DOMAIN_JOB_DISK_TEMP_TOTAL
+	domainJobErrorField                  = DOMAIN_JOB_ERRMSG
 )
 
 // DomainJobType describes the lifecycle state of a libvirt domain job.

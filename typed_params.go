@@ -8,7 +8,7 @@ import (
 	"unsafe"
 )
 
-const typedParameterFieldLength = 80
+const typedParameterFieldLength = TYPED_PARAM_FIELD_LENGTH
 
 // TypedParameterType identifies the value stored in a TypedParameter.
 type TypedParameterType int32
