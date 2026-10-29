@@ -37,7 +37,7 @@ jobs:
       - run: make coverage
       - name: Upload coverage
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: coverage
           path: coverage.out
@@ -89,7 +89,7 @@ jobs:
           exit "$status"
       - name: Upload synthetic integration log
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: synthetic-integration-${{ matrix.os }}
           path: /tmp/synthetic-integration.log
@@ -145,7 +145,7 @@ jobs:
           sudo chmod a+r /tmp/libvirtd-ci.log || true
       - name: Upload libvirt log
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: libvirtd-log
           path: /tmp/libvirtd-ci.log
