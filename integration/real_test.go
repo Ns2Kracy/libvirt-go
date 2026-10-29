@@ -119,6 +119,9 @@ func exerciseRealDomain(t *testing.T, conn *Connect, suffix string) {
 	requireRealFeature(t, "DomainDefineXML", err)
 	t.Cleanup(func() { cleanupRealDomain(t, domain) })
 
+	if saved, err := domain.HasManagedSaveImage(0); err != nil || saved {
+		t.Fatalf("new domain HasManagedSaveImage = (%t, %v), want false", saved, err)
+	}
 	assertRealNamedObject(t, data.Name, domain.GetName)
 	assertRealUUID(t, data.UUID, domain.GetUUIDString)
 	lookedUp, err := conn.LookupDomainByUUIDString(data.UUID)

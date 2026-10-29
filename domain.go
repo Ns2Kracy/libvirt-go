@@ -274,6 +274,15 @@ func (d *Domain) GetID() (uint, error) {
 	return uint(id), err
 }
 
+// HasManagedSaveImage reports whether libvirt has a managed saved-state image.
+func (d *Domain) HasManagedSaveImage(flags uint32) (bool, error) {
+	value, err := domainCall(d, "virDomainHasManagedSaveImage", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
+		result := api.virDomainHasManagedSaveImage(ptr, flags)
+		return result, result < 0
+	})
+	return value == 1, err
+}
+
 // GetAutostart reports whether the domain starts with the host.
 func (d *Domain) GetAutostart() (bool, error) {
 	value, err := domainCall(d, "virDomainGetAutostart", func(api *nativeAPI, ptr unsafe.Pointer) (int32, bool) {
